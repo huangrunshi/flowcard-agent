@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>虚拟充值智能助手</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+      background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      padding: 24px 0 16px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .header p { font-size: 13px; opacity: 0.9; }
+
+    .chat-container {
+      width: 100%;
+      max-width: 480px;
+      background: #f8f9fa;
+      border-radius: 20px 20px 0 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 70vh;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bubble-wrap { display: flex; align-items: flex-end; gap: 8px; }
+    .bubble-wrap.user { flex-direction: row-reverse; }
+
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+      background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .bubble.bot {
+      background: white;
+      color: #333;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .bubble.user {
+      background: linear-gradient(135deg, #ff6b6b, #feca57);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .quick-btns {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 4px 0 8px 42px;
+    }
+    .quick-btn {
+      background: white;
+      border: 1.5px solid #ff6b6b;
+      color: #ff6b6b;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-btn:hover, .quick-btn:active {
+      background: #ff6b6b; color: white;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 4px;
+      max-width: 340px;
+    }
+    .category-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .category-card:hover {
+      border-color: #ff6b6b;
+      transform: translateY(-2px);
+    }
+    .category-card .icon { font-size: 28px; margin-bottom: 6px; }
+    .category-card .name { font-size: 13px; color: #333; font-weight: 500; }
+
+    .product-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+      max-width: 340px;
+    }
+    .product-card {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      transition: border 0.2s;
+    }
+    .product-card:hover { border-color: #ff6b6b; }
+    .product-name { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 4px; }
+    .product-desc { font-size: 12px; color: #666; margin-bottom: 8px; }
+    .product-price { font-size: 20px; font-weight: 800; color: #ff6b6b; }
+    .product-price span { font-size: 12px; color: #999; font-weight: 400; }
+    .product-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .tag {
+      background: #fff0f0;
+      color: #ff6b6b;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .order-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #ff6b6b, #feca57);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    .input-area {
+      background: white;
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border-top: 1px solid #eee;
+    }
+    .input-area input {
+      flex: 1;
+      border: 1.5px solid #ddd;
+      border-radius: 22px;
+      padding: 10px 16px;
+      font-size: 14px;
+      outline: none;
+    }
+    .input-area input:focus { border-color: #ff6b6b; }
+    .send-btn {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, #ff6b6b, #feca57);
+      border: none; border-radius: 50%;
+      color: white; font-size: 18px;
+      cursor: pointer;
+    }
+
+    .typing { display: flex; align-items: center; gap: 4px; padding: 10px 14px; }
+    .typing span {
+      width: 7px; height: 7px; background: #bbb;
+      border-radius: 50%; animation: bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 8px 0;
+      max-width: 340px;
+    }
+    .search-box input {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎫 虚拟充值智能助手</h1>
+  <p>视频/音乐/游戏/外卖会员，一键充值</p>
+</div>
+
+<div class="chat-container">
+  <div class="messages" id="messages"></div>
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="输入你想充值的产品，如「腾讯视频」" />
+    <button class="send-btn" onclick="handleSend()">➤</button>
+  </div>
+</div>
+
+<script>
+// ===================== 商品数据库（可自行添加）=====================
+// 格式：id(唯一标识), name(名称), category(分类), price(价格), 
+//       desc(描述), tags(标签), orderUrl(下单链接)
+
+const PRODUCTS = [
+  // 视频会员
+  { id: "txsp_month", name: "腾讯视频VIP", category: "video", price: 15, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/txsp_month" },
+  { id: "txsp_quarter", name: "腾讯视频VIP", category: "video", price: 40, desc: "季卡 - 官方直充", tags: ["季卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/txsp_quarter" },
+  { id: "txsp_year", name: "腾讯视频VIP", category: "video", price: 150, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/txsp_year" },
+  
+  { id: "aqy_month", name: "爱奇艺黄金会员", category: "video", price: 15, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/aqy_month" },
+  { id: "aqy_year", name: "爱奇艺黄金会员", category: "video", price: 140, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/aqy_year" },
+  
+  { id: "yk_month", name: "优酷会员", category: "video", price: 12, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/yk_month" },
+  { id: "yk_year", name: "优酷会员", category: "video", price: 120, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/yk_year" },
+  
+  { id: "mg_month", name: "芒果TV会员", category: "video", price: 12, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/mg_month" },
+  { id: "mg_year", name: "芒果TV会员", category: "video", price: 100, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/mg_year" },
+  
+  { id: "bili_month", name: "哔哩哔哩大会员", category: "video", price: 18, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/bili_month" },
+  { id: "bili_year", name: "哔哩哔哩大会员", category: "video", price: 168, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/bili_year" },
+  
+  // 音乐会员
+  { id: "wyy_month", name: "网易云音乐黑胶", category: "music", price: 12, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/wyy_month" },
+  { id: "wyy_year", name: "网易云音乐黑胶", category: "music", price: 108, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/wyy_year" },
+  
+  { id: "qqyy_month", name: "QQ音乐绿钻", category: "music", price: 12, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/qqyy_month" },
+  { id: "qqyy_year", name: "QQ音乐绿钻", category: "music", price: 120, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/qqyy_year" },
+  
+  { id: "kugou_month", name: "酷狗音乐VIP", category: "music", price: 12, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/kugou_month" },
+  { id: "kugou_year", name: "酷狗音乐VIP", category: "music", price: 108, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/kugou_year" },
+  
+  // 网盘/办公
+  { id: "bdwp_month", name: "百度网盘SVIP", category: "cloud", price: 25, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/bdwp_month" },
+  { id: "bdwp_year", name: "百度网盘SVIP", category: "cloud", price: 220, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/bdwp_year" },
+  
+  { id: "xunlei_month", name: "迅雷超级会员", category: "cloud", price: 18, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/xunlei_month" },
+  { id: "xunlei_year", name: "迅雷超级会员", category: "cloud", price: 168, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/xunlei_year" },
+  
+  { id: "wps_month", name: "WPS超级会员", category: "office", price: 15, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/wps_month" },
+  { id: "wps_year", name: "WPS超级会员", category: "office", price: 140, desc: "年卡 - 官方直充", tags: ["年卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/wps_year" },
+  
+  // 外卖/生活
+  { id: "meituan_month", name: "美团外卖会员", category: "life", price: 8, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/meituan_month" },
+  { id: "eleme_month", name: "饿了么超级会员", category: "life", price: 8, desc: "月卡 - 官方直充", tags: ["月卡", "官方直充"], orderUrl: "https://shop.yiquanyi.com/order/eleme_month" },
+  
+  // 游戏
+  { id: "steam_30", name: "Steam充值卡", category: "game", price: 28, desc: "30元 - 官方卡密", tags: ["30元", "卡密"], orderUrl: "https://shop.yiquanyi.com/order/steam_30" },
+  { id: "steam_100", name: "Steam充值卡", category: "game", price: 95, desc: "100元 - 官方卡密", tags: ["100元", "卡密"], orderUrl: "https://shop.yiquanyi.com/order/steam_100" },
+];
+
+// 分类配置
+const CATEGORIES = [
+  { id: "video", name: "视频会员", icon: "🎬", keywords: ["视频", "腾讯", "爱奇艺", "优酷", "芒果", "b站", "哔哩"] },
+  { id: "music", name: "音乐会员", icon: "🎵", keywords: ["音乐", "网易云", "qq音乐", "酷狗", "酷我"] },
+  { id: "cloud", name: "网盘下载", icon: "☁️", keywords: ["网盘", "百度", "迅雷", "下载", "云盘"] },
+  { id: "office", name: "办公学习", icon: "📄", keywords: ["办公", "wps", "office", "文档"] },
+  { id: "life", name: "外卖生活", icon: "🍔", keywords: ["外卖", "美团", "饿了么", "生活"] },
+  { id: "game", name: "游戏充值", icon: "🎮", keywords: ["游戏", "steam", "充值", "点卡"] },
+];
+
+// ===================== 智能状态 =====================
+let currentCategory = null;
+let searchQuery = "";
+
+// ===================== NLU: 自然语言理解 =====================
+function analyzeInput(text) {
+  const t = text.toLowerCase().replace(/\s+/g, '');
+  const result = { category: null, product: null, intent: null };
+  
+  // 分类识别
+  for (let cat of CATEGORIES) {
+    for (let kw of cat.keywords) {
+      if (t.includes(kw)) {
+        result.category = cat.id;
+        break;
+      }
+    }
+    if (result.category) break;
+  }
+  
+  // 产品识别（模糊匹配）
+  for (let p of PRODUCTS) {
+    if (t.includes(p.name.toLowerCase()) || 
+        p.name.toLowerCase().includes(t) ||
+        t.includes(p.id)) {
+      result.product = p;
+      break;
+    }
+  }
+  
+  // 意图识别
+  if (t.includes('全部') || t.includes('所有') || t.includes('列表')) {
+    result.intent = 'showAll';
+  } else if (t.includes('分类') || t.includes('类别') || t.includes('类型')) {
+    result.intent = 'showCategory';
+  } else if (t.includes('便宜') || t.includes('优惠') || t.includes('低价')) {
+    result.intent = 'showCheap';
+  } else if (t.includes('搜索') || t.includes('找') || t.includes('查')) {
+    result.intent = 'search';
+  }
+  
+  return result;
+}
+
+// ===================== 搜索功能 =====================
+function searchProducts(query) {
+  if (!query) return [];
+  const q = query.toLowerCase();
+  return PRODUCTS.filter(p => 
+    p.name.toLowerCase().includes(q) || 
+    p.desc.toLowerCase().includes(q) ||
+    p.tags.some(t => t.toLowerCase().includes(q))
+  );
+}
+
+// ===================== 按分类获取产品 =====================
+function getProductsByCategory(catId) {
+  return PRODUCTS.filter(p => p.category === catId);
+}
+
+// ===================== 获取最便宜的产品 =====================
+function getCheapestProducts(limit = 5) {
+  return [...PRODUCTS].sort((a, b) => a.price - b.price).slice(0, limit);
+}
+
+// ===================== 渲染函数 =====================
+function appendBotMsg(html, quickBtns) {
+  const wrap = document.createElement("div");
+  wrap.className = "bubble-wrap bot";
+  wrap.innerHTML = `<div class="avatar">🤖</div><div class="bubble bot">${html}</div>`;
+  document.getElementById("messages").appendChild(wrap);
+
+  if (quickBtns && quickBtns.length) {
+    const btnWrap = document.createElement("div");
+    btnWrap.className = "quick-btns";
+    quickBtns.forEach(btn => {
+      const b = document.createElement("button");
+      b.className = "quick-btn";
+      b.textContent = btn.label;
+      b.onclick = () => {
+        btn.action();
+        btnWrap.remove();
+      };
+      btnWrap.appendChild(b);
+    });
+    document.getElementById("messages").appendChild(btnWrap);
+  }
+  scrollBottom();
+}
+
+function appendUserMsg(text) {
+  const wrap = document.createElement("div");
+  wrap.className = "bubble-wrap user";
+  wrap.innerHTML = `<div class="bubble user">${text}</div><div class="avatar">🙋</div>`;
+  document.getElementById("messages").appendChild(wrap);
+  scrollBottom();
+}
+
+function appendTyping() {
+  const wrap = document.createElement("div");
+  wrap.className = "bubble-wrap bot";
+  wrap.id = "typing";
+  wrap.innerHTML = `<div class="avatar">🤖</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  document.getElementById("messages").appendChild(wrap);
+  scrollBottom();
+}
+
+function removeTyping() {
+  const t = document.getElementById("typing");
+  if (t) t.remove();
+}
+
+function appendCategories() {
+  const wrap = document.createElement("div");
+  wrap.className = "bubble-wrap bot";
+  const grid = document.createElement("div");
+  grid.className = "category-grid";
+  
+  CATEGORIES.forEach(cat => {
+    const card = document.createElement("div");
+    card.className = "category-card";
+    card.innerHTML = `<div class="icon">${cat.icon}</div><div class="name">${cat.name}</div>`;
+    card.onclick = () => showCategoryProducts(cat.id);
+    grid.appendChild(card);
+  });
+  
+  wrap.appendChild(document.createElement("div")).className = "avatar";
+  wrap.children[0].textContent = "🤖";
+  wrap.appendChild(grid);
+  document.getElementById("messages").appendChild(wrap);
+  scrollBottom();
+}
+
+function appendProducts(products, title) {
+  const wrap = document.createElement("div");
+  wrap.className = "bubble-wrap bot";
+  const list = document.createElement("div");
+  list.className = "product-list";
+  
+  if (title) {
+    const titleDiv = document.createElement("div");
+    titleDiv.style.cssText = "font-weight:600;margin-bottom:8px;color:#333;";
+    titleDiv.textContent = title;
+    list.appendChild(titleDiv);
+  }
+  
+  products.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.desc}</div>
+      <div class="product-price">${p.price}元<span>起</span></div>
+      <div class="product-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+      <a class="order-btn" href="${p.orderUrl}" target="_blank">立即充值 →</a>
+    `;
+    list.appendChild(card);
+  });
+  
+  wrap.appendChild(document.createElement("div")).className = "avatar";
+  wrap.children[0].textContent = "🤖";
+  wrap.appendChild(list);
+  document.getElementById("messages").appendChild(wrap);
+  scrollBottom();
+}
+
+function scrollBottom() {
+  const m = document.getElementById("messages");
+  setTimeout(() => m.scrollTop = m.scrollHeight, 50);
+}
+
+// ===================== 对话流程 =====================
+function botReply(text, quickBtns, delay = 500) {
+  appendTyping();
+  setTimeout(() => {
+    removeTyping();
+    appendBotMsg(text, quickBtns);
+  }, delay);
+}
+
+function showCategoryProducts(catId) {
+  const cat = CATEGORIES.find(c => c.id === catId);
+  const products = getProductsByCategory(catId);
+  
+  if (products.length === 0) {
+    botReply(`抱歉，${cat.name}分类下暂无商品 😅`, [
+      { label: '📋 查看全部', action: () => showAllProducts() },
+      { label: '🏠 返回分类', action: () => showCategories() }
+    ]);
+    return;
+  }
+  
+  botReply(`为您找到 <b>${products.length}款</b>${cat.name}产品 👇`);
+  setTimeout(() => appendProducts(products), 600);
+}
+
+function showAllProducts() {
+  botReply(`全部 <b>${PRODUCTS.length}款</b>充值产品 👇`);
+  setTimeout(() => appendProducts(PRODUCTS, "全部商品"), 600);
+}
+
+function showCategories() {
+  botReply("请选择您要充值的类型 👇");
+  setTimeout(() => appendCategories(), 400);
+}
+
+function showCheapProducts() {
+  const cheap = getCheapestProducts(5);
+  botReply("为您推荐最优惠的充值产品 👇");
+  setTimeout(() => appendProducts(cheap, "超值推荐"), 600);
+}
+
+function showSearchResults(query) {
+  const results = searchProducts(query);
+  if (results.length === 0) {
+    botReply(`抱歉，没有找到「${query}」相关的充值产品 😅<br>试试其他关键词？`, [
+      { label: '📋 查看全部', action: () => showAllProducts() },
+      { label: '🏠 返回分类', action: () => showCategories() }
+    ]);
+    return;
+  }
+  botReply(`找到 <b>${results.length}款</b>「${query}」相关产品 👇`);
+  setTimeout(() => appendProducts(results, `「${query}」搜索结果`), 600);
+}
+
+function processUserInput(text, skipAppend = false) {
+  if (!skipAppend) appendUserMsg(text);
+  
+  const analysis = analyzeInput(text);
+  
+  // 处理意图
+  if (analysis.intent === 'showAll') {
+    showAllProducts();
+  } else if (analysis.intent === 'showCategory') {
+    showCategories();
+  } else if (analysis.intent === 'showCheap') {
+    showCheapProducts();
+  } else if (analysis.intent === 'search' || text.length >= 2) {
+    showSearchResults(text);
+  } else if (analysis.category) {
+    showCategoryProducts(analysis.category);
+  } else if (analysis.product) {
+    botReply(`为您找到 <b>${analysis.product.name}</b> 👇`);
+    setTimeout(() => appendProducts([analysis.product]), 400);
+  } else {
+    // 兜底：引导
+    botReply("抱歉没听懂 😅<br>您可以：", [
+      { label: '🎬 视频会员', action: () => showCategoryProducts('video') },
+      { label: '🎵 音乐会员', action: () => showCategoryProducts('music') },
+      { label: '📋 查看全部', action: () => showAllProducts() }
+    ]);
+  }
+}
+
+function handleSend() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  processUserInput(text);
+}
+
+document.getElementById("userInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") handleSend();
+});
+
+// ===================== 启动 =====================
+function startConversation() {
+  botReply(
+    "您好！我是虚拟充值助手 👋<br>我可以帮您充值：<br>• 视频会员（腾讯/爱奇艺/优酷/B站）<br>• 音乐会员（网易云/QQ音乐/酷狗）<br>• 网盘办公（百度网盘/WPS）<br>• 外卖生活（美团/饿了么）<br><br>直接告诉我您想充什么？",
+    [
+      { label: '🎬 视频会员', action: () => showCategoryProducts('video') },
+      { label: '🎵 音乐会员', action: () => showCategoryProducts('music') },
+      { label: '☁️ 网盘下载', action: () => showCategoryProducts('cloud') },
+      { label: '💰 超值推荐', action: () => showCheapProducts() },
+      { label: '📋 查看全部', action: () => showAllProducts() }
+    ],
+    800
+  );
+}
+
+window.onload = () => startConversation();
+</script>
+
+</body>
+</html>
