@@ -3,95 +3,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>流量卡智能助手</title>
+  <title>流量卡智能顾问</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
-    .header{text-align:center;color:#fff;padding:20px 0 16px;width:100%;max-width:480px}
-    .header h1{font-size:22px;margin-bottom:6px}
-    .header p{font-size:13px;opacity:0.85}
-    .chat-container{width:100%;max-width:480px;background:#f5f7fa;border-radius:20px 20px 0 0;flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:70vh}
-    .messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
+    .header{text-align:center;color:#fff;padding:20px 0 14px;width:100%;max-width:480px}
+    .header h1{font-size:24px;margin-bottom:6px;background:linear-gradient(90deg,#00d2ff,#3a7bd5);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .header p{font-size:13px;opacity:0.75}
+    .tips{background:rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px;margin:0 0 14px;max-width:480px;width:100%;border:1px solid rgba(255,255,255,0.1)}
+    .tips-title{color:#ffd700;font-size:12px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .tips-list{font-size:11px;color:rgba(255,255,255,0.7);line-height:1.7}
+    .chat-container{width:100%;max-width:480px;background:#fafbfc;border-radius:20px 20px 0 0;flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:62vh;box-shadow:0 -8px 30px rgba(0,0,0,0.25)}
+    .messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:10px}
     .bubble-wrap{display:flex;align-items:flex-end;gap:8px}
     .bubble-wrap.user{flex-direction:row-reverse}
-    .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-    .bubble{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word}
-    .bubble.bot{background:#fff;color:#333;border-bottom-left-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-    .bubble.user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:4px}
-    .quick-btns{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px 40px}
-    .quick-btn{background:#fff;border:1.5px solid #667eea;color:#667eea;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all 0.2s}
-    .quick-btn:hover{background:#667eea;color:#fff}
-    .product-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
-    .product-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);border:2px solid transparent;transition:border 0.2s}
-    .product-card:hover{border-color:#667eea}
-    .product-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-    .product-name{font-size:15px;font-weight:700;color:#222}
-    .product-price{font-size:20px;font-weight:800;color:#667eea}
-    .product-price span{font-size:12px;color:#999;font-weight:400}
-    .product-desc{font-size:12px;color:#666;margin-bottom:8px;line-height:1.4}
-    .product-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
-    .tag{background:#f0f1ff;color:#667eea;font-size:11px;padding:2px 8px;border-radius:10px}
-    .tag.region{background:#e8f5e9;color:#4caf50}
-    .order-btn{display:block;width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:10px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none}
+    .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;box-shadow:0 3px 10px rgba(102,126,234,0.35)}
+    .bubble-wrap.user .avatar{background:linear-gradient(135deg,#11998e,#38ef7d)}
+    .bubble{max-width:84%;padding:12px 16px;border-radius:18px;font-size:14px;line-height:1.55;word-break:break-word}
+    .bubble.bot{background:#fff;color:#333;border-bottom-left-radius:5px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+    .bubble.user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:5px;box-shadow:0 3px 12px rgba(102,126,234,0.3)}
+    .quick-btns{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 8px 42px}
+    .quick-btn{background:#fff;border:1.5px solid #667eea;color:#667eea;border-radius:18px;padding:7px 14px;font-size:12px;cursor:pointer;transition:all 0.2s;font-weight:500}
+    .quick-btn:hover{background:#667eea;color:#fff;transform:translateY(-2px)}
+    .product-card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 3px 15px rgba(0,0,0,0.06);border:2px solid #f0f0f0;transition:all 0.2s;margin-bottom:10px}
+    .product-card:hover{border-color:#667eea;transform:translateY(-2px)}
+    .product-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .product-name{font-size:15px;font-weight:700;color:#1a1a2e}
+    .product-price{font-size:20px;font-weight:800;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .product-desc{font-size:12px;color:#666;margin-bottom:10px;line-height:1.5;background:#f8f9fa;padding:8px 12px;border-radius:8px}
+    .product-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+    .tag{background:#f0f4ff;color:#667eea;font-size:11px;padding:3px 9px;border-radius:10px;font-weight:500}
+    .tag.region{background:#e8f5e9;color:#2d8a4e}
+    .tag.hot{background:#fff5f5;color:#e53e3e}
+    .order-btn{display:block;width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:12px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;transition:all 0.2s}
+    .order-btn:hover{transform:scale(1.02);box-shadow:0 5px 15px rgba(102,126,234,0.35)}
     .input-area{background:#fff;padding:12px 16px;display:flex;gap:10px;align-items:center;border-top:1px solid #eee}
-    .input-area input{flex:1;border:1.5px solid #ddd;border-radius:22px;padding:10px 16px;font-size:14px;outline:none}
+    .input-area input{flex:1;border:2px solid #e8e8e8;border-radius:24px;padding:12px 18px;font-size:14px;outline:none;transition:border 0.3s}
     .input-area input:focus{border-color:#667eea}
-    .send-btn{width:40px;height:40px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer}
-    .typing{display:flex;align-items:center;gap:4px;padding:10px 14px}
-    .typing span{width:6px;height:6px;background:#bbb;border-radius:50%;animation:bounce 1.2s infinite}
+    .send-btn{width:44px;height:44px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;transition:all 0.3s;box-shadow:0 3px 12px rgba(102,126,234,0.3)}
+    .send-btn:hover{transform:scale(1.08)}
+    .typing{display:flex;align-items:center;gap:4px;padding:12px 16px}
+    .typing span{width:7px;height:7px;background:#667eea;border-radius:50%;animation:bounce 1.4s infinite}
     .typing span:nth-child(2){animation-delay:0.2s}
     .typing span:nth-child(3){animation-delay:0.4s}
-    @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-    .stats{font-size:12px;color:#888;text-align:center;padding:8px}
+    @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:0.5}40%{transform:translateY(-6px);opacity:1}}
+    .notice{background:linear-gradient(135deg,#fff9e6,#fff3cd);border-left:4px solid #ffc107;border-radius:8px;padding:12px;margin:8px 0;font-size:12px;color:#856404;line-height:1.6}
+    .notice strong{color:#c00}
   </style>
 </head>
 <body>
-<div class="header"><h1>📱 流量卡智能助手</h1><p>三大运营商流量卡推荐，一键下单</p></div>
+<div class="header">
+  <h1>🌟 流量卡智能顾问</h1>
+  <p>帮您挑选最合适的流量卡，一键下单</p>
+</div>
+<div class="tips">
+  <div class="tips-title">💡 温馨提示</div>
+  <div class="tips-list">
+    📞 下单后请<strong>及时联系润石</strong>跟进<br>
+    📞 留意运营商<strong>官方回访电话</strong><br>
+    🚫 卡片<strong>不可转借他人</strong>使用
+  </div>
+</div>
 <div class="chat-container">
   <div class="messages" id="messages"></div>
-  <div class="input-area"><input type="text" id="userInput" placeholder="告诉我你的需求，如：29元、200G、联通"><button class="send-btn" onclick="handleSend()">➤</button></div>
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="告诉我您想要的套餐，比如：29元、200G、电信...">
+    <button class="send-btn" onclick="handleSend()">➤</button>
+  </div>
 </div>
 <script>
-// 套餐数据库
 const PRODUCTS=[
-  // 电信
-  {id:"dx_xh39",operator:"dianxin",name:"电信星华卡",price:39,flow:185,region:"仅发湖南",desc:"39元185G流量+0.1元/分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3828"},
-  {id:"dx_th39",operator:"dianxin",name:"电信太华卡",price:39,flow:205,region:"仅发山东",desc:"39元205G流量+0.1元/分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3794"},
-  {id:"dx_bh29",operator:"dianxin",name:"电信北合卡",price:29,flow:140,region:"仅发河北",desc:"29元140G流量",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3827"},
-  {id:"dx_rx19",operator:"dianxin",name:"电信瑞星卡",price:19,flow:90,region:"发全国",desc:"19元90G流量+400分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"dx_jn28",operator:"dianxin",name:"电信先锋卡",price:28,flow:210,region:"仅发济南",desc:"28元210G流量+200分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"dx_cy29",operator:"dianxin",name:"电信畅游卡",price:29,flow:280,region:"发全国",desc:"29元280G流量+300分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"dx_bh19",operator:"dianxin",name:"电信北海卡",price:19,flow:200,region:"仅发河北",desc:"19元200G流量",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  // 移动
-  {id:"yd_cy39",operator:"yidong",name:"移动畅言卡",price:39,flow:380,region:"发全国",desc:"39元380G流量+2000分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_dy29",operator:"yidong",name:"移动多言卡",price:29,flow:250,region:"发全国",desc:"29元250G流量+2000分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_yy19",operator:"yidong",name:"移动易云卡",price:19,flow:50,region:"仅发北京",desc:"19元50G流量",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_ty19",operator:"yidong",name:"移动天云卡",price:19.4,flow:240,region:"仅发河南",desc:"19.4元240G流量+400分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_ds29",operator:"yidong",name:"移动东山卡",price:29,flow:300,region:"仅发山东",desc:"29元300G流量+100分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_cl20",operator:"yidong",name:"移动川流卡",price:20,flow:350,region:"仅发四川",desc:"20元350G流量+400分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_fh18",operator:"yidong",name:"移动绯红卡",price:18,flow:90,region:"发全国",desc:"18元90G流量+300分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  // 联通
-  {id:"lt_ly40",operator:"liantong",name:"联通林云卡",price:40,flow:200,region:"发全国",desc:"40元200G流量+100分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_qy39",operator:"liantong",name:"联通千云卡",price:39,flow:280,region:"仅发河北",desc:"39元280G流量+200分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_jc39",operator:"liantong",name:"联通巨川卡",price:39,flow:520,region:"仅发四川",desc:"39元520G流量+300分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_jh29",operator:"liantong",name:"联通江会卡",price:29,flow:160,region:"仅发浙江",desc:"29元160G流量+500分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_hp49",operator:"liantong",name:"联通琥珀卡",price:49,flow:215,region:"发全国",desc:"49元215G流量+100分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_sy29",operator:"liantong",name:"联通双语卡",price:29,flow:150,region:"仅发浙江",desc:"29元150G流量+100分钟+2T云盘",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"}
+  // 电信 - 精选
+  {id:"dx_xh39",operator:"dianxin",name:"电信星华卡",price:39,flow:185,region:"仅发湖南",desc:"39元185G流量+0.1元/分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3828",tags:["热门"]},
+  {id:"dx_th39",operator:"dianxin",name:"电信太华卡",price:39,flow:205,region:"仅发山东",desc:"39元205G流量+0.1元/分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3794",tags:["大流量"]},
+  {id:"dx_bh29",operator:"dianxin",name:"电信北合卡",price:29,flow:140,region:"仅发河北",desc:"29元140G流量，性价比高",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3827",tags:["超值"]},
+  {id:"dx_rx19",operator:"dianxin",name:"电信瑞星卡",price:19,flow:90,region:"发全国",desc:"19元90G流量+400分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["低月租"]},
+  {id:"dx_cy29",operator:"dianxin",name:"电信畅游卡",price:29,flow:280,region:"发全国",desc:"29元280G流量+300分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["大流量","爆款"]},
+  // 移动 - 精选
+  {id:"yd_cy39",operator:"yidong",name:"移动畅言卡",price:39,flow:380,region:"发全国",desc:"39元380G流量+2000分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["顶配"]},
+  {id:"yd_dy29",operator:"yidong",name:"移动多言卡",price:29,flow:250,region:"发全国",desc:"29元250G流量+2000分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["爆款"]},
+  {id:"yd_ty19",operator:"yidong",name:"移动天云卡",price:19.4,flow:240,region:"仅发河南",desc:"19.4元240G流量+400分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["低月租"]},
+  {id:"yd_cl20",operator:"yidong",name:"移动川流卡",price:20,flow:350,region:"仅发四川",desc:"20元350G流量+400分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["大流量"]},
+  {id:"yd_fh18",operator:"yidong",name:"移动绯红卡",price:18,flow:90,region:"发全国",desc:"18元90G流量+300分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["最低"]},
+  // 联通 - 精选
+  {id:"lt_ly40",operator:"liantong",name:"联通林云卡",price:40,flow:200,region:"发全国",desc:"40元200G流量+100分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"lt_qy39",operator:"liantong",name:"联通千云卡",price:39,flow:280,region:"仅发河北",desc:"39元280G流量+200分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["大流量"]},
+  {id:"lt_jc39",operator:"liantong",name:"联通巨川卡",price:39,flow:520,region:"仅发四川",desc:"39元520G流量+300分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["超大流量"]},
+  {id:"lt_jh29",operator:"liantong",name:"联通江会卡",price:29,flow:160,region:"仅发浙江",desc:"29元160G流量+500分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["通话多"]},
+  {id:"lt_hp49",operator:"liantong",name:"联通琥珀卡",price:49,flow:215,region:"发全国",desc:"49元215G流量+100分钟通话",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",tags:["长期"]}
 ];
-const OPS=[{id:"dianxin",name:"📡 电信",kw:["电信","dx"]},{id:"yidong",name:"📶 移动",kw:["移动","yd"]},{id:"liantong",name:"📟 联通",kw:["联通","lt"]}];
-function analyze(t){const r={op:null,price:null,flow:null,intent:null};for(let o of OPS)for(let k of o.kw)if(t.includes(k)){r.op=o.id;break}let m=t.match(/(\d{1,2})元/);if(m)r.price=parseInt(m[1]);m=t.match(/(\d{2,4})G/);if(m)r.flow=parseInt(m[1]);if(t.includes("全部")||t.includes("所有"))r.intent="all";if(t.includes("便宜")||t.includes("优惠"))r.intent="cheap";return r}
-function filter(an){let r=PRODUCTS;if(an.op)r=r.filter(p=>p.operator===an.op);if(an.price)r=r.filter(p=>p.price<=an.price);if(an.flow)r=r.sort((a,b)=>b.flow-a.flow).filter(p=>p.flow>=an.flow*0.8);if(an.intent==="cheap")r=r.sort((a,b)=>a.price-b.price).slice(0,6);else if(an.intent==="all")r=r;else r=r.slice(0,8);return r}
-function renderProducts(ps,title){let h='<div class="product-list">'+(title?`<div style="font-weight:600;margin-bottom:8px;color:#333">${title}</div>`:"");ps.forEach(p=>{h+=`<div class="product-card"><div class="product-header"><div class="product-name">${p.name}</div><div class="product-price">${p.price}元<span>/月</span></div></div><div class="product-desc">${p.desc}</div><div class="product-tags"><span class="tag region">${p.region}</span></div><a class="order-btn" href="${p.orderUrl}" target="_blank">立即下单 →</a></div>`});h+='</div>';return h}
-function bot(t,btns,q){appendTyping();setTimeout(()=>{removeTyping();appendBot(t,btns);if(q)scrollBottom()},500)}
-function appendBot(t,btns){let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${t}</div>`;document.getElementById("messages").appendChild(w);if(btns){let bw=document.createElement("div");bw.className="quick-btns";btns.forEach(b=>{let btn=document.createElement("button");btn.className="quick-btn";btn.textContent=b.label;btn.onclick=()=>{bw.remove();b.action()};bw.appendChild(btn)});document.getElementById("messages").appendChild(bw)}scrollBottom()}
-function appendUser(t){let w=document.createElement("div");w.className="bubble-wrap user";w.innerHTML=`<div class="bubble user">${t}</div><div class="avatar">🙋</div>`;document.getElementById("messages").appendChild(w);scrollBottom()}
-function appendTyping(){let w=document.createElement("div");w.className="bubble-wrap bot";w.id="typing";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>`;document.getElementById("messages").appendChild(w);scrollBottom()}
+const OPS=[
+  {id:"dianxin",name:"📡 电信",color:"#ff6b6b",kw:["电信","dx"]},
+  {id:"yidong",name:"📶 移动",color:"#4ecdc4",kw:["移动","yd"]},
+  {id:"liantong",name:"📟 联通",color:"#45b7d1",kw:["联通","lt"]}
+];
+function analyze(t){
+  const r={op:null,price:null,flow:null,intent:null,cheap:false};
+  for(let o of OPS)for(let k of o.kw)if(t.includes(k)){r.op=o.id;break}
+  let m=t.match(/(\d{1,2})元/);if(m)r.price=parseInt(m[1]);
+  m=t.match(/(\d{2,4})G/);if(m)r.flow=parseInt(m[1]);
+  if(t.includes("全部")||t.includes("所有")||t.includes("看看"))r.intent="all";
+  if(t.includes("便宜")||t.includes("优惠")||t.includes("划算")||t.includes("超值"))r.cheap=true;
+  if(t.includes("流量")&&!r.flow)r.intent="flow";
+  if(t.includes("通话")||t.includes("分钟"))r.intent="call";
+  return r
+}
+function filter(an){
+  let r=PRODUCTS;
+  if(an.op)r=r.filter(p=>p.operator===an.op);
+  if(an.price)r=r.filter(p=>p.price<=an.price);
+  if(an.flow)r=r.sort((a,b)=>b.flow-a.flow).filter(p=>p.flow>=an.flow*0.7);
+  if(an.cheap)r=r.sort((a,b)=>a.price-b.price).slice(0,6);
+  else if(an.intent==="all")r=r;
+  else r=r.slice(0,8);
+  return r
+}
+function renderProducts(ps,title){
+  let h='<div style="margin-top:4px">'+(title?`<div style="font-weight:600;margin-bottom:10px;color:#333;font-size:14px">${title}</div>`:"");
+  ps.forEach(p=>{
+    let tags=(p.tags||[]).map(t=>`<span class="tag ${t==='爆款'||t==='热门'?'hot':''}">${t}</span>`).join("");
+    h+=`<div class="product-card">
+      <div class="product-header"><div class="product-name">${p.name}</div><div class="product-price">${p.price}元<span style="font-size:12px;font-weight:400;color:#999">/月</span></div></div>
+      <div class="product-desc">${p.desc}</div>
+      <div class="product-tags"><span class="tag region">${p.region}</span>${tags}</div>
+      <a class="order-btn" href="${p.orderUrl}" target="_blank">立即下单 →</a>
+    </div>`
+  });
+  h+='</div>';
+  return h
+}
+function bot(t,btns,q){
+  appendTyping();
+  setTimeout(()=>{
+    removeTyping();
+    appendBot(t,btns);
+    if(q)scrollBottom()
+  },600)
+}
+function appendBot(t,btns){
+  let w=document.createElement("div");
+  w.className="bubble-wrap bot";
+  w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${t}</div>`;
+  document.getElementById("messages").appendChild(w);
+  if(btns){
+    let bw=document.createElement("div");
+    bw.className="quick-btns";
+    btns.forEach(b=>{
+      let btn=document.createElement("button");
+      btn.className="quick-btn";
+      btn.textContent=b.label;
+      btn.onclick=()=>{bw.remove();b.action()};
+      bw.appendChild(btn)
+    });
+    document.getElementById("messages").appendChild(bw)
+  }
+  scrollBottom()
+}
+function appendUser(t){
+  let w=document.createElement("div");
+  w.className="bubble-wrap user";
+  w.innerHTML=`<div class="bubble user">${t}</div><div class="avatar">🙋</div>`;
+  document.getElementById("messages").appendChild(w);
+  scrollBottom()
+}
+function appendTyping(){
+  let w=document.createElement("div");
+  w.className="bubble-wrap bot";
+  w.id="typing";
+  w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  document.getElementById("messages").appendChild(w);
+  scrollBottom()
+}
 function removeTyping(){let t=document.getElementById("typing");if(t)t.remove()}
 function scrollBottom(){setTimeout(()=>document.getElementById("messages").scrollTop=document.getElementById("messages").scrollHeight,50)}
-function handle(){let i=document.getElementById("userInput"),t=i.value.trim();if(!t)return;i.value="";let a=analyze(t.toLowerCase()),ps=filter(a);appendUser(t);if(ps.length===0){bot("抱歉，没有找到符合条件的套餐 😅",[{label:"📡 电信卡",action:()=>showOp("dianxin")},{label:"📶 移动卡",action:()=>showOp("yidong")},{label:"📟 联通卡",action:()=>showOp("liantong")}]);return}let msg=a.intent==="cheap"?"为您找到最优惠的套餐 👇":a.intent==="all"?"全部套餐 👇":`为您找到 <b>${ps.length}</b>款合适套餐 👇`;bot(msg);setTimeout(()=>{let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps)}</div>`;document.getElementById("messages").appendChild(w);scrollBottom()},400)}
-function showOp(op){let o=OPS.find(x=>x.id===op),ps=PRODUCTS.filter(p=>p.operator===op).sort((a,b)=>a.price-b.price);bot(`<b>${o.name}</b>共${ps.length}款套餐 👇`);setTimeout(()=>{let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps)}</div>`;document.getElementById("messages").appendChild(w);scrollBottom()},400)}
-function start(){bot("您好！我是流量卡智能助手 👋<br>告诉我：<br>• 想要的月租（如29元）<br>• 流量需求（如200G）<br>• 运营商偏好（电信/移动/联通）",[{label:"📡 电信卡",action:()=>showOp("dianxin")},{label:"📶 移动卡",action:()=>showOp("yidong")},{label:"📟 联通卡",action:()=>showOp("liantong")},{label:"💰 最便宜",action:()=>{let ps=PRODUCTS.sort((a,b)=>a.price-b.price).slice(0,6);bot("最便宜的几款 👇");setTimeout(()=>{let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps,"💰 超值低价")}</div>`;document.getElementById("messages").appendChild(w);scrollBottom()},400)}}])}
-document.getElementById("userInput").addEventListener("keydown",e=>{if(e.key==="Enter")handle()});
+function handleSend(){
+  let i=document.getElementById("userInput"),t=i.value.trim();
+  if(!t)return;
+  i.value="";
+  let a=analyze(t.toLowerCase()),ps=filter(a);
+  appendUser(t);
+  if(ps.length===0){
+    bot(`抱歉呀，没有找到完全符合条件的套餐 😅<br><div class="notice">试试这样告诉我：<br>• "29元的套餐"<br>• "电信卡"<br>• "200G以上流量"</div>`,[
+      {label:"📡 电信卡",action:()=>showOp("dianxin")},
+      {label:"📶 移动卡",action:()=>showOp("yidong")},
+      {label:"📟 联通卡",action:()=>showOp("liantong")}
+    ]);
+    return
+  }
+  let msg="";
+  if(a.cheap)msg="帮您筛选了最划算的几款 👇";
+  else if(a.intent==="all")msg=`共有 <b>${ps.length}</b>款套餐可选 👇`;
+  else if(a.flow)msg=`为您找到 <b>${ps.length}</b>款大流量套餐 👇`;
+  else if(a.price)msg={`为您找到 <b>${ps.length}</b>款${a.price}元以内的套餐 👇`;
+  else msg=`为您推荐 <b>${ps.length}</b>款合适套餐 👇`;
+  bot(msg);
+  setTimeout(()=>{
+    let w=document.createElement("div");
+    w.className="bubble-wrap bot";
+    w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps)}</div>`;
+    document.getElementById("messages").appendChild(w);
+    scrollBottom()
+  },500)
+}
+function showOp(op){
+  let o=OPS.find(x=>x.id===op);
+  let ps=PRODUCTS.filter(p=>p.operator===op).sort((a,b)=>a.price-b.price);
+  bot(`<b>${o.name}</b>共${ps.length}款套餐，给您按价格排序了 👇`);
+  setTimeout(()=>{
+    let w=document.createElement("div");
+    w.className="bubble-wrap bot";
+    w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps)}</div>`;
+    document.getElementById("messages").appendChild(w);
+    scrollBottom()
+  },500)
+}
+function showCheap(){
+  let ps=PRODUCTS.sort((a,b)=>a.price-b.price).slice(0,6);
+  bot("按价格从低到高排序的几款 👇");
+  setTimeout(()=>{
+    let w=document.createElement("div");
+    w.className="bubble-wrap bot";
+    w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps,"💰 超值低价")}</div>`;
+    document.getElementById("messages").appendChild(w);
+    scrollBottom()
+  },500)
+}
+function start(){
+  bot(`嗨！我是您的流量卡顾问 🌟<br><br>可以这样告诉我：<br>• "29元以内的卡"<br>• "流量多一点的"<br>• "电信/移动/联通"<br><br>帮您找到最合适的套餐！`,[
+    {label:"📡 电信卡",action:()=>showOp("dianxin")},
+    {label:"📶 移动卡",action:()=>showOp("yidong")},
+    {label:"📟 联通卡",action:()=>showOp("liantong")},
+    {label:"💰 最便宜",action:()=>showCheap()}
+  ])
+}
+document.getElementById("userInput").addEventListener("keydown",e=>{if(e.key==="Enter")handleSend()});
 window.onload=start;
 </script>
 </body>
