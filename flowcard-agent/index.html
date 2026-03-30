@@ -10,7 +10,7 @@
     .header{text-align:center;color:#fff;padding:20px 0 12px;width:100%;max-width:480px}
     .header h1{font-size:22px;margin-bottom:4px}
     .header p{font-size:13px;opacity:0.85}
-    .tips{background:rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;margin:0 0 12px;max-width:480px;width:100%}
+    .tips{background:rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;margin:0 0 12px;max-width:480px;width:100%;border:1px solid rgba(255,255,255,0.2)}
     .tips-title{color:#ffd700;font-size:12px;font-weight:600;margin-bottom:4px}
     .tips-list{font-size:11px;color:rgba(255,255,255,0.8);line-height:1.6}
     .chat-container{width:100%;max-width:480px;background:#f5f5f5;border-radius:16px 16px 0 0;flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:60vh}
@@ -22,7 +22,7 @@
     .bubble.bot{background:#fff;color:#333;border-bottom-left-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
     .bubble.user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:4px}
     .quick-btns{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 6px 40px}
-    .quick-btn{background:#fff;border:1.5px solid #667eea;color:#667eea;border-radius:16px;padding:6px 12px;font-size:12px;cursor:pointer}
+    .quick-btn{background:#fff;border:1.5px solid #667eea;color:#667eea;border-radius:16px;padding:6px 12px;font-size:12px;cursor:pointer;transition:all 0.2s}
     .quick-btn:hover{background:#667eea;color:#fff}
     .product-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,0.08);border:1px solid #eee;margin-bottom:10px}
     .product-name{font-size:15px;font-weight:700;color:#222;margin-bottom:6px}
@@ -32,11 +32,13 @@
     .product-tags{margin:8px 0}
     .tag{background:#f0f4ff;color:#667eea;font-size:11px;padding:2px 8px;border-radius:8px;margin-right:4px}
     .tag.region{background:#e8f5e9;color:#2d8a4e}
-    .order-btn{display:block;width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:10px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;margin-top:8px}
+    .order-btn{display:block;width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:10px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;margin-top:8px;transition:all 0.2s}
+    .order-btn:hover{transform:scale(1.02)}
     .input-area{background:#fff;padding:10px 14px;display:flex;gap:10px;align-items:center;border-top:1px solid #eee}
     .input-area input{flex:1;border:2px solid #e0e0e0;border-radius:20px;padding:10px 16px;font-size:14px;outline:none}
     .input-area input:focus{border-color:#667eea}
-    .send-btn{width:42px;height:42px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer}
+    .send-btn{width:42px;height:42px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;transition:all 0.2s}
+    .send-btn:hover{transform:scale(1.08)}
     .typing{display:flex;align-items:center;gap:4px;padding:10px 14px}
     .typing span{width:6px;height:6px;background:#667eea;border-radius:50%;animation:bounce 1.2s infinite}
     .typing span:nth-child(2){animation-delay:0.2s}
@@ -46,21 +48,21 @@
 </head>
 <body>
 <div class="header">
-  <h1>流量卡智能顾问</h1>
+  <h1>🌟 流量卡智能顾问</h1>
   <p>帮您挑选最合适的流量卡</p>
 </div>
 <div class="tips">
-  <div class="tips-title">温馨提示</div>
+  <div class="tips-title">💡 温馨提示</div>
   <div class="tips-list">
-    下单后请<strong>联系润石</strong>跟进<br>
-    留意运营商<strong>官方回访电话</strong><br>
-    卡片<strong>不可转借他人</strong>
+    📞 下单后请<strong>及时联系润石</strong>跟进<br>
+    📞 留意运营商<strong>官方回访电话</strong><br>
+    🚫 卡片<strong>不可转借他人</strong>使用
   </div>
 </div>
 <div class="chat-container">
   <div class="messages" id="messages"></div>
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="输入您的需求，如：29元、200G">
+    <input type="text" id="userInput" placeholder="输入您的需求，如：29元、200G、电信">
     <button class="send-btn" id="sendBtn">➤</button>
   </div>
 </div>
@@ -83,12 +85,11 @@ var PRODUCTS=[
   {id:"lt_hp49",operator:"liantong",name:"联通琥珀卡",price:49,flow:215,region:"发全国",desc:"215G流量+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"}
 ];
 
-function addBotMsg(html, btns) {
+function addBotMsg(html) {
   var wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
+  wrap.className = "bubble-wrap";
   wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot">' + html + '</div>';
   document.getElementById("messages").appendChild(wrap);
-  if (btns) addButtons(btns);
   scrollToBottom();
 }
 
@@ -100,31 +101,18 @@ function addUserMsg(text) {
   scrollToBottom();
 }
 
-function addTyping() {
-  var wrap = document.createElement("div");
-  wrap.id = "typing";
-  wrap.className = "bubble-wrap bot";
-  wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>';
-  document.getElementById("messages").appendChild(wrap);
-  scrollToBottom();
-}
-
-function removeTyping() {
-  var t = document.getElementById("typing");
-  if (t) t.parentNode.removeChild(t);
-}
-
 function addButtons(btns) {
   var wrap = document.createElement("div");
   wrap.className = "quick-btns";
   for (var i = 0; i < btns.length; i++) {
     var btn = document.createElement("button");
     btn.className = "quick-btn";
-    btn.innerHTML = btns[i].label;
+    btn.textContent = btns[i].label;
     btn.onclick = btns[i].action;
     wrap.appendChild(btn);
   }
   document.getElementById("messages").appendChild(wrap);
+  scrollToBottom();
 }
 
 function scrollToBottom() {
@@ -132,9 +120,8 @@ function scrollToBottom() {
   setTimeout(function() { m.scrollTop = m.scrollHeight; }, 50);
 }
 
-function showProducts(list, title) {
+function showProducts(list) {
   var html = '<div style="margin-top:8px">';
-  if (title) html += '<div style="font-weight:600;margin-bottom:8px">' + title + '</div>';
   for (var i = 0; i < list.length; i++) {
     var p = list[i];
     html += '<div class="product-card">' +
@@ -142,7 +129,7 @@ function showProducts(list, title) {
       '<div class="product-price">' + p.price + '元<span>/月</span></div>' +
       '<div class="product-desc">' + p.desc + '</div>' +
       '<div class="product-tags"><span class="tag region">' + p.region + '</span></div>' +
-      '<a class="order-btn" href="' + p.url + '" target="_blank">立即下单</a>' +
+      '<a class="order-btn" href="' + p.url + '" target="_blank">立即下单 →</a>' +
       '</div>';
   }
   html += '</div>';
@@ -151,11 +138,15 @@ function showProducts(list, title) {
 
 function searchProducts(text) {
   text = text.toLowerCase();
-  var result = PRODUCTS;
+  var result = PRODUCTS.slice();
   
-  if (text.indexOf("电信") >= 0) result = result.filter(function(p) { return p.operator === "dianxin"; });
-  else if (text.indexOf("移动") >= 0) result = result.filter(function(p) { return p.operator === "yidong"; });
-  else if (text.indexOf("联通") >= 0) result = result.filter(function(p) { return p.operator === "liantong"; });
+  if (text.indexOf("电信") >= 0 || text.indexOf("dx") >= 0) {
+    result = result.filter(function(p) { return p.operator === "dianxin"; });
+  } else if (text.indexOf("移动") >= 0 || text.indexOf("yd") >= 0) {
+    result = result.filter(function(p) { return p.operator === "yidong"; });
+  } else if (text.indexOf("联通") >= 0 || text.indexOf("lt") >= 0) {
+    result = result.filter(function(p) { return p.operator === "liantong"; });
+  }
   
   var priceMatch = text.match(/(\d{1,2})元/);
   if (priceMatch) {
@@ -163,10 +154,11 @@ function searchProducts(text) {
     result = result.filter(function(p) { return p.price <= maxPrice; });
   }
   
-  var flowMatch = text.match(/(\d{2,3})G/i);
+  var flowMatch = text.match(/(\d{2,3})g/i);
   if (flowMatch) {
     var minFlow = parseInt(flowMatch[1]);
     result = result.sort(function(a, b) { return b.flow - a.flow; });
+    result = result.filter(function(p) { return p.flow >= minFlow * 0.8; });
   }
   
   return result.slice(0, 6);
@@ -179,37 +171,36 @@ function handleSend() {
   input.value = "";
   
   addUserMsg(text);
-  addTyping();
   
   var results = searchProducts(text);
   
   setTimeout(function() {
-    removeTyping();
     if (results.length === 0) {
-      addBotMsg("没有找到符合条件的套餐，请试试：29元、电信卡、200G", [
-        {label:"电信卡", action:function(){ showOperator("dianxin"); }},
-        {label:"移动卡", action:function(){ showOperator("yidong"); }},
-        {label:"联通卡", action:function(){ showOperator("liantong"); }}
+      addBotMsg("没有找到符合条件的套餐呢 😅<br>试试这样说：29元、电信卡、200G");
+      addButtons([
+        {label:"📡 电信卡", action:function(){ showOperator("dianxin"); }},
+        {label:"📶 移动卡", action:function(){ showOperator("yidong"); }},
+        {label:"📟 联通卡", action:function(){ showOperator("liantong"); }}
       ]);
     } else {
-      addBotMsg("为您找到 " + results.length + " 款合适套餐", []);
+      addBotMsg("为您找到 <b>" + results.length + "</b> 款合适套餐 👇");
       var wrap = document.createElement("div");
-      wrap.className = "bubble-wrap bot";
+      wrap.className = "bubble-wrap";
       wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot">' + showProducts(results) + '</div>';
       document.getElementById("messages").appendChild(wrap);
       scrollToBottom();
     }
-  }, 500);
+  }, 400);
 }
 
 function showOperator(op) {
-  var name = op === "dianxin" ? "电信" : (op === "yidong" ? "移动" : "联通");
+  var name = op === "dianxin" ? "📡 电信" : (op === "yidong" ? "📶 移动" : "📟 联通");
   var list = PRODUCTS.filter(function(p) { return p.operator === op; });
   list.sort(function(a, b) { return a.price - b.price; });
   
-  addBotMsg(name + "卡共 " + list.length + " 款，按价格排序", []);
+  addBotMsg(name + " 共 <b>" + list.length + "</b> 款套餐，按价格排序 👇");
   var wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
+  wrap.className = "bubble-wrap";
   wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot">' + showProducts(list) + '</div>';
   document.getElementById("messages").appendChild(wrap);
   scrollToBottom();
@@ -217,9 +208,9 @@ function showOperator(op) {
 
 function showCheap() {
   var list = PRODUCTS.slice().sort(function(a, b) { return a.price - b.price; });
-  addBotMsg("最便宜的套餐", []);
+  addBotMsg("💰 最便宜的套餐 👇");
   var wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
+  wrap.className = "bubble-wrap";
   wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot">' + showProducts(list.slice(0, 5)) + '</div>';
   document.getElementById("messages").appendChild(wrap);
   scrollToBottom();
@@ -231,16 +222,15 @@ document.getElementById("userInput").onkeydown = function(e) {
   if (e.key === "Enter") handleSend();
 };
 
-addTyping();
 setTimeout(function() {
-  removeTyping();
-  addBotMsg("您好！我是流量卡智能顾问<br><br>请告诉我您的需求：<br>• 月租预算（如29元）<br>• 流量需求（如200G）<br>• 运营商偏好", [
-    {label:"电信卡", action:function(){ showOperator("dianxin"); }},
-    {label:"移动卡", action:function(){ showOperator("yidong"); }},
-    {label:"联通卡", action:function(){ showOperator("liantong"); }},
-    {label:"最便宜", action:showCheap}
+  addBotMsg("您好！👋 我是流量卡智能顾问<br><br>请告诉我您的需求：<br>• 月租预算（如29元）<br>• 流量需求（如200G）<br>• 运营商偏好");
+  addButtons([
+    {label:"📡 电信卡", action:function(){ showOperator("dianxin"); }},
+    {label:"📶 移动卡", action:function(){ showOperator("yidong"); }},
+    {label:"📟 联通卡", action:function(){ showOperator("liantong"); }},
+    {label:"💰 最便宜", action:showCheap}
   ]);
-}, 800);
+}, 600);
 </script>
 </body>
 </html>
