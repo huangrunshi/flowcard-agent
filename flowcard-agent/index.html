@@ -24,8 +24,6 @@
     .quick-btns{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 6px 40px}
     .quick-btn{background:#fff;border:1.5px solid #667eea;color:#667eea;border-radius:16px;padding:8px 14px;font-size:12px;cursor:pointer;transition:all 0.2s;font-weight:500}
     .quick-btn:hover{background:#667eea;color:#fff;transform:translateY(-2px)}
-    .quick-btn.group-title{background:#f0f4ff;border:none;color:#667eea;font-weight:600;padding:6px 12px;cursor:default;margin-top:6px}
-    .quick-btn.group-title:hover{transform:none}
     .product-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,0.08);border:1px solid #eee;margin-bottom:10px}
     .product-name{font-size:15px;font-weight:700;color:#222;margin-bottom:6px}
     .product-price{font-size:20px;font-weight:800;color:#667eea}
@@ -83,11 +81,7 @@ var PRODUCTS=[
   {id:"lt_hp49",operator:"liantong",name:"联通琥珀卡",price:49,flow:215,region:"发全国",coverage:"全国",desc:"215G流量+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"}
 ];
 
-var userState = {
-  operator: null,
-  price: null,
-  coverage: null
-};
+var userState = {operator: null, price: null, coverage: null};
 
 function addBotMsg(html) {
   var wrap = document.createElement("div");
@@ -111,13 +105,8 @@ function addButtons(btns) {
   for (var i = 0; i < btns.length; i++) {
     var btn = document.createElement("button");
     btn.className = "quick-btn";
-    if (btns[i].isTitle) {
-      btn.className += " group-title";
-    }
     btn.textContent = btns[i].label;
-    if (!btns[i].isTitle) {
-      btn.onclick = btns[i].action;
-    }
+    btn.onclick = btns[i].action;
     wrap.appendChild(btn);
   }
   document.getElementById("messages").appendChild(wrap);
@@ -148,19 +137,9 @@ function showProducts(list) {
 
 function filterProducts() {
   var result = PRODUCTS.slice();
-  
-  if (userState.operator) {
-    result = result.filter(function(p) { return p.operator === userState.operator; });
-  }
-  
-  if (userState.price) {
-    result = result.filter(function(p) { return p.price <= userState.price; });
-  }
-  
-  if (userState.coverage) {
-    result = result.filter(function(p) { return p.coverage === userState.coverage; });
-  }
-  
+  if (userState.operator) result = result.filter(function(p) { return p.operator === userState.operator; });
+  if (userState.price) result = result.filter(function(p) { return p.price <= userState.price; });
+  if (userState.coverage) result = result.filter(function(p) { return p.coverage === userState.coverage; });
   return result.slice(0, 8);
 }
 
@@ -214,7 +193,6 @@ function selectCoverage(coverage) {
 
 function showResults() {
   var results = filterProducts();
-  
   if (results.length === 0) {
     addBotMsg("😅 抱歉，暂时没有完全符合条件的套餐<br><br>让我为您推荐最接近的几款：");
     userState.coverage = null;
@@ -222,18 +200,16 @@ function showResults() {
   } else {
     addBotMsg("✨ 为您找到 <b>" + results.length + "</b> 款合适套餐，按价格排序 👇");
   }
-  
   var wrap = document.createElement("div");
   wrap.className = "bubble-wrap";
   wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot">' + showProducts(results) + '</div>';
   document.getElementById("messages").appendChild(wrap);
   scrollToBottom();
-  
   setTimeout(function() {
     addBotMsg("💡 <b>下单后记得联系润石跟进哦！</b>");
     addButtons([
       {label:"🔄 重新选择", action:reset},
-      {label:"📞 联系润石", action:function(){ addBotMsg("润石微信：[请咨询客服]"); }}
+      {label:"📞 联系润石", action:function(){ addBotMsg("润石微信：huangrunshi"); }}
     ]);
   }, 800);
 }
@@ -241,9 +217,7 @@ function showResults() {
 function reset() {
   userState = {operator: null, price: null, coverage: null};
   addUserMsg("我想重新选择");
-  setTimeout(function() {
-    askOperator();
-  }, 300);
+  setTimeout(function() { askOperator(); }, 300);
 }
 
 function handleSend() {
@@ -251,34 +225,23 @@ function handleSend() {
   var text = input.value.trim();
   if (!text) return;
   input.value = "";
-  
   addUserMsg(text);
-  
   var t = text.toLowerCase();
-  
-  // 快速匹配
-  if (t.indexOf("电信") >= 0) {
-    selectOperator("dianxin");
-  } else if (t.indexOf("移动") >= 0) {
-    selectOperator("yidong");
-  } else if (t.indexOf("联通") >= 0) {
-    selectOperator("liantong");
-  } else if (t.indexOf("全国") >= 0) {
-    selectCoverage("全国");
-  } else if (t.indexOf("本地") >= 0) {
-    selectCoverage("本地");
-  } else {
+  if (t.indexOf("电信") >= 0) selectOperator("dianxin");
+  else if (t.indexOf("移动") >= 0) selectOperator("yidong");
+  else if (t.indexOf("联通") >= 0) selectOperator("liantong");
+  else if (t.indexOf("全国") >= 0) selectCoverage("全国");
+  else if (t.indexOf("本地") >= 0) selectCoverage("本地");
+  else {
     var priceMatch = t.match(/(\d{1,2})元/);
-    if (priceMatch) {
-      selectPrice(parseInt(priceMatch[1]));
-    } else {
+    if (priceMatch) selectPrice(parseInt(priceMatch[1]));
+    else {
       addBotMsg("我没太听懂呢 😅<br>让我们从选择运营商开始吧");
       askOperator();
     }
   }
 }
 
-// 初始化
 document.getElementById("sendBtn").onclick = handleSend;
 document.getElementById("userInput").onkeydown = function(e) {
   if (e.key === "Enter") handleSend();
