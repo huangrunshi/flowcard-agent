@@ -1,617 +1,98 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>流量卡智能顾问</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>流量卡智能助手</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .header {
-      text-align: center;
-      color: white;
-      padding: 24px 0 16px;
-      width: 100%;
-      max-width: 480px;
-    }
-    .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-    .header p { font-size: 13px; opacity: 0.85; }
-
-    .chat-container {
-      width: 100%;
-      max-width: 480px;
-      background: #f5f5f5;
-      border-radius: 20px 20px 0 0;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      min-height: 70vh;
-    }
-
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .bubble-wrap { display: flex; align-items: flex-end; gap: 8px; }
-    .bubble-wrap.user { flex-direction: row-reverse; }
-
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
-      background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .bubble {
-      max-width: 82%;
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-size: 14px;
-      line-height: 1.6;
-      word-break: break-word;
-    }
-    .bubble.bot {
-      background: white;
-      color: #333;
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    }
-    .bubble.user {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      border-bottom-right-radius: 4px;
-    }
-
-    .quick-btns {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      padding: 4px 0 8px 42px;
-    }
-    .quick-btn {
-      background: white;
-      border: 1.5px solid #764ba2;
-      color: #764ba2;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .quick-btn:hover, .quick-btn:active {
-      background: #764ba2; color: white;
-    }
-
-    .card-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      border: 2px solid transparent;
-      transition: border 0.2s;
-    }
-    .card.best { border-color: #764ba2; }
-    .card-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-    }
-    .card-name { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 6px; }
-    .card-price { font-size: 22px; font-weight: 800; color: #764ba2; }
-    .card-price span { font-size: 13px; color: #999; font-weight: 400; }
-    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
-    .tag {
-      background: #f0eeff;
-      color: #764ba2;
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 10px;
-    }
-    .card-note { font-size: 12px; color: #f5a623; margin-bottom: 10px; }
-    .order-btn {
-      display: block;
-      width: 100%;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      text-align: center;
-      padding: 11px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .order-btn:active { opacity: 0.85; }
-
-    .input-area {
-      background: white;
-      padding: 12px 16px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      border-top: 1px solid #eee;
-    }
-    .input-area input {
-      flex: 1;
-      border: 1.5px solid #ddd;
-      border-radius: 22px;
-      padding: 10px 16px;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.2s;
-    }
-    .input-area input:focus { border-color: #764ba2; }
-    .send-btn {
-      width: 42px; height: 42px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border: none; border-radius: 50%;
-      color: white; font-size: 18px;
-      cursor: pointer; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .typing { display: flex; align-items: center; gap: 4px; padding: 10px 14px; }
-    .typing span {
-      width: 7px; height: 7px; background: #bbb;
-      border-radius: 50%; animation: bounce 1.2s infinite;
-    }
-    .typing span:nth-child(2) { animation-delay: 0.2s; }
-    .typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-6px); }
-    }
-
-    .status-bar {
-      background: rgba(255,255,255,0.1);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 11px;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    .status-bar .tag-item {
-      display: inline-block;
-      background: rgba(255,255,255,0.2);
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin: 2px;
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
+    .header{text-align:center;color:#fff;padding:20px 0 16px;width:100%;max-width:480px}
+    .header h1{font-size:22px;margin-bottom:6px}
+    .header p{font-size:13px;opacity:0.85}
+    .chat-container{width:100%;max-width:480px;background:#f5f7fa;border-radius:20px 20px 0 0;flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:70vh}
+    .messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+    .bubble-wrap{display:flex;align-items:flex-end;gap:8px}
+    .bubble-wrap.user{flex-direction:row-reverse}
+    .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+    .bubble{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word}
+    .bubble.bot{background:#fff;color:#333;border-bottom-left-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    .bubble.user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:4px}
+    .quick-btns{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px 40px}
+    .quick-btn{background:#fff;border:1.5px solid #667eea;color:#667eea;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all 0.2s}
+    .quick-btn:hover{background:#667eea;color:#fff}
+    .product-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+    .product-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);border:2px solid transparent;transition:border 0.2s}
+    .product-card:hover{border-color:#667eea}
+    .product-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+    .product-name{font-size:15px;font-weight:700;color:#222}
+    .product-price{font-size:20px;font-weight:800;color:#667eea}
+    .product-price span{font-size:12px;color:#999;font-weight:400}
+    .product-desc{font-size:12px;color:#666;margin-bottom:8px;line-height:1.4}
+    .product-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+    .tag{background:#f0f1ff;color:#667eea;font-size:11px;padding:2px 8px;border-radius:10px}
+    .tag.region{background:#e8f5e9;color:#4caf50}
+    .order-btn{display:block;width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:10px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none}
+    .input-area{background:#fff;padding:12px 16px;display:flex;gap:10px;align-items:center;border-top:1px solid #eee}
+    .input-area input{flex:1;border:1.5px solid #ddd;border-radius:22px;padding:10px 16px;font-size:14px;outline:none}
+    .input-area input:focus{border-color:#667eea}
+    .send-btn{width:40px;height:40px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer}
+    .typing{display:flex;align-items:center;gap:4px;padding:10px 14px}
+    .typing span{width:6px;height:6px;background:#bbb;border-radius:50%;animation:bounce 1.2s infinite}
+    .typing span:nth-child(2){animation-delay:0.2s}
+    .typing span:nth-child(3){animation-delay:0.4s}
+    @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+    .stats{font-size:12px;color:#888;text-align:center;padding:8px}
   </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>📱 流量卡智能顾问</h1>
-  <p>告诉我需求，我帮你精准匹配最划算的套餐</p>
-</div>
-
+<div class="header"><h1>📱 流量卡智能助手</h1><p>三大运营商流量卡推荐，一键下单</p></div>
 <div class="chat-container">
   <div class="messages" id="messages"></div>
-  <div class="input-area">
-    <input type="text" id="userInput" placeholder="随便聊聊，比如「学生党，想要便宜大流量」" />
-    <button class="send-btn" onclick="handleSend()">➤</button>
-  </div>
+  <div class="input-area"><input type="text" id="userInput" placeholder="告诉我你的需求，如：29元、200G、联通"><button class="send-btn" onclick="handleSend()">➤</button></div>
 </div>
-
 <script>
-// ===================== 套餐数据库 =====================
-const PLANS = [
-  { id: "3828", name: "移动少年卡", price: 30, data: 300, extraData: 30, call: 100, minAge: 18, maxAge: 25, ship: "报单发货", local: false, highlight: "全场流量最大，会员权益N选1", note: "仅限18-25岁", tags: ["300G通用", "30G定向", "18-25岁"] },
-  { id: "3827", name: "广电花菜卡", price: 39, data: 222, extraData: 0, call: 0, minAge: 18, maxAge: 60, ship: "全国发货", local: true, highlight: "222G纯通用+本地归属", note: "通话按量计费", tags: ["222G通用", "本地归属"] },
-  { id: "3794", name: "移动七彩卡2.0", price: 29, data: 220, extraData: 30, call: 2000, minAge: 18, maxAge: 60, ship: "顺丰到付", local: false, highlight: "流量+通话双天花板", note: "顺丰到付", tags: ["220G通用", "30G定向", "2000分钟"] },
-  { id: "3751", name: "移动智慧卡", price: 29, data: 220, extraData: 30, call: 2000, minAge: 18, maxAge: 60, ship: "顺丰到付", local: false, highlight: "综合性价比之王", note: "顺丰到付", tags: ["220G通用", "30G定向", "2000分钟"] },
-  { id: "3815", name: "联通醉酒卡", price: 40, data: 200, extraData: 0, call: 100, minAge: 18, maxAge: 60, ship: "激活后发货", local: false, highlight: "200G纯通用", note: "激活首充后发货", tags: ["200G通用", "全国发货"] },
-  { id: "3806", name: "联通飞驰卡", price: 19, data: 210, extraData: 0, call: 100, minAge: 18, maxAge: 50, ship: "全国发货", local: false, highlight: "月租最低", note: "⚠️ NFC激活麻烦", tags: ["210G通用", "19元月租"] },
-  { id: "3718", name: "联通饺子卡", price: 29, data: 150, extraData: 0, call: 200, minAge: 18, maxAge: 28, ship: "激活后发货", local: false, highlight: "通话多+会员权益", note: "仅限18-28岁", tags: ["150G通用", "200分钟", "18-28岁"] },
-  { id: "3802", name: "联通海龙卡", price: 29, data: 130, extraData: 0, call: 200, minAge: 18, maxAge: 24, ship: "全国发货", local: false, highlight: "年轻人专属", note: "仅限18-24岁", tags: ["130G通用", "200分钟", "18-24岁"] },
-  { id: "3730", name: "联通东山卡", price: 40, data: 155, extraData: 0, call: 100, minAge: 18, maxAge: 60, ship: "全国发货", local: false, highlight: "长期套餐", note: "三照下单", tags: ["155G通用", "长期套餐"] },
-  { id: "3822", name: "联通绘梦卡", price: 39, data: 20, extraData: 30, call: 100, minAge: 18, maxAge: 60, ship: "全国发货", local: true, highlight: "本地归属+上门激活", note: "通用流量较少", tags: ["本地归属", "上门激活"] },
-  { id: "3322", name: "广电奔马卡", price: 39, data: 90, extraData: 0, call: 0, minAge: 18, maxAge: 60, ship: "全国发货", local: true, highlight: "本地归属", note: "通话按量计费", tags: ["90G通用", "本地归属"] },
-  { id: "3814", name: "联通惊喜卡2.0", price: 39, data: 25, extraData: 30, call: 100, minAge: 18, maxAge: 60, ship: "认证后发货", local: false, highlight: "认证发货规范", note: "流量次月到账", tags: ["25G通用", "30G定向"] }
+// 套餐数据库
+const PRODUCTS=[
+  // 电信
+  {id:"dx_xh39",operator:"dianxin",name:"电信星华卡",price:39,flow:185,region:"仅发湖南",desc:"39元185G流量+0.1元/分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3828"},
+  {id:"dx_th39",operator:"dianxin",name:"电信太华卡",price:39,flow:205,region:"仅发山东",desc:"39元205G流量+0.1元/分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3794"},
+  {id:"dx_bh29",operator:"dianxin",name:"电信北合卡",price:29,flow:140,region:"仅发河北",desc:"29元140G流量",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3827"},
+  {id:"dx_rx19",operator:"dianxin",name:"电信瑞星卡",price:19,flow:90,region:"发全国",desc:"19元90G流量+400分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"dx_jn28",operator:"dianxin",name:"电信先锋卡",price:28,flow:210,region:"仅发济南",desc:"28元210G流量+200分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"dx_cy29",operator:"dianxin",name:"电信畅游卡",price:29,flow:280,region:"发全国",desc:"29元280G流量+300分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"dx_bh19",operator:"dianxin",name:"电信北海卡",price:19,flow:200,region:"仅发河北",desc:"19元200G流量",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  // 移动
+  {id:"yd_cy39",operator:"yidong",name:"移动畅言卡",price:39,flow:380,region:"发全国",desc:"39元380G流量+2000分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"yd_dy29",operator:"yidong",name:"移动多言卡",price:29,flow:250,region:"发全国",desc:"29元250G流量+2000分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"yd_yy19",operator:"yidong",name:"移动易云卡",price:19,flow:50,region:"仅发北京",desc:"19元50G流量",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"yd_ty19",operator:"yidong",name:"移动天云卡",price:19.4,flow:240,region:"仅发河南",desc:"19.4元240G流量+400分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"yd_ds29",operator:"yidong",name:"移动东山卡",price:29,flow:300,region:"仅发山东",desc:"29元300G流量+100分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"yd_cl20",operator:"yidong",name:"移动川流卡",price:20,flow:350,region:"仅发四川",desc:"20元350G流量+400分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"yd_fh18",operator:"yidong",name:"移动绯红卡",price:18,flow:90,region:"发全国",desc:"18元90G流量+300分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  // 联通
+  {id:"lt_ly40",operator:"liantong",name:"联通林云卡",price:40,flow:200,region:"发全国",desc:"40元200G流量+100分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"lt_qy39",operator:"liantong",name:"联通千云卡",price:39,flow:280,region:"仅发河北",desc:"39元280G流量+200分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"lt_jc39",operator:"liantong",name:"联通巨川卡",price:39,flow:520,region:"仅发四川",desc:"39元520G流量+300分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"lt_jh29",operator:"liantong",name:"联通江会卡",price:29,flow:160,region:"仅发浙江",desc:"29元160G流量+500分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"lt_hp49",operator:"liantong",name:"联通琥珀卡",price:49,flow:215,region:"发全国",desc:"49元215G流量+100分钟",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
+  {id:"lt_sy29",operator:"liantong",name:"联通双语卡",price:29,flow:150,region:"仅发浙江",desc:"29元150G流量+100分钟+2T云盘",orderUrl:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"}
 ];
-
-// ===================== 智能状态机 =====================
-const state = {
-  budget: null,
-  dataNeeds: null,      // "max" | "high" | "mid" | "low"
-  callNeeds: null,      // "high" | "mid" | "low"
-  age: null,
-  localNeeds: null,
-  conversationHistory: []
-};
-
-// ===================== NLU: 自然语言理解 =====================
-function analyzeInput(text) {
-  const result = { budget: null, dataNeeds: null, callNeeds: null, age: null, localNeeds: null, intent: null };
-  const t = text.toLowerCase().replace(/\s+/g, '');
-
-  // 预算识别
-  const budgetMatch = t.match(/(\d+)\s*元/);
-  if (budgetMatch) result.budget = parseInt(budgetMatch[1]);
-  if (t.includes('不限') || t.includes('随便') || t.includes('不在乎')) result.budget = 999;
-  if (t.includes('便宜') || t.includes('省钱') || t.includes('最低')) result.budget = result.budget || 29;
-  if (t.includes('越便宜越好') || t.includes('越低越好')) result.budget = 19;
-
-  // 流量需求识别
-  if (t.includes('越多越好') || t.includes('大流量') || t.includes('流量王') || t.includes('超大流量')) result.dataNeeds = 'max';
-  else if (t.includes('很多') || t.includes('大量') || t.includes('刷视频') || t.includes('看剧') || t.includes('直播')) result.dataNeeds = 'high';
-  else if (t.includes('够用') || t.includes('一般') || t.includes('正常')) result.dataNeeds = 'mid';
-  else if (t.includes('很少') || t.includes('不多') || t.includes('够用就行')) result.dataNeeds = 'low';
-
-  // 通话需求识别
-  if (t.includes('经常打') || t.includes('通话多') || t.includes('打电话多') || t.includes('很多电话') || t.includes('业务电话')) result.callNeeds = 'high';
-  else if (t.includes('偶尔打') || t.includes('有时打') || t.includes('还行')) result.callNeeds = 'mid';
-  else if (t.includes('不打') || t.includes('很少打') || t.includes('基本不打') || t.includes('不打电话')) result.callNeeds = 'low';
-
-  // 年龄识别
-  const ageMatch = t.match(/(\d+)\s*岁/);
-  if (ageMatch) result.age = parseInt(ageMatch[1]);
-  if (t.includes('学生') || t.includes('大学') || t.includes('在校') || t.includes('刚毕业')) result.age = result.age || 22;
-  if (t.includes('应届') || t.includes('实习生')) result.age = result.age || 23;
-  if (t.includes('中年') || t.includes('工作多年') || t.includes('上班')) result.age = result.age || 35;
-
-  // 归属地识别
-  if (t.includes('本地归属') || t.includes('本地号码') || t.includes('本地卡') || t.includes('当地区号')) result.localNeeds = true;
-  if (t.includes('不需要本地') || t.includes('全国通用') || t.includes('不在意归属')) result.localNeeds = false;
-
-  // 意图识别
-  if (t.includes('推荐') || t.includes('找') || t.includes('有没有') || t.includes('想要') || t.includes('需要')) result.intent = 'recommend';
-  if (t.includes('查看全部') || t.includes('所有套餐') || t.includes('全部套餐')) result.intent = 'showAll';
-  if (t.includes('重新') || t.includes('重来') || t.includes('重新选')) result.intent = 'reset';
-
-  return result;
-}
-
-// ===================== 智能追问逻辑 =====================
-function getMissingInfo() {
-  const missing = [];
-
-  if (state.budget === null) {
-    missing.push({ key: 'budget', question: '您每月的预算大概是多少？', priority: 1 });
-  }
-
-  if (state.dataNeeds === null && state.callNeeds === null) {
-    missing.push({ key: 'usage', question: '您主要用流量还是打电话？或者两者都需要？', priority: 2 });
-  }
-
-  if (state.age === null) {
-    missing.push({ key: 'age', question: '请问您大概多大年龄？（部分套餐有年龄限制）', priority: 3 });
-  }
-
-  if (state.localNeeds === null && missing.length === 0) {
-    missing.push({ key: 'local', question: '需要本地归属地吗？', priority: 4 });
-  }
-
-  return missing.sort((a, b) => a.priority - b.priority);
-}
-
-function generateSmartQuestion() {
-  const missing = getMissingInfo();
-
-  if (missing.length === 0) {
-    return null; // 信息足够，可以推荐了
-  }
-
-  const first = missing[0];
-  let quickBtns = [];
-
-  switch (first.key) {
-    case 'budget':
-      quickBtns = [
-        { label: '20元以内', action: () => { state.budget = 19; processUserInput('20元以内', true); } },
-        { label: '30元以内', action: () => { state.budget = 30; processUserInput('30元以内', true); } },
-        { label: '40元以内', action: () => { state.budget = 40; processUserInput('40元以内', true); } },
-        { label: '不限预算', action: () => { state.budget = 999; processUserInput('不限预算', true); } }
-      ];
-      break;
-    case 'usage':
-      quickBtns = [
-        { label: '流量越多越好', action: () => { state.dataNeeds = 'max'; processUserInput('流量越多越好', true); } },
-        { label: '通话也要多', action: () => { state.callNeeds = 'high'; state.dataNeeds = 'high'; processUserInput('通话也要多', true); } },
-        { label: '够用就行', action: () => { state.dataNeeds = 'mid'; state.callNeeds = 'mid'; processUserInput('够用就行', true); } }
-      ];
-      break;
-    case 'age':
-      quickBtns = [
-        { label: '18-24岁', action: () => { state.age = 22; processUserInput('18-24岁', true); } },
-        { label: '25-28岁', action: () => { state.age = 26; processUserInput('25-28岁', true); } },
-        { label: '29-60岁', action: () => { state.age = 35; processUserInput('29-60岁', true); } }
-      ];
-      break;
-    case 'local':
-      quickBtns = [
-        { label: '需要本地归属', action: () => { state.localNeeds = true; processUserInput('需要本地归属', true); } },
-        { label: '不需要', action: () => { state.localNeeds = false; processUserInput('不需要', true); } }
-      ];
-      break;
-  }
-
-  return { question: first.question, quickBtns };
-}
-
-// ===================== 推荐引擎 =====================
-function recommend() {
-  let candidates = PLANS.filter(p => {
-    if (state.age !== null && (state.age < p.minAge || state.age > p.maxAge)) return false;
-    if (state.budget !== null && p.price > state.budget) return false;
-    return true;
-  });
-
-  if (state.localNeeds === true) {
-    const localPlans = candidates.filter(p => p.local);
-    if (localPlans.length > 0) candidates = localPlans;
-  }
-
-  // 排序策略
-  if (state.callNeeds === 'high') {
-    candidates.sort((a, b) => {
-      if (b.call !== a.call) return b.call - a.call;
-      return b.data - a.data;
-    });
-  } else if (state.dataNeeds === 'max' || state.dataNeeds === 'high') {
-    candidates.sort((a, b) => {
-      const aTotal = a.data + a.extraData;
-      const bTotal = b.data + b.extraData;
-      return bTotal - aTotal;
-    });
-  } else {
-    // 综合排序：性价比优先
-    candidates.sort((a, b) => {
-      const aScore = (a.data + a.extraData) / a.price + a.call / 100;
-      const bScore = (b.data + b.extraData) / b.price + b.call / 100;
-      return bScore - aScore;
-    });
-  }
-
-  return candidates.slice(0, 3);
-}
-
-// ===================== 渲染函数 =====================
-function appendBotMsg(html, quickBtns) {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
-  wrap.innerHTML = `<div class="avatar">🤖</div><div class="bubble bot">${html}</div>`;
-  document.getElementById("messages").appendChild(wrap);
-
-  if (quickBtns && quickBtns.length) {
-    const btnWrap = document.createElement("div");
-    btnWrap.className = "quick-btns";
-    quickBtns.forEach(btn => {
-      const b = document.createElement("button");
-      b.className = "quick-btn";
-      b.textContent = btn.label;
-      b.onclick = () => {
-        btn.action();
-        btnWrap.remove();
-      };
-      btnWrap.appendChild(b);
-    });
-    document.getElementById("messages").appendChild(btnWrap);
-  }
-  scrollBottom();
-}
-
-function appendUserMsg(text) {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap user";
-  wrap.innerHTML = `<div class="bubble user">${text}</div><div class="avatar">🙋</div>`;
-  document.getElementById("messages").appendChild(wrap);
-  scrollBottom();
-}
-
-function appendTyping() {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
-  wrap.id = "typing";
-  wrap.innerHTML = `<div class="avatar">🤖</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>`;
-  document.getElementById("messages").appendChild(wrap);
-  scrollBottom();
-}
-
-function removeTyping() {
-  const t = document.getElementById("typing");
-  if (t) t.remove();
-}
-
-function appendCards(plans) {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
-  const cardList = document.createElement("div");
-  cardList.className = "card-list";
-  cardList.style.maxWidth = "340px";
-
-  plans.forEach((p, i) => {
-    const card = document.createElement("div");
-    card.className = "card" + (i === 0 ? " best" : "");
-    const orderUrl = `https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=${p.id}`;
-    const totalData = p.data + p.extraData;
-    card.innerHTML = `
-      ${i === 0 ? '<div class="card-badge">🌟 最推荐</div>' : (i === 1 ? '<div class="card-badge" style="background:#aaa">备选</div>' : '')}
-      <div class="card-name">${p.name}</div>
-      <div class="card-price">${p.price}元<span>/月</span></div>
-      <div class="card-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
-      ${p.note ? `<div class="card-note">⚠️ ${p.note}</div>` : ""}
-      <a class="order-btn" href="${orderUrl}" target="_blank">立即办理 →</a>
-    `;
-    cardList.appendChild(card);
-  });
-
-  wrap.appendChild(document.createElement("div")).className = "avatar";
-  wrap.children[0].textContent = "🤖";
-  wrap.appendChild(cardList);
-  document.getElementById("messages").appendChild(wrap);
-  scrollBottom();
-}
-
-function scrollBottom() {
-  const m = document.getElementById("messages");
-  setTimeout(() => m.scrollTop = m.scrollHeight, 50);
-}
-
-function updateStatusBar() {
-  let bar = document.getElementById("status-bar");
-  if (!bar) {
-    bar = document.createElement("div");
-    bar.id = "status-bar";
-    bar.className = "status-bar";
-    document.querySelector(".chat-container").insertBefore(bar, document.querySelector(".messages"));
-  }
-
-  const tags = [];
-  if (state.budget !== null) tags.push(`预算: ${state.budget === 999 ? '不限' : state.budget + '元'}`);
-  if (state.dataNeeds) tags.push(`流量: ${state.dataNeeds === 'max' ? '越多越好' : state.dataNeeds === 'high' ? '大量' : '一般'}`);
-  if (state.callNeeds) tags.push(`通话: ${state.callNeeds === 'high' ? '多' : state.callNeeds === 'low' ? '少' : '一般'}`);
-  if (state.age) tags.push(`年龄: ${state.age}岁`);
-  if (state.localNeeds !== null) tags.push(state.localNeeds ? '本地归属' : '全国通用');
-
-  if (tags.length > 0) {
-    bar.innerHTML = tags.map(t => `<span class="tag-item">${t}</span>`).join('');
-    bar.style.display = 'block';
-  } else {
-    bar.style.display = 'none';
-  }
-}
-
-// ===================== 核心对话处理 =====================
-function botReply(text, quickBtns, delay = 500) {
-  appendTyping();
-  setTimeout(() => {
-    removeTyping();
-    appendBotMsg(text, quickBtns);
-  }, delay);
-}
-
-function processUserInput(text, skipAppend = false) {
-  if (!skipAppend) appendUserMsg(text);
-  state.conversationHistory.push({ role: 'user', text });
-
-  const analysis = analyzeInput(text);
-
-  // 更新状态
-  if (analysis.budget !== null) state.budget = analysis.budget;
-  if (analysis.dataNeeds !== null) state.dataNeeds = analysis.dataNeeds;
-  if (analysis.callNeeds !== null) state.callNeeds = analysis.callNeeds;
-  if (analysis.age !== null) state.age = analysis.age;
-  if (analysis.localNeeds !== null) state.localNeeds = analysis.localNeeds;
-
-  updateStatusBar();
-
-  // 处理特殊意图
-  if (analysis.intent === 'reset') {
-    resetState();
-    startConversation();
-    return;
-  }
-
-  if (analysis.intent === 'showAll') {
-    showAllPlans();
-    return;
-  }
-
-  // 检查是否可以推荐
-  const hasEnoughInfo = state.budget !== null && (state.dataNeeds !== null || state.callNeeds !== null) && state.age !== null;
-
-  if (hasEnoughInfo) {
-    const missing = getMissingInfo();
-    if (missing.length === 0) {
-      showRecommendation();
-    } else {
-      // 还有一点信息缺失，追问
-      const qa = generateSmartQuestion();
-      botReply(qa.question, qa.quickBtns);
-    }
-  } else {
-    // 信息不够，智能追问
-    const qa = generateSmartQuestion();
-    if (qa) {
-      botReply(qa.question, qa.quickBtns);
-    } else {
-      showRecommendation();
-    }
-  }
-}
-
-function showRecommendation() {
-  const plans = recommend();
-  if (!plans.length) {
-    botReply("抱歉，暂时没有完全符合条件的套餐 😅<br>要不放宽一下条件？比如提高预算或取消年龄限制？", [
-      { label: '🔄 重新选择', action: () => { resetState(); startConversation(); } },
-      { label: '📋 查看全部套餐', action: () => showAllPlans() }
-    ]);
-    return;
-  }
-
-  botReply(`根据您的需求，为您精准匹配到 <b>${plans.length} 款</b>最合适的套餐 👇`);
-  setTimeout(() => appendCards(plans), 600);
-  setTimeout(() => {
-    botReply("点击「立即办理」直接跳转下单 😊<br>还有其他问题吗？", [
-      { label: '🔄 重新选择', action: () => { resetState(); startConversation(); } },
-      { label: '📋 查看全部套餐', action: () => showAllPlans() }
-    ]);
-  }, 1200);
-}
-
-function showAllPlans() {
-  appendUserMsg("查看全部套餐");
-  botReply("全部全国可发套餐如下，点击直接办理 👇");
-  setTimeout(() => appendCards(PLANS), 600);
-}
-
-function resetState() {
-  state.budget = null;
-  state.dataNeeds = null;
-  state.callNeeds = null;
-  state.age = null;
-  state.localNeeds = null;
-  state.conversationHistory = [];
-  updateStatusBar();
-}
-
-function startConversation() {
-  botReply(
-    "您好！我是流量卡顾问 👋<br>您可以随便说说您的需求，比如：<br>• 「学生党，想要便宜大流量」<br>• 「30岁，通话多，流量也要大」<br>• 「预算30以内，不打电话」",
-    [
-      { label: '大流量+便宜', action: () => processUserInput('流量越多越好，月租便宜', true) },
-      { label: '通话多', action: () => processUserInput('打电话多，流量也要有', true) },
-      { label: '随便看看', action: () => showAllPlans() }
-    ],
-    800
-  );
-}
-
-function handleSend() {
-  const input = document.getElementById("userInput");
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = "";
-  processUserInput(text);
-}
-
-document.getElementById("userInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") handleSend();
-});
-
-window.onload = () => startConversation();
+const OPS=[{id:"dianxin",name:"📡 电信",kw:["电信","dx"]},{id:"yidong",name:"📶 移动",kw:["移动","yd"]},{id:"liantong",name:"📟 联通",kw:["联通","lt"]}];
+function analyze(t){const r={op:null,price:null,flow:null,intent:null};for(let o of OPS)for(let k of o.kw)if(t.includes(k)){r.op=o.id;break}let m=t.match(/(\d{1,2})元/);if(m)r.price=parseInt(m[1]);m=t.match(/(\d{2,4})G/);if(m)r.flow=parseInt(m[1]);if(t.includes("全部")||t.includes("所有"))r.intent="all";if(t.includes("便宜")||t.includes("优惠"))r.intent="cheap";return r}
+function filter(an){let r=PRODUCTS;if(an.op)r=r.filter(p=>p.operator===an.op);if(an.price)r=r.filter(p=>p.price<=an.price);if(an.flow)r=r.sort((a,b)=>b.flow-a.flow).filter(p=>p.flow>=an.flow*0.8);if(an.intent==="cheap")r=r.sort((a,b)=>a.price-b.price).slice(0,6);else if(an.intent==="all")r=r;else r=r.slice(0,8);return r}
+function renderProducts(ps,title){let h='<div class="product-list">'+(title?`<div style="font-weight:600;margin-bottom:8px;color:#333">${title}</div>`:"");ps.forEach(p=>{h+=`<div class="product-card"><div class="product-header"><div class="product-name">${p.name}</div><div class="product-price">${p.price}元<span>/月</span></div></div><div class="product-desc">${p.desc}</div><div class="product-tags"><span class="tag region">${p.region}</span></div><a class="order-btn" href="${p.orderUrl}" target="_blank">立即下单 →</a></div>`});h+='</div>';return h}
+function bot(t,btns,q){appendTyping();setTimeout(()=>{removeTyping();appendBot(t,btns);if(q)scrollBottom()},500)}
+function appendBot(t,btns){let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${t}</div>`;document.getElementById("messages").appendChild(w);if(btns){let bw=document.createElement("div");bw.className="quick-btns";btns.forEach(b=>{let btn=document.createElement("button");btn.className="quick-btn";btn.textContent=b.label;btn.onclick=()=>{bw.remove();b.action()};bw.appendChild(btn)});document.getElementById("messages").appendChild(bw)}scrollBottom()}
+function appendUser(t){let w=document.createElement("div");w.className="bubble-wrap user";w.innerHTML=`<div class="bubble user">${t}</div><div class="avatar">🙋</div>`;document.getElementById("messages").appendChild(w);scrollBottom()}
+function appendTyping(){let w=document.createElement("div");w.className="bubble-wrap bot";w.id="typing";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>`;document.getElementById("messages").appendChild(w);scrollBottom()}
+function removeTyping(){let t=document.getElementById("typing");if(t)t.remove()}
+function scrollBottom(){setTimeout(()=>document.getElementById("messages").scrollTop=document.getElementById("messages").scrollHeight,50)}
+function handle(){let i=document.getElementById("userInput"),t=i.value.trim();if(!t)return;i.value="";let a=analyze(t.toLowerCase()),ps=filter(a);appendUser(t);if(ps.length===0){bot("抱歉，没有找到符合条件的套餐 😅",[{label:"📡 电信卡",action:()=>showOp("dianxin")},{label:"📶 移动卡",action:()=>showOp("yidong")},{label:"📟 联通卡",action:()=>showOp("liantong")}]);return}let msg=a.intent==="cheap"?"为您找到最优惠的套餐 👇":a.intent==="all"?"全部套餐 👇":`为您找到 <b>${ps.length}</b>款合适套餐 👇`;bot(msg);setTimeout(()=>{let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps)}</div>`;document.getElementById("messages").appendChild(w);scrollBottom()},400)}
+function showOp(op){let o=OPS.find(x=>x.id===op),ps=PRODUCTS.filter(p=>p.operator===op).sort((a,b)=>a.price-b.price);bot(`<b>${o.name}</b>共${ps.length}款套餐 👇`);setTimeout(()=>{let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps)}</div>`;document.getElementById("messages").appendChild(w);scrollBottom()},400)}
+function start(){bot("您好！我是流量卡智能助手 👋<br>告诉我：<br>• 想要的月租（如29元）<br>• 流量需求（如200G）<br>• 运营商偏好（电信/移动/联通）",[{label:"📡 电信卡",action:()=>showOp("dianxin")},{label:"📶 移动卡",action:()=>showOp("yidong")},{label:"📟 联通卡",action:()=>showOp("liantong")},{label:"💰 最便宜",action:()=>{let ps=PRODUCTS.sort((a,b)=>a.price-b.price).slice(0,6);bot("最便宜的几款 👇");setTimeout(()=>{let w=document.createElement("div");w.className="bubble-wrap bot";w.innerHTML=`<div class="avatar">🤖</div><div class="bubble bot">${renderProducts(ps,"💰 超值低价")}</div>`;document.getElementById("messages").appendChild(w);scrollBottom()},400)}}])}
+document.getElementById("userInput").addEventListener("keydown",e=>{if(e.key==="Enter")handle()});
+window.onload=start;
 </script>
 </body>
 </html>
