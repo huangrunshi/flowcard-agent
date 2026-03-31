@@ -4,6 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>流量卡智能顾问</title>
+  <!-- 51.LA 统计 -->
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({id:"3PTYJy7p2PjoS50k",ck:"3PTYJy7p2PjoS50k"})</script>
+<script>
+// 来源跟踪：从URL参数获取来源
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var from = params.get('from');
+  if(from){
+    LA.trackEvent('访问来源', from, window.location.href);
+    // 记录到本地存储用于显示
+    localStorage.setItem('visit_source', from);
+  }
+})();
+</script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
