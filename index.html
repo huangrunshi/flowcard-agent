@@ -255,63 +255,73 @@ async function loadConfig(){
 function applyConfig(){
   if(!appConfig) return;
   var root = document.documentElement;
+  var c = appConfig.chat || {};
   
-  // 配色
+  // 应用配色
   if(appConfig.colors){
-    var c = appConfig.colors;
-    root.style.setProperty('--primary', c.primary || '#0d9488');
-    root.style.setProperty('--primary-light', c.primaryLight || '#0f766e');
-    root.style.setProperty('--accent', c.accent || '#5eead4');
-    root.style.setProperty('--bg-main', c.background || '#141824');
-    root.style.setProperty('--text-primary', c.textPrimary || '#e2e8f0');
-    root.style.setProperty('--text-secondary', c.textSecondary || '#94a3b8');
-    root.style.setProperty('--text-muted', c.textMuted || '#64748b');
-    
-    // 应用到关键元素
-    var primaryColor = c.primary || '#0d9488';
-    var accentColor = c.accent || '#5eead4';
-    var textColor = c.textPrimary || '#e2e8f0';
-    var textSec = c.textSecondary || '#94a3b8';
-    
-    // 按钮
-    document.querySelectorAll('.btn-order').forEach(function(el){
-      el.style.background = 'linear-gradient(135deg,' + primaryColor + ',' + (c.primaryLight || '#0f766e') + ')';
-    });
-    document.querySelectorAll('.send-btn').forEach(function(el){
-      el.style.background = 'linear-gradient(135deg,' + primaryColor + ',' + (c.primaryLight || '#0f766e') + ')';
-    });
-    // 头像
-    document.querySelectorAll('.chat-avatar').forEach(function(el){
-      el.style.border = '2px solid ' + accentColor;
-    });
-    // 价格
-    document.querySelectorAll('.price-num, .spec-val').forEach(function(el){
-      el.style.color = accentColor;
-    });
+    root.style.setProperty('--primary', appConfig.colors.primary || '#0d9488');
+    root.style.setProperty('--accent', appConfig.colors.accent || '#5eead4');
   }
   
-  // 布局设置
-  if(appConfig.layout){
-    var l = appConfig.layout;
-    document.querySelectorAll('.chat-avatar').forEach(function(el){
-      el.style.width = l.avatarSize + 'px';
-      el.style.height = l.avatarSize + 'px';
-      el.style.fontSize = (l.avatarSize * 0.5) + 'px';
+  // 应用气泡样式
+  if(c.aiBubbleBg){
+    document.querySelectorAll('.chat-bubble.bot .chat-content').forEach(function(el){
+      el.style.background = c.aiBubbleBg;
     });
+  }
+  if(c.userBubbleBg){
+    document.querySelectorAll('.chat-bubble.user .chat-content').forEach(function(el){
+      el.style.background = c.userBubbleBg;
+    });
+  }
+  if(c.aiBubbleRadius){
+    document.querySelectorAll('.chat-bubble.bot .chat-content').forEach(function(el){
+      el.style.borderRadius = c.aiBubbleRadius + 'px';
+    });
+  }
+  if(c.userBubbleRadius){
+    document.querySelectorAll('.chat-bubble.user .chat-content').forEach(function(el){
+      el.style.borderRadius = c.userBubbleRadius + 'px';
+    });
+  }
+  if(c.aiBubbleTextColor){
+    document.querySelectorAll('.chat-bubble.bot .chat-content').forEach(function(el){
+      el.style.color = c.aiBubbleTextColor;
+    });
+  }
+  if(c.userBubbleTextColor){
+    document.querySelectorAll('.chat-bubble.user .chat-content').forEach(function(el){
+      el.style.color = c.userBubbleTextColor;
+    });
+  }
+  if(c.avatarSize){
+    document.querySelectorAll('.chat-avatar').forEach(function(el){
+      el.style.width = c.avatarSize + 'px';
+      el.style.height = c.avatarSize + 'px';
+      el.style.fontSize = (c.avatarSize * 0.5) + 'px';
+    });
+  }
+  if(c.bubbleSpacing){
     document.querySelectorAll('.chat-bubble').forEach(function(el){
-      el.style.marginBottom = l.bubbleSpacing + 'px';
+      el.style.marginBottom = c.bubbleSpacing + 'px';
     });
-    document.querySelectorAll('.result-card').forEach(function(el){
-      el.style.padding = l.cardPadding + 'px';
-      el.style.borderRadius = l.borderRadius + 'px';
+  }
+  if(c.chatMaxWidth){
+    document.querySelectorAll('.main').forEach(function(el){
+      el.style.maxWidth = c.chatMaxWidth + 'px';
     });
   }
   
-  // 更新标题和副标题
-  if(appConfig.site){
-    var titleEl = document.querySelector('.header-title');
-    var subEl = document.querySelector('.header-badges');
-    if(titleEl && appConfig.site.title) titleEl.innerHTML = '📱 ' + appConfig.site.title;
+  // 更新头像图标
+  if(c.aiAvatarIcon){
+    document.querySelectorAll('.chat-bubble.bot .chat-avatar').forEach(function(el){
+      el.textContent = c.aiAvatarIcon;
+    });
+  }
+  if(c.userAvatarIcon){
+    document.querySelectorAll('.chat-bubble.user .chat-avatar').forEach(function(el){
+      el.textContent = c.userAvatarIcon;
+    });
   }
 }
 
