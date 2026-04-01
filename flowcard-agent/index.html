@@ -2,255 +2,352 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>流量卡智能顾问</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>流量卡智能顾问 - 3秒匹配最适合的卡</title>
+  <!-- 51.LA 统计 -->
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({id:"3PTYJy7p2PjoS50k",ck:"3PTYJy7p2PjoS50k"})</script>
+  <script>
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var from = params.get('from');
+    if(from){LA.trackEvent('访问来源', from, window.location.href);}
+  })();
+  </script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
-    .header{text-align:center;color:#fff;padding:20px 0 12px;width:100%;max-width:480px}
-    .header h1{font-size:22px;margin-bottom:4px}
-    .header p{font-size:13px;opacity:0.85}
-    .tips{background:rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;margin:0 0 12px;max-width:480px;width:100%;border:1px solid rgba(255,255,255,0.2)}
-    .tips-title{color:#ffd700;font-size:12px;font-weight:600;margin-bottom:4px}
-    .tips-list{font-size:11px;color:rgba(255,255,255,0.8);line-height:1.6}
-    .chat-container{width:100%;max-width:480px;background:#f5f5f5;border-radius:16px 16px 0 0;flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:60vh}
-    .messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-    .bubble-wrap{display:flex;align-items:flex-end;gap:8px}
-    .bubble-wrap.user{flex-direction:row-reverse}
-    .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;background:#fff;color:#667eea;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-    .bubble{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word}
-    .bubble.bot{background:#fff;color:#333;border-bottom-left-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-    .bubble.user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-bottom-right-radius:4px}
-    .quick-btns{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 6px 40px}
-    .quick-btn{background:#fff;border:1.5px solid #667eea;color:#667eea;border-radius:16px;padding:8px 14px;font-size:12px;cursor:pointer;transition:all 0.2s;font-weight:500}
-    .quick-btn:hover{background:#667eea;color:#fff;transform:translateY(-2px)}
-    .product-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,0.08);border:1px solid #eee;margin-bottom:10px}
-    .product-name{font-size:15px;font-weight:700;color:#222;margin-bottom:6px}
-    .product-price{font-size:20px;font-weight:800;color:#667eea}
-    .product-price span{font-size:11px;color:#999;font-weight:400}
-    .product-desc{font-size:12px;color:#666;margin:6px 0;line-height:1.4}
-    .product-tags{margin:8px 0}
-    .tag{background:#f0f4ff;color:#667eea;font-size:11px;padding:2px 8px;border-radius:8px;margin-right:4px}
-    .tag.region{background:#e8f5e9;color:#2d8a4e}
-    .tag.hot{background:#fff5f5;color:#e53e3e;font-weight:600}
-    .order-btn{display:block;width:100%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:10px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;margin-top:8px;transition:all 0.2s}
-    .order-btn:hover{transform:scale(1.02)}
-    .input-area{background:#fff;padding:10px 14px;display:flex;gap:10px;align-items:center;border-top:1px solid #eee}
-    .input-area input{flex:1;border:2px solid #e0e0e0;border-radius:20px;padding:10px 16px;font-size:14px;outline:none}
-    .input-area input:focus{border-color:#667eea}
-    .send-btn{width:42px;height:42px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;transition:all 0.2s}
-    .send-btn:hover{transform:scale(1.08)}
+    html{font-size:14px}
+    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;flex-direction:column}
+    
+    /* 顶部价值主张 */
+    .hero{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:16px 20px;text-align:center;color:#fff;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .hero h1{font-size:18px;font-weight:600;margin-bottom:6px}
+    .hero h1 span{color:#ffd700}
+    .hero p{font-size:12px;opacity:0.9}
+    
+    /* 快捷筛选 */
+    .quick-filters{background:#fff;padding:12px 16px;display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-shrink:0}
+    .quick-filters::-webkit-scrollbar{display:none}
+    .filter-btn{min-width:70px;padding:8px 12px;background:#f5f5f5;border:1.5px solid #e0e0e0;border-radius:20px;font-size:12px;color:#666;text-align:center;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
+    .filter-btn:hover,.filter-btn.active{background:#667eea;color:#fff;border-color:#667eea}
+    
+    /* 主内容区 */
+    .main{flex:1;overflow-y:auto;padding:16px;max-width:480px;margin:0 auto;width:100%}
+    
+    /* 结果卡片 */
+    .result-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);transition:all 0.2s}
+    .result-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.12)}
+    .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+    .card-title{font-size:16px;font-weight:700;color:#333}
+    .card-tags{display:flex;gap:6px;flex-wrap:wrap}
+    .tag{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:500}
+    .tag.hot{background:#ff4757;color:#fff}
+    .tag.new{background:#2ed573;color:#fff}
+    .tag.nation{background:#667eea;color:#fff}
+    .tag.local{background:#ffa502;color:#fff}
+    
+    .card-specs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+    .spec-item{text-align:center;padding:8px;background:#f8f9fa;border-radius:8px}
+    .spec-value{font-size:18px;font-weight:700;color:#667eea}
+    .spec-label{font-size:10px;color:#999;margin-top:2px}
+    
+    .card-price{font-size:24px;font-weight:700;color:#ff4757;text-align:center;padding:10px 0;border-top:1px dashed #eee;border-bottom:1px dashed #eee;margin-bottom:12px}
+    .card-price span{font-size:12px;color:#999;font-weight:400}
+    
+    .card-footer{display:flex;gap:10px}
+    .btn{flex:1;padding:12px;border-radius:10px;font-size:14px;font-weight:600;text-align:center;cursor:pointer;transition:all 0.2s;border:none}
+    .btn-order{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;box-shadow:0 4px 12px rgba(102,126,234,0.4)}
+    .btn-order:hover{transform:scale(1.02);box-shadow:0 6px 16px rgba(102,126,234,0.5)}
+    .btn-compare{background:#f5f5f5;color:#666;border:1px solid #e0e0e0}
+    .btn-compare:hover{background:#eee}
+    
+    /* 加载状态 */
+    .loading{text-align:center;padding:40px 20px;display:none}
+    .loading.show{display:block}
+    .loading-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading p{color:#fff;font-size:14px}
+    
+    /* 空状态 */
+    .empty{text-align:center;padding:40px 20px;display:none}
+    .empty.show{display:block}
+    .empty-icon{font-size:48px;margin-bottom:16px}
+    .empty p{color:rgba(255,255,255,0.8);font-size:14px}
+    
+    /* 输入区 */
+    .input-area{background:#fff;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.1)}
+    .input-row{display:flex;gap:10px;align-items:center}
+    .input-row input{flex:1;border:2px solid #e0e0e0;border-radius:24px;padding:12px 16px;font-size:14px;outline:none;transition:border-color 0.2s}
+    .input-row input:focus{border-color:#667eea}
+    .send-btn{width:48px;height:48px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 12px rgba(102,126,234,0.4)}
+    .send-btn:hover{transform:scale(1.05)}
+    .send-btn:disabled{opacity:0.5;cursor:not-allowed}
+    
+    /* 提示栏 */
+    .tips{background:rgba(255,255,255,0.1);margin:0 16px 12px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);max-width:448px}
+    .tips p{font-size:11px;color:rgba(255,255,255,0.8);line-height:1.6;text-align:center}
+    
+    /* 匹配结果标题 */
+    .result-header{color:#fff;font-size:14px;font-weight:600;margin-bottom:12px;padding:0 4px;display:none}
+    .result-header.show{display:block}
+    
+    /* 响应式 */
+    @media(min-width:768px){
+      .main{max-width:600px}
+      .card-specs{grid-template-columns:repeat(4,1fr)}
+    }
   </style>
 </head>
 <body>
-<div class="header">
-  <h1>🌟 流量卡智能顾问</h1>
-  <p>帮您挑选最合适的流量卡</p>
+
+<!-- 顶部价值主张 -->
+<div class="hero">
+  <h1>📱 流量卡智能顾问 <span>AI推荐</span></h1>
+  <p>3秒匹配全国正规流量卡 · 无合约 · 不虚量 · 可查官方</p>
 </div>
+
+<!-- 快捷筛选 -->
+<div class="quick-filters">
+  <button class="filter-btn active" data-filter="all">🔥 精选</button>
+  <button class="filter-btn" data-filter="student">🎓 学生党</button>
+  <button class="filter-btn" data-filter="call">📞 通话多</button>
+  <button class="filter-btn" data-filter="data">📊 纯流量</button>
+  <button class="filter-btn" data-filter="budget">💰 低预算</button>
+  <button class="filter-btn" data-filter="nation">🌐 全国</button>
+</div>
+
+<!-- 提示 -->
 <div class="tips">
-  <div class="tips-title">💡 温馨提示</div>
-  <div class="tips-list">
-    📞 下单后请<strong>及时联系润石</strong>跟进<br>
-    📞 留意运营商<strong>官方回访电话</strong><br>
-    🚫 卡片<strong>不可转借他人</strong>使用
-  </div>
+  <p>💡 点击上方标签快速筛选，或输入需求（如"电信卡推荐"）</p>
 </div>
-<div class="chat-container">
-  <div class="messages" id="messages"></div>
-  <div class="input-area">
-    <input type="text" id="userInput" placeholder="或直接输入需求...">
+
+<!-- 主内容区 -->
+<div class="main" id="main">
+  <div class="result-header" id="resultHeader">为您找到 <span id="resultCount">0</span> 款合适的卡</div>
+  
+  <!-- 加载中 -->
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <p>正在为您匹配最优套餐...</p>
+  </div>
+  
+  <!-- 空状态 -->
+  <div class="empty" id="empty">
+    <div class="empty-icon">🔍</div>
+    <p>没有找到符合条件的套餐<br>试试其他筛选条件？</p>
+  </div>
+  
+  <!-- 结果列表 -->
+  <div id="results"></div>
+</div>
+
+<!-- 输入区 -->
+<div class="input-area">
+  <div class="input-row">
+    <input type="text" id="userInput" placeholder="输入需求：电信卡 / 低价 / 大流量...">
     <button class="send-btn" id="sendBtn">➤</button>
   </div>
 </div>
+
 <script>
+// 产品数据
 var PRODUCTS=[
-  {id:"dx_xh39",operator:"dianxin",name:"电信星华卡",price:39,flow:185,region:"仅发湖南",coverage:"本地",desc:"185G流量+通话",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3828",hot:true},
-  {id:"dx_th39",operator:"dianxin",name:"电信太华卡",price:39,flow:205,region:"仅发山东",coverage:"本地",desc:"205G流量+通话",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3794"},
-  {id:"dx_bh29",operator:"dianxin",name:"电信北合卡",price:29,flow:140,region:"仅发河北",coverage:"本地",desc:"140G流量",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3827"},
-  {id:"dx_rx19",operator:"dianxin",name:"电信瑞星卡",price:19,flow:90,region:"发全国",coverage:"全国",desc:"90G流量+400分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",hot:true},
-  {id:"dx_cy29",operator:"dianxin",name:"电信畅游卡",price:29,flow:280,region:"发全国",coverage:"全国",desc:"280G流量+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",hot:true},
-  {id:"yd_cy39",operator:"yidong",name:"移动畅言卡",price:39,flow:380,region:"发全国",coverage:"全国",desc:"380G流量+2000分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",hot:true},
-  {id:"yd_dy29",operator:"yidong",name:"移动多言卡",price:29,flow:250,region:"发全国",coverage:"全国",desc:"250G流量+2000分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",hot:true},
-  {id:"yd_ty19",operator:"yidong",name:"移动天云卡",price:19,flow:240,region:"仅发河南",coverage:"本地",desc:"240G流量+400分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_cl20",operator:"yidong",name:"移动川流卡",price:20,flow:350,region:"仅发四川",coverage:"本地",desc:"350G流量+400分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"yd_fh18",operator:"yidong",name:"移动绯红卡",price:18,flow:90,region:"发全国",coverage:"全国",desc:"90G流量+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_ly40",operator:"liantong",name:"联通林云卡",price:40,flow:200,region:"发全国",coverage:"全国",desc:"200G流量+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_qy39",operator:"liantong",name:"联通千云卡",price:39,flow:280,region:"仅发河北",coverage:"本地",desc:"280G流量+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_jc39",operator:"liantong",name:"联通巨川卡",price:39,flow:520,region:"仅发四川",coverage:"本地",desc:"520G流量+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9",hot:true},
-  {id:"lt_jh29",operator:"liantong",name:"联通江会卡",price:29,flow:160,region:"仅发浙江",coverage:"本地",desc:"160G流量+500分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"},
-  {id:"lt_hp49",operator:"liantong",name:"联通琥珀卡",price:49,flow:215,region:"发全国",coverage:"全国",desc:"215G流量+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9"}
+  {id:"dx_xh39",operator:"电信",name:"电信星华卡",price:39,flow:185,talk:0,region:"仅发湖南",nation:false,student:false,call:false,data:true,budget:false,hot:true,desc:"185G流量，性价比之选"},
+  {id:"dx_th39",operator:"电信",name:"电信太华卡",price:39,flow:205,talk:0,region:"仅发山东",nation:false,student:false,call:false,data:true,budget:false,desc:"205G流量，大流量首选"},
+  {id:"dx_bh29",operator:"电信",name:"电信北合卡",price:29,flow:140,talk:0,region:"仅发河北",nation:false,student:true,call:false,data:true,budget:true,desc:"140G+29元，学生党福音"},
+  {id:"dx_rx19",operator:"电信",name:"电信瑞星卡",price:19,flow:90,talk:400,region:"发全国",nation:true,student:true,call:true,data:false,budget:true,hot:true,desc:"19元90G+400分钟，低预算首选"},
+  {id:"dx_cy29",operator:"电信",name:"电信畅游卡",price:29,flow:280,talk:300,region:"发全国",nation:true,student:true,call:true,data:true,budget:true,hot:true,desc:"280G+300分钟，全能型"},
+  {id:"yd_cy39",operator:"移动",name:"移动畅言卡",price:39,flow:380,talk:2000,region:"发全国",nation:true,student:false,call:true,data:true,budget:false,hot:true,desc:"380G+2000分钟，通话王"},
+  {id:"yd_dy29",operator:"移动",name:"移动多言卡",price:29,flow:250,talk:2000,region:"发全国",nation:true,student:false,call:true,data:true,budget:true,hot:true,desc:"250G+2000分钟，通话首选"},
+  {id:"yd_ty19",operator:"移动",name:"移动天云卡",price:19,flow:240,talk:400,region:"仅发河南",nation:false,student:true,call:true,data:true,budget:true,desc:"19元240G，低预算大流量"},
+  {id:"yd_cl20",operator:"移动",name:"移动川流卡",price:20,flow:350,talk:400,region:"仅发四川",nation:false,student:false,call:false,data:true,budget:true,desc:"20元350G，纯流量首选"},
+  {id:"yd_fh18",operator:"移动",name:"移动绯红卡",price:18,flow:90,talk:300,region:"发全国",nation:true,student:true,call:true,data:false,budget:true,desc:"18元90G+300分钟"},
+  {id:"lt_ly40",operator:"联通",name:"联通林云卡",price:40,flow:200,talk:100,region:"发全国",nation:true,student:false,call:false,data:true,budget:false,desc:"200G通用流量"},
+  {id:"lt_qy39",operator:"联通",name:"联通千云卡",price:39,flow:280,talk:200,region:"仅发河北",nation:false,student:false,call:true,data:true,budget:false,hot:true,desc:"280G+200分钟，大流量通话"},
+  {id:"lt_jc39",operator:"联通",name:"联通巨川卡",price:39,flow:520,talk:300,region:"仅发四川",nation:false,student:false,call:false,data:true,budget:false,hot:true,desc:"520G超大流量，流量王者"},
+  {id:"lt_jh29",operator:"联通",name:"联通江会卡",price:29,flow:160,talk:500,region:"仅发浙江",nation:false,student:false,call:true,data:true,budget:true,desc:"29元160G+500分钟"},
+  {id:"lt_hp49",operator:"联通",name:"联通琥珀卡",price:49,flow:215,talk:100,region:"发全国",nation:true,student:false,call:false,data:true,budget:false,desc:"215G通用流量"}
 ];
 
-var userState = {operator: null, price: null, coverage: null};
+var currentFilter='all';
+var isLoading=false;
 
-function addBotMsg(html) {
-  var wrap = document.createElement("div");
-  wrap.className = "bubble-wrap";
-  wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot">' + html + '</div>';
-  document.getElementById("messages").appendChild(wrap);
-  scrollToBottom();
+function showLoading(){
+  isLoading=true;
+  document.getElementById('loading').classList.add('show');
+  document.getElementById('empty').classList.remove('show');
+  document.getElementById('results').innerHTML='';
+  document.getElementById('sendBtn').disabled=true;
 }
 
-function addUserMsg(text) {
-  var wrap = document.createElement("div");
-  wrap.className = "bubble-wrap user";
-  wrap.innerHTML = '<div class="bubble user">' + text + '</div><div class="avatar">🙋</div>';
-  document.getElementById("messages").appendChild(wrap);
-  scrollToBottom();
+function hideLoading(){
+  isLoading=false;
+  document.getElementById('loading').classList.remove('show');
+  document.getElementById('sendBtn').disabled=false;
 }
 
-function addButtons(btns) {
-  var wrap = document.createElement("div");
-  wrap.className = "quick-btns";
-  for (var i = 0; i < btns.length; i++) {
-    var btn = document.createElement("button");
-    btn.className = "quick-btn";
-    btn.textContent = btns[i].label;
-    btn.onclick = btns[i].action;
-    wrap.appendChild(btn);
+function renderCard(p){
+  var hotTag=p.hot?'<span class="tag hot">🔥 爆款</span>':'';
+  var regionTag=p.nation?'<span class="tag nation">🌐 全国</span>':'<span class="tag local">📍 省内</span>';
+  var talkText=p.talk>0?'+'+p.talk+'分钟':'纯流量';
+  
+  return '<div class="result-card">'+
+    '<div class="card-header">'+
+      '<div class="card-title">'+p.name+'</div>'+
+      '<div class="card-tags">'+hotTag+regionTag+'</div>'+
+    '</div>'+
+    '<div class="card-specs">'+
+      '<div class="spec-item"><div class="spec-value">'+p.operator+'</div><div class="spec-label">运营商</div></div>'+
+      '<div class="spec-item"><div class="spec-value">'+p.flow+'G</div><div class="spec-label">流量</div></div>'+
+      '<div class="spec-item"><div class="spec-value">'+talkText+'</div><div class="spec-label">通话</div></div>'+
+    '</div>'+
+    '<div class="card-price">'+p.price+'<span>元/月</span></div>'+
+    '<div class="card-desc" style="text-align:center;font-size:12px;color:#666;margin-bottom:12px">'+p.desc+' · '+p.region+'</div>'+
+    '<div class="card-footer">'+
+      '<button class="btn btn-compare" onclick="showDetail(\''+p.id+'\')">📋 详情</button>'+
+      '<button class="btn btn-order" onclick="showQR()">📞 办理</button>'+
+    '</div>'+
+  '</div>';
+}
+
+function filterProducts(filter){
+  currentFilter=filter;
+  if(filter==='all')return PRODUCTS.slice();
+  return PRODUCTS.filter(function(p){
+    if(filter==='student')return p.student;
+    if(filter==='call')return p.call;
+    if(filter==='data')return p.data;
+    if(filter==='budget')return p.budget;
+    if(filter==='nation')return p.nation;
+    return true;
+  });
+}
+
+function showResults(filter){
+  var list=filterProducts(filter);
+  var results=document.getElementById('results');
+  var header=document.getElementById('resultHeader');
+  var empty=document.getElementById('empty');
+  
+  header.classList.add('show');
+  document.getElementById('resultCount').textContent=list.length;
+  
+  if(list.length===0){
+    empty.classList.add('show');
+    results.innerHTML='';
+  }else{
+    empty.classList.remove('show');
+    results.innerHTML=list.map(renderCard).join('');
   }
-  document.getElementById("messages").appendChild(wrap);
-  scrollToBottom();
+  
+  // 滚动到顶部
+  document.getElementById('main').scrollTop=0;
 }
 
-function scrollToBottom() {
-  var m = document.getElementById("messages");
-  setTimeout(function() { m.scrollTop = m.scrollHeight; }, 50);
-}
-
-function showProducts(list) {
-  var html = '<div style="margin-top:8px">';
-  for (var i = 0; i < list.length; i++) {
-    var p = list[i];
-    var hotTag = p.hot ? '<span class="tag hot">🔥 爆款</span>' : '';
-    html += '<div class="product-card">' +
-      '<div class="product-name">' + p.name + '</div>' +
-      '<div class="product-price">' + p.price + '元<span>/月</span></div>' +
-      '<div class="product-desc">' + p.desc + '</div>' +
-      '<div class="product-tags"><span class="tag region">' + p.region + '</span>' + hotTag + '</div>' +
-      '<a class="order-btn" href="' + p.url + '" target="_blank">立即下单 →</a>' +
-      '</div>';
+function handleQuery(query){
+  if(isLoading)return;
+  var q=query.toLowerCase();
+  
+  // 智能识别筛选
+  if(q.includes('电信')||q.includes('dx')){
+    showResults('all');
+    setTimeout(function(){
+      var results=PRODUCTS.filter(function(p){return p.operator==='电信';});
+      document.getElementById('results').innerHTML=results.map(renderCard).join('');
+      document.getElementById('resultCount').textContent=results.length;
+    },300);
+    return;
   }
-  html += '</div>';
-  return html;
-}
-
-function filterProducts() {
-  var result = PRODUCTS.slice();
-  if (userState.operator) result = result.filter(function(p) { return p.operator === userState.operator; });
-  if (userState.price) result = result.filter(function(p) { return p.price <= userState.price; });
-  if (userState.coverage) result = result.filter(function(p) { return p.coverage === userState.coverage; });
-  return result.slice(0, 8);
-}
-
-function askOperator() {
-  addBotMsg("👉 请先选择您偏好的运营商：");
-  addButtons([
-    {label:"📡 电信", action:function(){ selectOperator("dianxin"); }},
-    {label:"📶 移动", action:function(){ selectOperator("yidong"); }},
-    {label:"📟 联通", action:function(){ selectOperator("liantong"); }},
-    {label:"🤔 不确定", action:askPrice}
-  ]);
-}
-
-function selectOperator(op) {
-  userState.operator = op;
-  var opName = op === "dianxin" ? "电信" : (op === "yidong" ? "移动" : "联通");
-  addUserMsg("我选择 " + opName);
-  askPrice();
-}
-
-function askPrice() {
-  addBotMsg("💰 您的月租预算是多少？");
-  addButtons([
-    {label:"💵 19元以下", action:function(){ selectPrice(19); }},
-    {label:"💵 20-29元", action:function(){ selectPrice(29); }},
-    {label:"💵 30-39元", action:function(){ selectPrice(39); }},
-    {label:"💵 40元以上", action:function(){ selectPrice(100); }}
-  ]);
-}
-
-function selectPrice(price) {
-  userState.price = price;
-  addUserMsg("我的预算是 " + price + "元以内");
-  askCoverage();
-}
-
-function askCoverage() {
-  addBotMsg("🌍 您需要全国可用还是本地就可以？");
-  addButtons([
-    {label:"🌐 全国可用", action:function(){ selectCoverage("全国"); }},
-    {label:"📍 本地就可以", action:function(){ selectCoverage("本地"); }},
-    {label:"🤷 都可以", action:showResults}
-  ]);
-}
-
-function selectCoverage(coverage) {
-  userState.coverage = coverage;
-  addUserMsg("我需要 " + coverage + "可用");
-  showResults();
-}
-
-function showResults() {
-  var results = filterProducts();
-  if (results.length === 0) {
-    addBotMsg("😅 抱歉，暂时没有完全符合条件的套餐<br><br>让我为您推荐最接近的几款：");
-    userState.coverage = null;
-    results = filterProducts();
-  } else {
-    addBotMsg("✨ 为您找到 <b>" + results.length + "</b> 款合适套餐，按价格排序 👇");
+  if(q.includes('移动')||q.includes('yd')){
+    setTimeout(function(){
+      var results=PRODUCTS.filter(function(p){return p.operator==='移动';});
+      document.getElementById('results').innerHTML=results.map(renderCard).join('');
+      document.getElementById('resultCount').textContent=results.length;
+    },300);
+    return;
   }
-  var wrap = document.createElement("div");
-  wrap.className = "bubble-wrap";
-  wrap.innerHTML = '<div class="avatar">🤖</div><div class="bubble bot">' + showProducts(results) + '</div>';
-  document.getElementById("messages").appendChild(wrap);
-  scrollToBottom();
-  setTimeout(function() {
-    addBotMsg("💡 <b>下单后记得联系润石跟进哦！</b>");
-    addButtons([
-      {label:"🔄 重新选择", action:reset},
-      {label:"📞 联系润石", action:function(){ addBotMsg("润石微信：huangrunshi"); }}
-    ]);
-  }, 800);
+  if(q.includes('联通')||q.includes('lt')){
+    setTimeout(function(){
+      var results=PRODUCTS.filter(function(p){return p.operator==='联通';});
+      document.getElementById('results').innerHTML=results.map(renderCard).join('');
+      document.getElementById('resultCount').textContent=results.length;
+    },300);
+    return;
+  }
+  if(q.includes('学生')||q.includes('便宜')||q.includes('低价')||q.includes('省钱')||q.includes('19')){
+    setTimeout(function(){showResults('budget');},300);
+    return;
+  }
+  if(q.includes('通话')||q.includes('分钟')){
+    setTimeout(function(){showResults('call');},300);
+    return;
+  }
+  if(q.includes('大流量')||q.includes('流量多')||q.includes('500')||q.includes('400')||q.includes('300')){
+    setTimeout(function(){
+      var sorted=PRODUCTS.slice().sort(function(a,b){return b.flow-a.flow;});
+      document.getElementById('results').innerHTML=sorted.map(renderCard).join('');
+      document.getElementById('resultCount').textContent=sorted.length;
+    },300);
+    return;
+  }
+  if(q.includes('全国')||q.includes('通用')){
+    setTimeout(function(){showResults('nation');},300);
+    return;
+  }
+  if(q.includes('推荐')||q.includes('热门')||q.includes('最好')){
+    setTimeout(function(){
+      var hot=PRODUCTS.filter(function(p){return p.hot;}).sort(function(a,b){return b.flow-a.flow;});
+      document.getElementById('results').innerHTML=hot.map(renderCard).join('');
+      document.getElementById('resultCount').textContent=hot.length;
+    },300);
+    return;
+  }
+  
+  // 默认显示热门
+  showResults('all');
 }
 
-function reset() {
-  userState = {operator: null, price: null, coverage: null};
-  addUserMsg("我想重新选择");
-  setTimeout(function() { askOperator(); }, 300);
+function showDetail(id){
+  var p=PRODUCTS.find(function(x){return x.id===id;});
+  if(!p)return;
+  alert('📋 '+p.name+'\n\n运营商: '+p.operator+'\n月租: '+p.price+'元\n流量: '+p.flow+'G\n通话: '+(p.talk>0?p.talk+'分钟':'纯流量')+'\n地区: '+p.region+'\n\n'+p.desc);
 }
 
-function handleSend() {
-  var input = document.getElementById("userInput");
-  var text = input.value.trim();
-  if (!text) return;
-  input.value = "";
-  addUserMsg(text);
-  var t = text.toLowerCase();
-  if (t.indexOf("电信") >= 0) selectOperator("dianxin");
-  else if (t.indexOf("移动") >= 0) selectOperator("yidong");
-  else if (t.indexOf("联通") >= 0) selectOperator("liantong");
-  else if (t.indexOf("全国") >= 0) selectCoverage("全国");
-  else if (t.indexOf("本地") >= 0) selectCoverage("本地");
-  else {
-    var priceMatch = t.match(/(\d{1,2})元/);
-    if (priceMatch) selectPrice(parseInt(priceMatch[1]));
-    else {
-      addBotMsg("我没太听懂呢 😅<br>让我们从选择运营商开始吧");
-      askOperator();
-    }
+function showQR(){
+  if(confirm('📞 即将跳转到办理页面\n\n长按识别二维码联系润石办理\n或截图保存到相册')){
+    // 可以在这里打开二维码图片
+    window.open('https://huangrunshi.github.io/flowcard-agent/qrcode.png','_blank');
   }
 }
 
-document.getElementById("sendBtn").onclick = handleSend;
-document.getElementById("userInput").onkeydown = function(e) {
-  if (e.key === "Enter") handleSend();
+// 事件绑定
+document.querySelectorAll('.filter-btn').forEach(function(btn){
+  btn.onclick=function(){
+    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+    this.classList.add('active');
+    showLoading();
+    setTimeout(function(){hideLoading();showResults(currentFilter);},500);
+  };
+});
+
+document.getElementById('sendBtn').onclick=function(){
+  var input=document.getElementById('userInput');
+  var text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  showLoading();
+  setTimeout(function(){
+    hideLoading();
+    handleQuery(text);
+  },500);
 };
 
-setTimeout(function() {
-  addBotMsg("👋 您好！我是流量卡智能顾问<br><br>我会根据您的需求，为您推荐最合适的流量卡套餐<br><br>让我们开始吧！");
-  askOperator();
-}, 600);
+document.getElementById('userInput').onkeydown=function(e){
+  if(e.key==='Enter')document.getElementById('sendBtn').click();
+};
+
+// 初始化显示热门
+setTimeout(function(){showResults('all');},300);
 </script>
 </body>
 </html>
