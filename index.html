@@ -375,6 +375,20 @@ function searchProducts(){
 
 function showNextResults(){
   hideLoading();
+  var chatArea=document.getElementById('chatArea');
+  var main=document.getElementById('main');
+  var isFirstBatch=(resultIndex===0);
+
+  // 首批展示时清除旧的卡片区域（保留气泡消息）
+  if(isFirstBatch){
+    var oldCards=chatArea.querySelectorAll('.result-cards,.card-btn.refresh');
+    oldCards.forEach(function(el){el.remove();});
+  }else{
+    // 换一批：移除"查看更多"按钮
+    var moreBtn=chatArea.querySelector('.card-btn.refresh');
+    if(moreBtn) moreBtn.remove();
+  }
+
   var cards=document.createElement('div');
   cards.className='result-cards';
   var batch=currentResults.slice(resultIndex,resultIndex+3);
@@ -398,18 +412,29 @@ function showNextResults(){
       '<div class="card-actions"><button class="card-btn order" onclick="window.open(\''+p.url+'\',\'_blank\')">📞 立即办理</button></div>'+
     '</div>';
   });
-  document.getElementById('chatArea').appendChild(cards);
+  chatArea.appendChild(cards);
   resultIndex+=3;
+
+  // 滚动到新卡片顶部（让用户看到新内容）
+  setTimeout(function(){
+    cards.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+
   if(resultIndex<currentResults.length){
-    var moreBtn=document.createElement('button');
-    moreBtn.className='card-btn refresh';
-    moreBtn.style.width='100%';
-    moreBtn.style.marginTop='12px';
-    moreBtn.textContent='🔄 查看更多 ('+currentResults.length+'-'+resultIndex+'/'+currentResults.length+')';
-    moreBtn.onclick=showNextResults;
-    document.getElementById('chatArea').appendChild(moreBtn);
+    var moreBtnNew=document.createElement('button');
+    moreBtnNew.className='card-btn refresh';
+    moreBtnNew.style.cssText='width:100%;margin-top:12px;';
+    var remaining=currentResults.length-resultIndex;
+    moreBtnNew.textContent='🔄 换一批 · 还有'+remaining+'款';
+    moreBtnNew.onclick=showNextResults;
+    chatArea.appendChild(moreBtnNew);
+  }else{
+    // 已展示全部
+    var doneMsg=document.createElement('div');
+    doneMsg.style.cssText='text-align:center;color:#718096;font-size:12px;padding:12px 0;';
+    doneMsg.textContent='✅ 已展示全部 '+currentResults.length+' 款套餐';
+    chatArea.appendChild(doneMsg);
   }
-  scrollToBottom();
 }
 
 function showQR(){
