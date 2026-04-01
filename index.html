@@ -7,6 +7,13 @@
   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
   <script>LA.init({id:"3PTYJy7p2PjoS50k",ck:"3PTYJy7p2PjoS50k"})</script>
   <style>
+:root{
+  --primary:#0d9488;--primary-light:#0f766e;--accent:#5eead4;
+  --bg-main:#141824;--bg-secondary:#1e2535;
+  --text-primary:#e2e8f0;--text-secondary:#94a3b8;--text-muted:#64748b;
+  --border-color:rgba(255,255,255,0.06);
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.2);--shadow-md:0 4px 16px rgba(0,0,0,0.25);--shadow-lg:0 8px 24px rgba(0,0,0,0.35);
+}
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;background:linear-gradient(150deg,#141824 0%,#1e2535 50%,#252d3d 100%);min-height:100vh;display:flex;flex-direction:column;color:#e2e8f0}
 
@@ -230,6 +237,90 @@
 </div>
 
 <script>
+
+// ===== 配置热加载 (每30秒自动刷新) =====
+var CONFIG_URL = './admin/config.json';
+var appConfig = null;
+
+async function loadConfig(){
+  try{
+    var resp = await fetch(CONFIG_URL + '?t=' + Date.now());
+    appConfig = await resp.json();
+    applyConfig();
+  }catch(e){
+    console.log('使用默认配置');
+  }
+}
+
+function applyConfig(){
+  if(!appConfig) return;
+  var root = document.documentElement;
+  
+  // 配色
+  if(appConfig.colors){
+    var c = appConfig.colors;
+    root.style.setProperty('--primary', c.primary || '#0d9488');
+    root.style.setProperty('--primary-light', c.primaryLight || '#0f766e');
+    root.style.setProperty('--accent', c.accent || '#5eead4');
+    root.style.setProperty('--bg-main', c.background || '#141824');
+    root.style.setProperty('--text-primary', c.textPrimary || '#e2e8f0');
+    root.style.setProperty('--text-secondary', c.textSecondary || '#94a3b8');
+    root.style.setProperty('--text-muted', c.textMuted || '#64748b');
+    
+    // 应用到关键元素
+    var primaryColor = c.primary || '#0d9488';
+    var accentColor = c.accent || '#5eead4';
+    var textColor = c.textPrimary || '#e2e8f0';
+    var textSec = c.textSecondary || '#94a3b8';
+    
+    // 按钮
+    document.querySelectorAll('.btn-order').forEach(function(el){
+      el.style.background = 'linear-gradient(135deg,' + primaryColor + ',' + (c.primaryLight || '#0f766e') + ')';
+    });
+    document.querySelectorAll('.send-btn').forEach(function(el){
+      el.style.background = 'linear-gradient(135deg,' + primaryColor + ',' + (c.primaryLight || '#0f766e') + ')';
+    });
+    // 头像
+    document.querySelectorAll('.chat-avatar').forEach(function(el){
+      el.style.border = '2px solid ' + accentColor;
+    });
+    // 价格
+    document.querySelectorAll('.price-num, .spec-val').forEach(function(el){
+      el.style.color = accentColor;
+    });
+  }
+  
+  // 布局设置
+  if(appConfig.layout){
+    var l = appConfig.layout;
+    document.querySelectorAll('.chat-avatar').forEach(function(el){
+      el.style.width = l.avatarSize + 'px';
+      el.style.height = l.avatarSize + 'px';
+      el.style.fontSize = (l.avatarSize * 0.5) + 'px';
+    });
+    document.querySelectorAll('.chat-bubble').forEach(function(el){
+      el.style.marginBottom = l.bubbleSpacing + 'px';
+    });
+    document.querySelectorAll('.result-card').forEach(function(el){
+      el.style.padding = l.cardPadding + 'px';
+      el.style.borderRadius = l.borderRadius + 'px';
+    });
+  }
+  
+  // 更新标题和副标题
+  if(appConfig.site){
+    var titleEl = document.querySelector('.header-title');
+    var subEl = document.querySelector('.header-badges');
+    if(titleEl && appConfig.site.title) titleEl.innerHTML = '📱 ' + appConfig.site.title;
+  }
+}
+
+// 页面加载时获取配置
+loadConfig();
+
+// 每30秒自动刷新配置
+setInterval(loadConfig, 30000);
+
 var PRODUCTS=[
   {id:"p3238",operator:"移动",name:"1230移动四川卡【预存报单发货】",price:20,flow:120,talk:200,region:"仅发四川",nation:false,budget:true,desc:"20元120G通用+30G定向+200分钟+会员权益",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3238"},
   {id:"p3277",operator:"移动",name:"0106移动四川卡【预存报单发货】",price:20,flow:160,talk:200,region:"仅发四川",nation:false,budget:true,desc:"20元160G通用+30G定向+200分钟+会员权益",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3277"},
