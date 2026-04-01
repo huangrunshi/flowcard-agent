@@ -1,617 +1,491 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>流量卡智能顾问</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>流量卡智能顾问 - 3秒匹配最适合的卡</title>
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({id:"3PTYJy7p2PjoS50k",ck:"3PTYJy7p2PjoS50k"})</script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .header {
-      text-align: center;
-      color: white;
-      padding: 24px 0 16px;
-      width: 100%;
-      max-width: 480px;
-    }
-    .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-    .header p { font-size: 13px; opacity: 0.85; }
-
-    .chat-container {
-      width: 100%;
-      max-width: 480px;
-      background: #f5f5f5;
-      border-radius: 20px 20px 0 0;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      min-height: 70vh;
-    }
-
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .bubble-wrap { display: flex; align-items: flex-end; gap: 8px; }
-    .bubble-wrap.user { flex-direction: row-reverse; }
-
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
-      background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .bubble {
-      max-width: 82%;
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-size: 14px;
-      line-height: 1.6;
-      word-break: break-word;
-    }
-    .bubble.bot {
-      background: white;
-      color: #333;
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    }
-    .bubble.user {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      border-bottom-right-radius: 4px;
-    }
-
-    .quick-btns {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      padding: 4px 0 8px 42px;
-    }
-    .quick-btn {
-      background: white;
-      border: 1.5px solid #764ba2;
-      color: #764ba2;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .quick-btn:hover, .quick-btn:active {
-      background: #764ba2; color: white;
-    }
-
-    .card-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      border: 2px solid transparent;
-      transition: border 0.2s;
-    }
-    .card.best { border-color: #764ba2; }
-    .card-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-    }
-    .card-name { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 6px; }
-    .card-price { font-size: 22px; font-weight: 800; color: #764ba2; }
-    .card-price span { font-size: 13px; color: #999; font-weight: 400; }
-    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
-    .tag {
-      background: #f0eeff;
-      color: #764ba2;
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 10px;
-    }
-    .card-note { font-size: 12px; color: #f5a623; margin-bottom: 10px; }
-    .order-btn {
-      display: block;
-      width: 100%;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      text-align: center;
-      padding: 11px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .order-btn:active { opacity: 0.85; }
-
-    .input-area {
-      background: white;
-      padding: 12px 16px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      border-top: 1px solid #eee;
-    }
-    .input-area input {
-      flex: 1;
-      border: 1.5px solid #ddd;
-      border-radius: 22px;
-      padding: 10px 16px;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.2s;
-    }
-    .input-area input:focus { border-color: #764ba2; }
-    .send-btn {
-      width: 42px; height: 42px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border: none; border-radius: 50%;
-      color: white; font-size: 18px;
-      cursor: pointer; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .typing { display: flex; align-items: center; gap: 4px; padding: 10px 14px; }
-    .typing span {
-      width: 7px; height: 7px; background: #bbb;
-      border-radius: 50%; animation: bounce 1.2s infinite;
-    }
-    .typing span:nth-child(2) { animation-delay: 0.2s; }
-    .typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-6px); }
-    }
-
-    .status-bar {
-      background: rgba(255,255,255,0.1);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 11px;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    .status-bar .tag-item {
-      display: inline-block;
-      background: rgba(255,255,255,0.2);
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin: 2px;
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",Arial,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;flex-direction:column}
+    
+    /* 顶部 */
+    .header{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:16px 20px;text-align:center;color:#fff;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .header h1{font-size:18px;font-weight:600;margin-bottom:4px}
+    .header h1 span{color:#ffd700}
+    .header p{font-size:12px;opacity:0.9}
+    
+    /* 当前条件标签 */
+    .conditions-bar{background:#fff;padding:10px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+    .conditions-bar::-webkit-scrollbar{display:none}
+    .condition-tag{min-width:fit-content;padding:6px 12px;background:#f0f4ff;border:1px solid #667eea;color:#667eea;border-radius:16px;font-size:12px;cursor:pointer;transition:all 0.2s}
+    .condition-tag:hover{background:#667eea;color:#fff}
+    .condition-tag .remove{margin-left:6px;font-size:10px}
+    
+    /* 快捷按钮 */
+    .quick-btns{background:#fff;padding:12px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;border-bottom:1px solid #f0f0f0}
+    .quick-btns::-webkit-scrollbar{display:none}
+    .quick-btn{min-width:60px;padding:8px 12px;background:#f5f5f5;border-radius:8px;font-size:12px;color:#666;text-align:center;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+    .quick-btn:hover,.quick-btn.active{background:#667eea;color:#fff}
+    
+    /* 主内容 */
+    .main{flex:1;overflow-y:auto;padding:16px;max-width:600px;margin:0 auto;width:100%}
+    
+    /* 对话气泡 */
+    .chat-bubble{margin-bottom:12px;animation:fadeIn 0.3s}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .chat-bubble.bot{display:flex;gap:10px}
+    .chat-bubble.user{flex-direction:row-reverse}
+    .chat-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:#fff;color:#667eea;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+    .chat-bubble.user .chat-avatar{background:#667eea;color:#fff}
+    .chat-content{max-width:80%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.6}
+    .chat-bubble.bot .chat-content{background:#fff;color:#333;border-bottom-left-radius:4px}
+    .chat-bubble.user .chat-content{background:#667eea;color:#fff;border-bottom-right-radius:4px}
+    
+    /* 卡片结果 */
+    .result-cards{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+    .result-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 12px rgba(0,0,0,0.08);transition:all 0.2s}
+    .result-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+    .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .card-name{font-size:15px;font-weight:700;color:#333}
+    .card-tags{display:flex;gap:6px}
+    .tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500}
+    .tag.hot{background:#ff4757;color:#fff}
+    .tag.nation{background:#667eea;color:#fff}
+    .tag.local{background:#ffa502;color:#fff}
+    .card-specs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+    .spec{text-align:center;padding:6px;background:#f8f9fa;border-radius:6px}
+    .spec-val{font-size:14px;font-weight:700;color:#667eea}
+    .spec-label{font-size:10px;color:#999}
+    .card-price{text-align:center;font-size:22px;font-weight:700;color:#ff4757;padding:8px 0;border-top:1px dashed #eee;border-bottom:1px dashed #eee;margin-bottom:10px}
+    .card-price span{font-size:12px;color:#999;font-weight:400}
+    .card-actions{display:flex;gap:8px}
+    .card-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;transition:all 0.2s;border:none}
+    .card-btn.order{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+    .card-btn.order:hover{transform:scale(1.02)}
+    .card-btn.refresh{background:#f5f5f5;color:#666;border:1px solid #e0e0e0}
+    .card-btn.refresh:hover{background:#eee}
+    
+    /* 输入区 */
+    .input-area{background:#fff;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.1)}
+    .input-row{display:flex;gap:10px;align-items:center}
+    .input-row input{flex:1;border:2px solid #e0e0e0;border-radius:24px;padding:12px 16px;font-size:14px;outline:none;transition:border-color 0.2s}
+    .input-row input:focus{border-color:#667eea}
+    .send-btn{width:48px;height:48px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;transition:all 0.2s}
+    .send-btn:hover{transform:scale(1.05)}
+    
+    /* 加载 */
+    .loading{text-align:center;padding:20px;color:#fff;font-size:14px;display:none}
+    .loading.show{display:block}
+    .loading::after{content:'...';animation:dots 1.5s infinite}
+    @keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
+    
+    @media(min-width:768px){.card-specs{grid-template-columns:repeat(5,1fr)}}
   </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>📱 流量卡智能顾问</h1>
-  <p>告诉我需求，我帮你精准匹配最划算的套餐</p>
+  <h1>📱 流量卡智能顾问 <span>AI</span></h1>
+  <p>3秒匹配 · 无合约 · 不虚量 · 官方可查</p>
 </div>
 
-<div class="chat-container">
-  <div class="messages" id="messages"></div>
-  <div class="input-area">
-    <input type="text" id="userInput" placeholder="随便聊聊，比如「学生党，想要便宜大流量」" />
-    <button class="send-btn" onclick="handleSend()">➤</button>
+<div class="conditions-bar" id="conditionsBar"></div>
+
+<div class="quick-btns">
+  <button class="quick-btn" data-action="refresh">🔄 换一批</button>
+  <button class="quick-btn" data-filter="dx">📡 电信</button>
+  <button class="quick-btn" data-filter="yd">📶 移动</button>
+  <button class="quick-btn" data-filter="lt">📟 联通</button>
+  <button class="quick-btn" data-filter="budget">💰 低月租</button>
+  <button class="quick-btn" data-filter="nation">🌐 全国</button>
+</div>
+
+<div class="main" id="main">
+  <div id="chatArea"></div>
+  <div class="loading" id="loading">正在匹配最优套餐</div>
+</div>
+
+<div class="input-area">
+  <div class="input-row">
+    <input type="text" id="userInput" placeholder="说说您的需求，比如：学生党，预算20以内">
+    <button class="send-btn" id="sendBtn">➤</button>
   </div>
 </div>
 
 <script>
-// ===================== 套餐数据库 =====================
-const PLANS = [
-  { id: "3828", name: "移动少年卡", price: 30, data: 300, extraData: 30, call: 100, minAge: 18, maxAge: 25, ship: "报单发货", local: false, highlight: "全场流量最大，会员权益N选1", note: "仅限18-25岁", tags: ["300G通用", "30G定向", "18-25岁"] },
-  { id: "3827", name: "广电花菜卡", price: 39, data: 222, extraData: 0, call: 0, minAge: 18, maxAge: 60, ship: "全国发货", local: true, highlight: "222G纯通用+本地归属", note: "通话按量计费", tags: ["222G通用", "本地归属"] },
-  { id: "3794", name: "移动七彩卡2.0", price: 29, data: 220, extraData: 30, call: 2000, minAge: 18, maxAge: 60, ship: "顺丰到付", local: false, highlight: "流量+通话双天花板", note: "顺丰到付", tags: ["220G通用", "30G定向", "2000分钟"] },
-  { id: "3751", name: "移动智慧卡", price: 29, data: 220, extraData: 30, call: 2000, minAge: 18, maxAge: 60, ship: "顺丰到付", local: false, highlight: "综合性价比之王", note: "顺丰到付", tags: ["220G通用", "30G定向", "2000分钟"] },
-  { id: "3815", name: "联通醉酒卡", price: 40, data: 200, extraData: 0, call: 100, minAge: 18, maxAge: 60, ship: "激活后发货", local: false, highlight: "200G纯通用", note: "激活首充后发货", tags: ["200G通用", "全国发货"] },
-  { id: "3806", name: "联通飞驰卡", price: 19, data: 210, extraData: 0, call: 100, minAge: 18, maxAge: 50, ship: "全国发货", local: false, highlight: "月租最低", note: "⚠️ NFC激活麻烦", tags: ["210G通用", "19元月租"] },
-  { id: "3718", name: "联通饺子卡", price: 29, data: 150, extraData: 0, call: 200, minAge: 18, maxAge: 28, ship: "激活后发货", local: false, highlight: "通话多+会员权益", note: "仅限18-28岁", tags: ["150G通用", "200分钟", "18-28岁"] },
-  { id: "3802", name: "联通海龙卡", price: 29, data: 130, extraData: 0, call: 200, minAge: 18, maxAge: 24, ship: "全国发货", local: false, highlight: "年轻人专属", note: "仅限18-24岁", tags: ["130G通用", "200分钟", "18-24岁"] },
-  { id: "3730", name: "联通东山卡", price: 40, data: 155, extraData: 0, call: 100, minAge: 18, maxAge: 60, ship: "全国发货", local: false, highlight: "长期套餐", note: "三照下单", tags: ["155G通用", "长期套餐"] },
-  { id: "3822", name: "联通绘梦卡", price: 39, data: 20, extraData: 30, call: 100, minAge: 18, maxAge: 60, ship: "全国发货", local: true, highlight: "本地归属+上门激活", note: "通用流量较少", tags: ["本地归属", "上门激活"] },
-  { id: "3322", name: "广电奔马卡", price: 39, data: 90, extraData: 0, call: 0, minAge: 18, maxAge: 60, ship: "全国发货", local: true, highlight: "本地归属", note: "通话按量计费", tags: ["90G通用", "本地归属"] },
-  { id: "3814", name: "联通惊喜卡2.0", price: 39, data: 25, extraData: 30, call: 100, minAge: 18, maxAge: 60, ship: "认证后发货", local: false, highlight: "认证发货规范", note: "流量次月到账", tags: ["25G通用", "30G定向"] }
+var PRODUCTS=[
+  {id:"dx_xh39",operator:"电信",name:"电信星华卡",price:39,flow:185,talk:0,region:"仅发湖南",nation:false,budget:false,hot:true,desc:"185G流量，性价比之选"},
+  {id:"dx_th39",operator:"电信",name:"电信太华卡",price:39,flow:205,talk:0,region:"仅发山东",nation:false,budget:false,desc:"205G流量"},
+  {id:"dx_bh29",operator:"电信",name:"电信北合卡",price:29,flow:140,talk:0,region:"仅发河北",nation:false,budget:true,student:true,desc:"140G，29元"},
+  {id:"dx_rx19",operator:"电信",name:"电信瑞星卡",price:19,flow:90,talk:400,region:"发全国",nation:true,budget:true,student:true,hot:true,desc:"19元90G+400分钟"},
+  {id:"dx_cy29",operator:"电信",name:"电信畅游卡",price:29,flow:280,talk:300,region:"发全国",nation:true,budget:true,hot:true,desc:"280G+300分钟"},
+  {id:"yd_cy39",operator:"移动",name:"移动畅言卡",price:39,flow:380,talk:2000,region:"发全国",nation:true,budget:false,hot:true,desc:"380G+2000分钟"},
+  {id:"yd_dy29",operator:"移动",name:"移动多言卡",price:29,flow:250,talk:2000,region:"发全国",nation:true,budget:true,hot:true,desc:"250G+2000分钟"},
+  {id:"yd_ty19",operator:"移动",name:"移动天云卡",price:19,flow:240,talk:400,region:"仅发河南",nation:false,budget:true,student:true,desc:"19元240G"},
+  {id:"yd_cl20",operator:"移动",name:"移动川流卡",price:20,flow:350,talk:0,region:"仅发四川",nation:false,budget:true,desc:"20元350G纯流量"},
+  {id:"yd_fh18",operator:"移动",name:"移动绯红卡",price:18,flow:90,talk:300,region:"发全国",nation:true,budget:true,student:true,desc:"18元90G+300分钟"},
+  {id:"lt_ly40",operator:"联通",name:"联通林云卡",price:40,flow:200,talk:100,region:"发全国",nation:true,budget:false,desc:"200G通用流量"},
+  {id:"lt_qy39",operator:"联通",name:"联通千云卡",price:39,flow:280,talk:200,region:"仅发河北",nation:false,budget:false,hot:true,desc:"280G+200分钟"},
+  {id:"lt_jc39",operator:"联通",name:"联通巨川卡",price:39,flow:520,talk:300,region:"仅发四川",nation:false,budget:false,hot:true,desc:"520G超大流量"},
+  {id:"lt_jh29",operator:"联通",name:"联通江会卡",price:29,flow:160,talk:500,region:"仅发浙江",nation:false,budget:true,desc:"29元160G+500分钟"},
+  {id:"lt_hp49",operator:"联通",name:"联通琥珀卡",price:49,flow:215,talk:100,region:"发全国",nation:true,budget:false,desc:"215G通用"}
 ];
 
-// ===================== 智能状态机 =====================
-const state = {
-  budget: null,
-  dataNeeds: null,      // "max" | "high" | "mid" | "low"
-  callNeeds: null,      // "high" | "mid" | "low"
-  age: null,
-  localNeeds: null,
-  conversationHistory: []
+// 用户条件状态
+var userConditions={
+  budget:null,
+  operator:null,
+  needTalk:null,
+  region:null,
+  device:null
+};
+var currentResults=[];
+var resultIndex=0;
+
+// 初始化
+function init(){
+  showBotMessage('👋 您好！我是流量卡智能顾问\n\n请告诉我您的需求，比如：\n• "学生党，预算20以内"\n• "通话多，流量也要大"\n• "只要移动卡"');
+}
+
+// 显示加载
+function showLoading(){document.getElementById('loading').classList.add('show');}
+function hideLoading(){document.getElementById('loading').classList.remove('show');}
+
+// 添加消息
+function addChatBubble(content,type){
+  var div=document.createElement('div');
+  div.className='chat-bubble '+type;
+  var avatar=type==='bot'?'🤖':'🙋';
+  div.innerHTML='<div class="chat-avatar">'+avatar+'</div><div class="chat-content">'+content.replace(/\n/g,'<br>')+'</div>';
+  document.getElementById('chatArea').appendChild(div);
+  scrollToBottom();
+}
+
+function showBotMessage(content){addChatBubble(content,'bot');}
+function showUserMessage(content){addChatBubble(content,'user');}
+
+function scrollToBottom(){
+  var main=document.getElementById('main');
+  setTimeout(function(){main.scrollTop=main.scrollHeight;},50);
+}
+
+// 更新条件标签
+function updateConditions(){
+  var bar=document.getElementById('conditionsBar');
+  var tags=[];
+  if(userConditions.budget){
+    var label=userConditions.budget.max?userConditions.budget.max+'元以内':'不限';
+    tags.push('<span class="condition-tag" onclick="clearCondition(\'budget\')">预算:'+label+' <span class="remove">✕</span></span>');
+  }
+  if(userConditions.operator){
+    tags.push('<span class="condition-tag" onclick="clearCondition(\'operator\')">'+userConditions.operator+' <span class="remove">✕</span></span>');
+  }
+  if(userConditions.needTalk===true){
+    tags.push('<span class="condition-tag" onclick="clearCondition(\'needTalk\')">需要通话 <span class="remove">✕</span></span>');
+  }
+  if(userConditions.needTalk===false){
+    tags.push('<span class="condition-tag" onclick="clearCondition(\'needTalk\')">纯流量 <span class="remove">✕</span></span>');
+  }
+  if(userConditions.region==='nation'){
+    tags.push('<span class="condition-tag" onclick="clearCondition(\'region\')">全国可用 <span class="remove">✕</span></span>');
+  }
+  bar.innerHTML=tags.join('');
+}
+
+function clearCondition(key){
+  delete userConditions[key];
+  updateConditions();
+  searchProducts();
+}
+
+// 搜索产品
+function searchProducts(){
+  var results=PRODUCTS.slice();
+  
+  // 按运营商筛选
+  if(userConditions.operator){
+    results=results.filter(function(p){return p.operator===userConditions.operator;});
+  }
+  
+  // 按预算筛选
+  if(userConditions.budget&&userConditions.budget.max){
+    results=results.filter(function(p){return p.price<=userConditions.budget.max;});
+  }
+  
+  // 按通话筛选
+  if(userConditions.needTalk===true){
+    results=results.filter(function(p){return p.talk>0;});
+  }else if(userConditions.needTalk===false){
+    results=results.filter(function(p){return p.talk===0;});
+  }
+  
+  // 按地区筛选
+  if(userConditions.region==='nation'){
+    results=results.filter(function(p){return p.nation;});
+  }
+  
+  // 排序：热门优先，然后按流量
+  results.sort(function(a,b){
+    if(a.hot&&!b.hot)return-1;
+    if(!a.hot&&b.hot)return 1;
+    return b.flow-a.flow;
+  });
+  
+  currentResults=results;
+  resultIndex=0;
+  
+  if(results.length===0){
+    showBotMessage('😢 没有找到符合条件的套餐\n\n试试放宽条件？');
+  }else{
+    showBotMessage('✨ 找到 '+results.length+' 款合适的卡，正在为您展示...');
+    setTimeout(function(){showNextResults();},500);
+  }
+}
+
+// 显示下一批结果
+function showNextResults(){
+  hideLoading();
+  var cards=document.createElement('div');
+  cards.className='result-cards';
+  
+  var batch=currentResults.slice(resultIndex,resultIndex+3);
+  batch.forEach(function(p){
+    var hotTag=p.hot?'<span class="tag hot">🔥</span>':'';
+    var regionTag=p.nation?'<span class="tag nation">🌐全国</span>':'<span class="tag local">📍省内</span>';
+    var talkText=p.talk>0?p.talk+'分钟':'纯流量';
+    
+    cards.innerHTML+='<div class="result-card">'+
+      '<div class="card-top">'+
+        '<div class="card-name">'+p.name+'</div>'+
+        '<div class="card-tags">'+hotTag+regionTag+'</div>'+
+      '</div>'+
+      '<div class="card-specs">'+
+        '<div class="spec"><div class="spec-val">'+p.operator+'</div><div class="spec-label">运营商</div></div>'+
+        '<div class="spec"><div class="spec-val">'+p.flow+'G</div><div class="spec-label">流量</div></div>'+
+        '<div class="spec"><div class="spec-val">'+talkText+'</div><div class="spec-label">通话</div></div>'+
+        '<div class="spec"><div class="spec-val">'+p.region.split("发")[1]||p.region+'</div><div class="spec-label">地区</div></div>'+
+      '</div>'+
+      '<div class="card-price">'+p.price+'<span>元/月</span></div>'+
+      '<div class="card-desc" style="text-align:center;font-size:12px;color:#666;margin-bottom:10px">'+p.desc+'</div>'+
+      '<div class="card-actions">'+
+        '<button class="card-btn order" onclick="showQR()">📞 办理</button>'+
+      '</div>'+
+    '</div>';
+  });
+  
+  document.getElementById('chatArea').appendChild(cards);
+  resultIndex+=3;
+  
+  // 如果还有更多，显示换一批按钮
+  if(resultIndex<currentResults.length){
+    var moreBtn=document.createElement('button');
+    moreBtn.className='card-btn refresh';
+    moreBtn.style.width='100%';
+    moreBtn.style.marginTop='12px';
+    moreBtn.textContent='🔄 查看更多 ('+currentResults.length+'-'+resultIndex+'/'+currentResults.length+')';
+    moreBtn.onclick=showNextResults;
+    document.getElementById('chatArea').appendChild(moreBtn);
+  }
+  
+  scrollToBottom();
+}
+
+// 显示二维码
+function showQR(){
+  window.open('https://huangrunshi.github.io/flowcard-agent/qrcode.png','_blank');
+}
+
+// 处理用户输入
+function processInput(text){
+  var t=text.toLowerCase();
+  
+  // 检查修改条件
+  if(t.includes('改成')||t.includes('改')||t.includes('改成')){
+    if(t.includes('预算')||t.includes('20')||t.includes('30')||t.includes('40')||t.includes('便宜')){
+      var match=t.match(/(\d+)/);
+      if(match){
+        userConditions.budget={max:parseInt(match[1])};
+        updateConditions();
+        showUserMessage('好的，预算改成'+match[1]+'元以内');
+        showLoading();
+        setTimeout(function(){searchProducts();},800);
+        return;
+      }
+    }
+    if(t.includes('不要')&&(t.includes('电信')||t.includes('移动')||t.includes('联通'))){
+      var notOp=t.includes('电信')?'电信':t.includes('移动')?'移动':'联通';
+      userConditions.operator=notOp==='电信'?'移动':'电信';
+      updateConditions();
+      showUserMessage('好的，不要'+notOp+'，给你推荐其他运营商');
+      showLoading();
+      setTimeout(function(){searchProducts();},800);
+      return;
+    }
+  }
+  
+  // 运营商选择
+  if(t.includes('电信')||t.includes('dx')||t.includes('电信卡')){
+    userConditions.operator='电信';
+    updateConditions();
+    showUserMessage('好的，要电信卡');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  if(t.includes('移动')||t.includes('yd')){
+    userConditions.operator='移动';
+    updateConditions();
+    showUserMessage('好的，要移动卡');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  if(t.includes('联通')||t.includes('lt')){
+    userConditions.operator='联通';
+    updateConditions();
+    showUserMessage('好的，要联通卡');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  if(t.includes('不要')&&(t.includes('电信')||t.includes('移动')||t.includes('联通'))){
+    var notOp=t.includes('电信')?'电信':t.includes('移动')?'移动':'联通';
+    userConditions.operator=notOp==='电信'?'移动':notOp==='移动'?'联通':'电信';
+    updateConditions();
+    showUserMessage('好的，避开'+notOp);
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  
+  // 通话需求
+  if(t.includes('通话')||t.includes('打电话')||t.includes('分钟')||t.includes('电话多')){
+    userConditions.needTalk=true;
+    updateConditions();
+    showUserMessage('好的，需要通话功能');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  if(t.includes('纯流量')||t.includes('不打电话')||t.includes('不要通话')){
+    userConditions.needTalk=false;
+    updateConditions();
+    showUserMessage('好的，纯流量套餐');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  
+  // 预算
+  var budgetMatch=t.match(/(\d{1,2})\s*元/);
+  if(budgetMatch){
+    userConditions.budget={max:parseInt(budgetMatch[1])};
+    updateConditions();
+    showUserMessage('好的，预算'+budgetMatch[1]+'元以内');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  if(t.includes('便宜')||t.includes('低价')||t.includes('省钱')){
+    userConditions.budget={max:30};
+    updateConditions();
+    showUserMessage('好的，帮你找低价套餐');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  
+  // 地区
+  if(t.includes('全国')||t.includes('通用')){
+    userConditions.region='nation';
+    updateConditions();
+    showUserMessage('好的，要全国可用的');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  
+  // 学生党
+  if(t.includes('学生')||t.includes('上学')){
+    userConditions.budget={max:30};
+    userConditions.needTalk=null;
+    updateConditions();
+    showUserMessage('好的，学生党套餐推荐');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  
+  // 热门推荐
+  if(t.includes('推荐')||t.includes('热门')||t.includes('最好')){
+    showUserMessage('好的，为你推荐热门套餐');
+    showLoading();
+    setTimeout(function(){searchProducts();},800);
+    return;
+  }
+  
+  // 大流量
+  if(t.includes('大流量')||t.includes('流量多')){
+    showUserMessage('好的，找大流量套餐');
+    showLoading();
+    setTimeout(function(){
+      currentResults=PRODUCTS.slice().sort(function(a,b){return b.flow-a.flow;});
+      resultIndex=0;
+      showBotMessage('📊 按流量排序的大流量套餐：');
+      setTimeout(function(){showNextResults();},500);
+    },800);
+    return;
+  }
+  
+  // 默认：模糊搜索，反问确认
+  showBotMessage('收到！我来帮你找...\n\n您还有什么要求吗？\n• 预算多少？（比如30元以内）\n• 需要通话吗？\n• 要哪个运营商？');
+  showLoading();
+  setTimeout(function(){searchProducts();},800);
+}
+
+// 事件绑定
+document.getElementById('sendBtn').onclick=function(){
+  var input=document.getElementById('userInput');
+  var text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  showUserMessage(text);
+  processInput(text);
 };
 
-// ===================== NLU: 自然语言理解 =====================
-function analyzeInput(text) {
-  const result = { budget: null, dataNeeds: null, callNeeds: null, age: null, localNeeds: null, intent: null };
-  const t = text.toLowerCase().replace(/\s+/g, '');
+document.getElementById('userInput').onkeydown=function(e){
+  if(e.key==='Enter')document.getElementById('sendBtn').click();
+};
 
-  // 预算识别
-  const budgetMatch = t.match(/(\d+)\s*元/);
-  if (budgetMatch) result.budget = parseInt(budgetMatch[1]);
-  if (t.includes('不限') || t.includes('随便') || t.includes('不在乎')) result.budget = 999;
-  if (t.includes('便宜') || t.includes('省钱') || t.includes('最低')) result.budget = result.budget || 29;
-  if (t.includes('越便宜越好') || t.includes('越低越好')) result.budget = 19;
-
-  // 流量需求识别
-  if (t.includes('越多越好') || t.includes('大流量') || t.includes('流量王') || t.includes('超大流量')) result.dataNeeds = 'max';
-  else if (t.includes('很多') || t.includes('大量') || t.includes('刷视频') || t.includes('看剧') || t.includes('直播')) result.dataNeeds = 'high';
-  else if (t.includes('够用') || t.includes('一般') || t.includes('正常')) result.dataNeeds = 'mid';
-  else if (t.includes('很少') || t.includes('不多') || t.includes('够用就行')) result.dataNeeds = 'low';
-
-  // 通话需求识别
-  if (t.includes('经常打') || t.includes('通话多') || t.includes('打电话多') || t.includes('很多电话') || t.includes('业务电话')) result.callNeeds = 'high';
-  else if (t.includes('偶尔打') || t.includes('有时打') || t.includes('还行')) result.callNeeds = 'mid';
-  else if (t.includes('不打') || t.includes('很少打') || t.includes('基本不打') || t.includes('不打电话')) result.callNeeds = 'low';
-
-  // 年龄识别
-  const ageMatch = t.match(/(\d+)\s*岁/);
-  if (ageMatch) result.age = parseInt(ageMatch[1]);
-  if (t.includes('学生') || t.includes('大学') || t.includes('在校') || t.includes('刚毕业')) result.age = result.age || 22;
-  if (t.includes('应届') || t.includes('实习生')) result.age = result.age || 23;
-  if (t.includes('中年') || t.includes('工作多年') || t.includes('上班')) result.age = result.age || 35;
-
-  // 归属地识别
-  if (t.includes('本地归属') || t.includes('本地号码') || t.includes('本地卡') || t.includes('当地区号')) result.localNeeds = true;
-  if (t.includes('不需要本地') || t.includes('全国通用') || t.includes('不在意归属')) result.localNeeds = false;
-
-  // 意图识别
-  if (t.includes('推荐') || t.includes('找') || t.includes('有没有') || t.includes('想要') || t.includes('需要')) result.intent = 'recommend';
-  if (t.includes('查看全部') || t.includes('所有套餐') || t.includes('全部套餐')) result.intent = 'showAll';
-  if (t.includes('重新') || t.includes('重来') || t.includes('重新选')) result.intent = 'reset';
-
-  return result;
-}
-
-// ===================== 智能追问逻辑 =====================
-function getMissingInfo() {
-  const missing = [];
-
-  if (state.budget === null) {
-    missing.push({ key: 'budget', question: '您每月的预算大概是多少？', priority: 1 });
-  }
-
-  if (state.dataNeeds === null && state.callNeeds === null) {
-    missing.push({ key: 'usage', question: '您主要用流量还是打电话？或者两者都需要？', priority: 2 });
-  }
-
-  if (state.age === null) {
-    missing.push({ key: 'age', question: '请问您大概多大年龄？（部分套餐有年龄限制）', priority: 3 });
-  }
-
-  if (state.localNeeds === null && missing.length === 0) {
-    missing.push({ key: 'local', question: '需要本地归属地吗？', priority: 4 });
-  }
-
-  return missing.sort((a, b) => a.priority - b.priority);
-}
-
-function generateSmartQuestion() {
-  const missing = getMissingInfo();
-
-  if (missing.length === 0) {
-    return null; // 信息足够，可以推荐了
-  }
-
-  const first = missing[0];
-  let quickBtns = [];
-
-  switch (first.key) {
-    case 'budget':
-      quickBtns = [
-        { label: '20元以内', action: () => { state.budget = 19; processUserInput('20元以内', true); } },
-        { label: '30元以内', action: () => { state.budget = 30; processUserInput('30元以内', true); } },
-        { label: '40元以内', action: () => { state.budget = 40; processUserInput('40元以内', true); } },
-        { label: '不限预算', action: () => { state.budget = 999; processUserInput('不限预算', true); } }
-      ];
-      break;
-    case 'usage':
-      quickBtns = [
-        { label: '流量越多越好', action: () => { state.dataNeeds = 'max'; processUserInput('流量越多越好', true); } },
-        { label: '通话也要多', action: () => { state.callNeeds = 'high'; state.dataNeeds = 'high'; processUserInput('通话也要多', true); } },
-        { label: '够用就行', action: () => { state.dataNeeds = 'mid'; state.callNeeds = 'mid'; processUserInput('够用就行', true); } }
-      ];
-      break;
-    case 'age':
-      quickBtns = [
-        { label: '18-24岁', action: () => { state.age = 22; processUserInput('18-24岁', true); } },
-        { label: '25-28岁', action: () => { state.age = 26; processUserInput('25-28岁', true); } },
-        { label: '29-60岁', action: () => { state.age = 35; processUserInput('29-60岁', true); } }
-      ];
-      break;
-    case 'local':
-      quickBtns = [
-        { label: '需要本地归属', action: () => { state.localNeeds = true; processUserInput('需要本地归属', true); } },
-        { label: '不需要', action: () => { state.localNeeds = false; processUserInput('不需要', true); } }
-      ];
-      break;
-  }
-
-  return { question: first.question, quickBtns };
-}
-
-// ===================== 推荐引擎 =====================
-function recommend() {
-  let candidates = PLANS.filter(p => {
-    if (state.age !== null && (state.age < p.minAge || state.age > p.maxAge)) return false;
-    if (state.budget !== null && p.price > state.budget) return false;
-    return true;
-  });
-
-  if (state.localNeeds === true) {
-    const localPlans = candidates.filter(p => p.local);
-    if (localPlans.length > 0) candidates = localPlans;
-  }
-
-  // 排序策略
-  if (state.callNeeds === 'high') {
-    candidates.sort((a, b) => {
-      if (b.call !== a.call) return b.call - a.call;
-      return b.data - a.data;
-    });
-  } else if (state.dataNeeds === 'max' || state.dataNeeds === 'high') {
-    candidates.sort((a, b) => {
-      const aTotal = a.data + a.extraData;
-      const bTotal = b.data + b.extraData;
-      return bTotal - aTotal;
-    });
-  } else {
-    // 综合排序：性价比优先
-    candidates.sort((a, b) => {
-      const aScore = (a.data + a.extraData) / a.price + a.call / 100;
-      const bScore = (b.data + b.extraData) / b.price + b.call / 100;
-      return bScore - aScore;
-    });
-  }
-
-  return candidates.slice(0, 3);
-}
-
-// ===================== 渲染函数 =====================
-function appendBotMsg(html, quickBtns) {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
-  wrap.innerHTML = `<div class="avatar">🤖</div><div class="bubble bot">${html}</div>`;
-  document.getElementById("messages").appendChild(wrap);
-
-  if (quickBtns && quickBtns.length) {
-    const btnWrap = document.createElement("div");
-    btnWrap.className = "quick-btns";
-    quickBtns.forEach(btn => {
-      const b = document.createElement("button");
-      b.className = "quick-btn";
-      b.textContent = btn.label;
-      b.onclick = () => {
-        btn.action();
-        btnWrap.remove();
-      };
-      btnWrap.appendChild(b);
-    });
-    document.getElementById("messages").appendChild(btnWrap);
-  }
-  scrollBottom();
-}
-
-function appendUserMsg(text) {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap user";
-  wrap.innerHTML = `<div class="bubble user">${text}</div><div class="avatar">🙋</div>`;
-  document.getElementById("messages").appendChild(wrap);
-  scrollBottom();
-}
-
-function appendTyping() {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
-  wrap.id = "typing";
-  wrap.innerHTML = `<div class="avatar">🤖</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>`;
-  document.getElementById("messages").appendChild(wrap);
-  scrollBottom();
-}
-
-function removeTyping() {
-  const t = document.getElementById("typing");
-  if (t) t.remove();
-}
-
-function appendCards(plans) {
-  const wrap = document.createElement("div");
-  wrap.className = "bubble-wrap bot";
-  const cardList = document.createElement("div");
-  cardList.className = "card-list";
-  cardList.style.maxWidth = "340px";
-
-  plans.forEach((p, i) => {
-    const card = document.createElement("div");
-    card.className = "card" + (i === 0 ? " best" : "");
-    const orderUrl = `https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=${p.id}`;
-    const totalData = p.data + p.extraData;
-    card.innerHTML = `
-      ${i === 0 ? '<div class="card-badge">🌟 最推荐</div>' : (i === 1 ? '<div class="card-badge" style="background:#aaa">备选</div>' : '')}
-      <div class="card-name">${p.name}</div>
-      <div class="card-price">${p.price}元<span>/月</span></div>
-      <div class="card-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
-      ${p.note ? `<div class="card-note">⚠️ ${p.note}</div>` : ""}
-      <a class="order-btn" href="${orderUrl}" target="_blank">立即办理 →</a>
-    `;
-    cardList.appendChild(card);
-  });
-
-  wrap.appendChild(document.createElement("div")).className = "avatar";
-  wrap.children[0].textContent = "🤖";
-  wrap.appendChild(cardList);
-  document.getElementById("messages").appendChild(wrap);
-  scrollBottom();
-}
-
-function scrollBottom() {
-  const m = document.getElementById("messages");
-  setTimeout(() => m.scrollTop = m.scrollHeight, 50);
-}
-
-function updateStatusBar() {
-  let bar = document.getElementById("status-bar");
-  if (!bar) {
-    bar = document.createElement("div");
-    bar.id = "status-bar";
-    bar.className = "status-bar";
-    document.querySelector(".chat-container").insertBefore(bar, document.querySelector(".messages"));
-  }
-
-  const tags = [];
-  if (state.budget !== null) tags.push(`预算: ${state.budget === 999 ? '不限' : state.budget + '元'}`);
-  if (state.dataNeeds) tags.push(`流量: ${state.dataNeeds === 'max' ? '越多越好' : state.dataNeeds === 'high' ? '大量' : '一般'}`);
-  if (state.callNeeds) tags.push(`通话: ${state.callNeeds === 'high' ? '多' : state.callNeeds === 'low' ? '少' : '一般'}`);
-  if (state.age) tags.push(`年龄: ${state.age}岁`);
-  if (state.localNeeds !== null) tags.push(state.localNeeds ? '本地归属' : '全国通用');
-
-  if (tags.length > 0) {
-    bar.innerHTML = tags.map(t => `<span class="tag-item">${t}</span>`).join('');
-    bar.style.display = 'block';
-  } else {
-    bar.style.display = 'none';
-  }
-}
-
-// ===================== 核心对话处理 =====================
-function botReply(text, quickBtns, delay = 500) {
-  appendTyping();
-  setTimeout(() => {
-    removeTyping();
-    appendBotMsg(text, quickBtns);
-  }, delay);
-}
-
-function processUserInput(text, skipAppend = false) {
-  if (!skipAppend) appendUserMsg(text);
-  state.conversationHistory.push({ role: 'user', text });
-
-  const analysis = analyzeInput(text);
-
-  // 更新状态
-  if (analysis.budget !== null) state.budget = analysis.budget;
-  if (analysis.dataNeeds !== null) state.dataNeeds = analysis.dataNeeds;
-  if (analysis.callNeeds !== null) state.callNeeds = analysis.callNeeds;
-  if (analysis.age !== null) state.age = analysis.age;
-  if (analysis.localNeeds !== null) state.localNeeds = analysis.localNeeds;
-
-  updateStatusBar();
-
-  // 处理特殊意图
-  if (analysis.intent === 'reset') {
-    resetState();
-    startConversation();
-    return;
-  }
-
-  if (analysis.intent === 'showAll') {
-    showAllPlans();
-    return;
-  }
-
-  // 检查是否可以推荐
-  const hasEnoughInfo = state.budget !== null && (state.dataNeeds !== null || state.callNeeds !== null) && state.age !== null;
-
-  if (hasEnoughInfo) {
-    const missing = getMissingInfo();
-    if (missing.length === 0) {
-      showRecommendation();
-    } else {
-      // 还有一点信息缺失，追问
-      const qa = generateSmartQuestion();
-      botReply(qa.question, qa.quickBtns);
+// 快捷按钮
+document.querySelectorAll('.quick-btn').forEach(function(btn){
+  btn.onclick=function(){
+    var action=this.dataset.action;
+    var filter=this.dataset.filter;
+    
+    if(action==='refresh'){
+      showUserMessage('换一批');
+      showLoading();
+      setTimeout(function(){
+        var shuffled=currentResults.slice().sort(function(){return 0.5-Math.random();});
+        currentResults=shuffled;
+        resultIndex=0;
+        showNextResults();
+      },500);
+      return;
     }
-  } else {
-    // 信息不够，智能追问
-    const qa = generateSmartQuestion();
-    if (qa) {
-      botReply(qa.question, qa.quickBtns);
-    } else {
-      showRecommendation();
-    }
-  }
-}
-
-function showRecommendation() {
-  const plans = recommend();
-  if (!plans.length) {
-    botReply("抱歉，暂时没有完全符合条件的套餐 😅<br>要不放宽一下条件？比如提高预算或取消年龄限制？", [
-      { label: '🔄 重新选择', action: () => { resetState(); startConversation(); } },
-      { label: '📋 查看全部套餐', action: () => showAllPlans() }
-    ]);
-    return;
-  }
-
-  botReply(`根据您的需求，为您精准匹配到 <b>${plans.length} 款</b>最合适的套餐 👇`);
-  setTimeout(() => appendCards(plans), 600);
-  setTimeout(() => {
-    botReply("点击「立即办理」直接跳转下单 😊<br>还有其他问题吗？", [
-      { label: '🔄 重新选择', action: () => { resetState(); startConversation(); } },
-      { label: '📋 查看全部套餐', action: () => showAllPlans() }
-    ]);
-  }, 1200);
-}
-
-function showAllPlans() {
-  appendUserMsg("查看全部套餐");
-  botReply("全部全国可发套餐如下，点击直接办理 👇");
-  setTimeout(() => appendCards(PLANS), 600);
-}
-
-function resetState() {
-  state.budget = null;
-  state.dataNeeds = null;
-  state.callNeeds = null;
-  state.age = null;
-  state.localNeeds = null;
-  state.conversationHistory = [];
-  updateStatusBar();
-}
-
-function startConversation() {
-  botReply(
-    "您好！我是流量卡顾问 👋<br>您可以随便说说您的需求，比如：<br>• 「学生党，想要便宜大流量」<br>• 「30岁，通话多，流量也要大」<br>• 「预算30以内，不打电话」",
-    [
-      { label: '大流量+便宜', action: () => processUserInput('流量越多越好，月租便宜', true) },
-      { label: '通话多', action: () => processUserInput('打电话多，流量也要有', true) },
-      { label: '随便看看', action: () => showAllPlans() }
-    ],
-    800
-  );
-}
-
-function handleSend() {
-  const input = document.getElementById("userInput");
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = "";
-  processUserInput(text);
-}
-
-document.getElementById("userInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") handleSend();
+    
+    if(filter==='dx'){processInput('电信');return;}
+    if(filter==='yd'){processInput('移动');return;}
+    if(filter==='lt'){processInput('联通');return;}
+    if(filter==='budget'){processInput('便宜');return;}
+    if(filter==='nation'){processInput('全国');return;}
+  };
 });
 
-window.onload = () => startConversation();
+init();
 </script>
 </body>
 </html>
