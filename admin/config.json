@@ -1,0 +1,81 @@
+{
+  "site": {
+    "title": "流量卡智能顾问 AI",
+    "subtitle": "3秒匹配 · 无合约 · 不虚量 · 官方可查"
+  },
+  "colors": {
+    "primary": "#0d9488",
+    "primaryLight": "#0f766e",
+    "accent": "#5eead4",
+    "background": "#141824",
+    "backgroundGradient": "#1e2535",
+    "textPrimary": "#e2e8f0",
+    "textSecondary": "#94a3b8",
+    "textMuted": "#64748b"
+  },
+  "layout": {
+    "maxWidth": 900,
+    "maxWidthTablet": "90%",
+    "maxWidthDesktop": 1000,
+    "maxWidthLarge": 1100,
+    "borderRadius": 16,
+    "avatarSize": 42,
+    "avatarSizeMobile": 32,
+    "bubbleSpacing": 20,
+    "cardSpacing": 16,
+    "cardPadding": 18
+  },
+  "chat": {
+    "aiBubbleBg": "rgba(30,34,42,0.92)",
+    "userBubbleBg": "linear-gradient(135deg,#0891b2,#0e7490)",
+    "aiBubbleRadius": 16,
+    "userBubbleRadius": 16,
+    "aiBorderColor": "rgba(94,234,212,0.08)",
+    "showShadow": true,
+    "maxBubbleWidth": 78,
+    "maxBubbleWidthLarge": 60
+  },
+  "badges": [
+    {"text": "官方正规可查", "icon": "✓"},
+    {"text": "无合约不虚量", "icon": "✓"},
+    {"text": "3秒智能匹配", "icon": "✓"},
+    {"text": "全国发货可选", "icon": "✓"}
+  ],
+  "quickFilters": [
+    {"label": "换一批", "action": "refresh", "icon": "🔄"},
+    {"label": "电信", "filter": "dx", "icon": "📡"},
+    {"label": "移动", "filter": "yd", "icon": "📶"},
+    {"label": "联通", "filter": "lt", "icon": "📟"},
+    {"label": "低月租", "filter": "budget", "icon": "💰"},
+    {"label": "全国", "filter": "nation", "icon": "🌐"}
+  ],
+  "suggestQuestions": [
+    {"text": "学生党套餐", "query": "学生党套餐", "icon": "🎓"},
+    {"text": "大流量卡", "query": "大流量卡", "icon": "💧"},
+    {"text": "低月租", "query": "低月租", "icon": "💸"},
+    {"text": "通话多", "query": "通话多的卡", "icon": "📞"},
+    {"text": "全国通用", "query": "全国通用", "icon": "🌐"},
+    {"text": "联通卡", "query": "联通卡", "icon": "📟"}
+  ],
+  "highlights": {
+    "bigflow": {"minFlow": 200, "label": "大流量", "icon": "💧"},
+    "nation": {"enabled": true, "label": "全国通用", "icon": "🚀"},
+    "budget": {"enabled": true, "label": "低月租", "icon": "💸"},
+    "talk": {"minTalk": 300, "label": "通话多", "icon": "📞"},
+    "value": {"minFlow": 100, "maxPrice": 29, "label": "高性价比", "icon": "⭐"}
+  },
+  "disclaimer": {
+    "enabled": true,
+    "text": "套餐信息仅供参考，具体以运营商官方为准，本页面仅为智能推荐。套餐资费及覆盖范围可能随时调整，购买前请仔细阅读套餐说明。"
+  },
+  "features": {
+    "showHighlights": true,
+    "showRegionTag": true,
+    "showPriceRow": true,
+    "autoScroll": true,
+    "keyboardAdapt": true,
+    "nationFirst": true
+  },
+  "initMessage": "👋 您好！我是流量卡智能顾问\n\n请告诉我您的需求，比如：\n• \"学生党，预算20以内\"\n• \"通话多，流量也要大\"\n• \"只要移动卡\"",
+  "initProductsMessage": "🌐 以下是当前热门套餐，全国套餐优先展示，点击「立即办理」直接下单："
+}
