@@ -77,6 +77,27 @@
     .loading::after{content:'...';animation:dots 1.5s infinite}
     @keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
     
+    /* 手机专项优化 */
+    @media(max-width:480px){
+      .header{padding:12px 16px 10px}
+      .header h1{font-size:16px}
+      .header p{font-size:11px}
+      .quick-btns{padding:10px 12px;gap:6px}
+      .quick-btn{padding:7px 10px;font-size:11px;min-width:52px}
+      .conditions-bar{padding:8px 12px}
+      .main{padding:12px}
+      .chat-content{max-width:85%;padding:10px 14px;font-size:13px}
+      .chat-avatar{width:32px;height:32px;font-size:15px}
+      .result-card{padding:12px}
+      .card-name{font-size:14px}
+      .card-specs{grid-template-columns:repeat(2,1fr);gap:6px}
+      .spec-val{font-size:13px}
+      .card-price{font-size:20px}
+      .card-btn{padding:11px 8px;font-size:13px}
+      .input-area{padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+      .input-row input{padding:11px 14px;font-size:14px}
+      .send-btn{width:44px;height:44px;font-size:18px}
+    }
     @media(min-width:768px){.card-specs{grid-template-columns:repeat(5,1fr)}}
   </style>
 </head>
@@ -561,6 +582,27 @@ document.querySelectorAll('.quick-btn').forEach(function(btn){
 });
 
 init();
+
+// 手机键盘弹起时滚动到底部
+if(/iPhone|iPad|Android/i.test(navigator.userAgent)){
+  var input=document.getElementById('userInput');
+  input.addEventListener('focus',function(){
+    setTimeout(function(){
+      document.getElementById('main').scrollTop=document.getElementById('main').scrollHeight;
+    },300);
+  });
+  // 监听视口变化（键盘弹起/收起）
+  var origH=window.innerHeight;
+  window.addEventListener('resize',function(){
+    var newH=window.innerHeight;
+    if(newH<origH-100){
+      // 键盘弹起，滚动到底
+      setTimeout(function(){
+        document.getElementById('main').scrollTop=document.getElementById('main').scrollHeight;
+      },100);
+    }
+  });
+}
 </script>
 <!-- v1775024848 -->
 </body>
