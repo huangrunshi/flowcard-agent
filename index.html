@@ -411,7 +411,7 @@ function processInput(text){
     }
     if(t.includes('不要')&&(t.includes('电信')||t.includes('移动')||t.includes('联通'))){
       var notOp=t.includes('电信')?'电信':t.includes('移动')?'移动':'联通';
-      userConditions.operator=notOp==='电信'?'移动':'notOp==='移动'?'联通':'电信';
+      userConditions.operator=notOp==='电信'?'移动':notOp==='移动'?'联通':'电信';
       updateConditions();
       showUserMessage('好的，不要'+notOp+'，给你推荐其他运营商');
       showLoading();
