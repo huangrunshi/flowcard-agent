@@ -6,51 +6,78 @@
   <title>流量卡智能顾问 - 管理后台</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",Arial,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
-    .container{max-width:1200px;margin:0 auto}
+    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",Arial,sans-serif;background:linear-gradient(150deg,#0f172a 0%,#1a2332 100%);color:#e2e8f0;min-height:100vh;padding:20px}
+    .container{max-width:1400px;margin:0 auto}
     .header{text-align:center;margin-bottom:40px}
-    .header h1{font-size:28px;margin-bottom:8px;color:#fff}
+    .header h1{font-size:28px;margin-bottom:8px;color:#fff;letter-spacing:0.5px}
     .header p{color:#94a3b8;font-size:14px}
     
-    .tabs{display:flex;gap:12px;margin-bottom:30px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:16px}
-    .tab{padding:10px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer;transition:all 0.2s;color:#94a3b8}
-    .tab.active{background:#0d9488;color:#fff;border-color:#0d9488}
+    .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+    @media(max-width:1024px){.main-grid{grid-template-columns:1fr}}
+    
+    .panel{background:rgba(30,37,53,0.8);border:1px solid rgba(94,234,212,0.1);border-radius:16px;padding:24px;backdrop-filter:blur(10px)}
+    
+    .tabs{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:12px;overflow-x:auto}
+    .tab{padding:10px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;cursor:pointer;transition:all 0.2s;color:#94a3b8;white-space:nowrap;font-size:13px;font-weight:500}
+    .tab:hover{background:rgba(94,234,212,0.08);color:#5eead4}
+    .tab.active{background:rgba(94,234,212,0.15);color:#5eead4;border-color:rgba(94,234,212,0.3)}
     
     .section{display:none}
     .section.active{display:block}
     
-    .form-group{margin-bottom:24px;background:rgba(30,37,53,0.6);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
-    .form-group label{display:block;margin-bottom:8px;font-weight:600;color:#e2e8f0;font-size:14px}
-    .form-group input, .form-group textarea, .form-group select{width:100%;padding:10px 14px;background:rgba(15,20,30,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#e2e8f0;font-size:14px;font-family:inherit}
-    .form-group input:focus, .form-group textarea:focus{outline:none;border-color:#0d9488;box-shadow:0 0 0 3px rgba(13,148,136,0.1)}
-    .form-group textarea{resize:vertical;min-height:100px}
+    .form-group{margin-bottom:20px}
+    .form-label{display:block;margin-bottom:8px;font-weight:600;color:#e2e8f0;font-size:13px;text-transform:uppercase;letter-spacing:0.5px}
+    .form-label .hint{font-size:11px;color:#64748b;font-weight:400;text-transform:none;margin-left:8px}
     
-    .color-picker{display:flex;gap:12px;align-items:center}
-    .color-input{width:60px;height:40px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer}
-    .color-value{flex:1;padding:10px 14px;background:rgba(15,20,30,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#e2e8f0}
+    .input-group{display:flex;gap:10px;align-items:center}
+    input[type="text"], input[type="number"], input[type="color"], textarea, select{
+      flex:1;padding:10px 14px;background:rgba(15,20,30,0.8);border:1px solid rgba(94,234,212,0.2);border-radius:10px;color:#e2e8f0;font-size:13px;font-family:inherit;transition:all 0.2s
+    }
+    input[type="text"]:focus, input[type="number"]:focus, input[type="color"]:focus, textarea:focus, select:focus{
+      outline:none;border-color:rgba(94,234,212,0.5);background:rgba(15,20,30,0.95);box-shadow:0 0 0 3px rgba(94,234,212,0.08)
+    }
+    textarea{resize:vertical;min-height:80px}
     
-    .array-item{background:rgba(15,20,30,0.5);padding:12px;border-radius:8px;margin-bottom:8px;display:flex;gap:8px;align-items:center}
-    .array-item input{flex:1}
-    .array-item button{padding:6px 12px;background:#dc2626;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px}
-    .array-item button:hover{background:#b91c1c}
+    .color-picker{display:flex;gap:10px;align-items:center}
+    .color-input{width:50px;height:40px;border:1px solid rgba(94,234,212,0.2);border-radius:10px;cursor:pointer;padding:2px}
+    .color-value{flex:1;padding:10px 14px;background:rgba(15,20,30,0.8);border:1px solid rgba(94,234,212,0.2);border-radius:10px;color:#e2e8f0;font-size:12px;font-family:monospace}
     
-    .btn-group{display:flex;gap:12px;margin-top:30px}
-    .btn{padding:12px 24px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s}
-    .btn-primary{background:#0d9488;color:#fff}
-    .btn-primary:hover{background:#0f766e;transform:translateY(-1px)}
-    .btn-secondary{background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.2)}
-    .btn-secondary:hover{background:rgba(255,255,255,0.15)}
+    .slider-group{display:flex;gap:12px;align-items:center}
+    input[type="range"]{flex:1;height:6px;background:rgba(94,234,212,0.1);border-radius:3px;outline:none;-webkit-appearance:none}
+    input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:linear-gradient(135deg,#0d9488,#0f766e);border-radius:50%;cursor:pointer;box-shadow:0 2px 8px rgba(13,148,136,0.3)}
+    input[type="range"]::-moz-range-thumb{width:18px;height:18px;background:linear-gradient(135deg,#0d9488,#0f766e);border-radius:50%;cursor:pointer;border:none;box-shadow:0 2px 8px rgba(13,148,136,0.3)}
+    .slider-value{min-width:50px;text-align:right;color:#5eead4;font-weight:600;font-size:13px}
     
-    .preview{background:rgba(30,37,53,0.6);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);margin-top:20px}
-    .preview h3{margin-bottom:12px;color:#5eead4}
-    .preview-item{padding:8px 12px;background:rgba(15,20,30,0.5);border-radius:6px;margin-bottom:6px;font-size:13px}
+    .preview-bubble{padding:14px 18px;border-radius:16px;margin-bottom:12px;max-width:70%;word-break:break-word;font-size:13px;line-height:1.6}
+    .preview-bubble.ai{background:rgba(30,34,42,0.92);border:1px solid rgba(94,234,212,0.08);color:#e2e8f0;margin-right:auto}
+    .preview-bubble.user{background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;margin-left:auto}
     
-    .status{padding:12px 16px;border-radius:8px;margin-bottom:20px;display:none}
-    .status.show{display:block}
+    .preview-section{background:rgba(15,20,30,0.5);border:1px solid rgba(94,234,212,0.1);border-radius:14px;padding:20px;margin-top:20px}
+    .preview-section h3{color:#5eead4;margin-bottom:16px;font-size:13px;text-transform:uppercase;letter-spacing:0.5px}
+    .preview-chat{display:flex;flex-direction:column;gap:12px}
+    
+    .btn-group{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+    .btn{padding:11px 20px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px}
+    .btn-primary{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;box-shadow:0 3px 12px rgba(13,148,136,0.3)}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(13,148,136,0.4)}
+    .btn-primary:active{transform:scale(0.98)}
+    .btn-secondary{background:rgba(255,255,255,0.08);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15)}
+    .btn-secondary:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25)}
+    .btn-danger{background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3)}
+    .btn-danger:hover{background:rgba(239,68,68,0.15)}
+    
+    .status{padding:12px 16px;border-radius:10px;margin-bottom:20px;display:none;font-size:13px;font-weight:500}
+    .status.show{display:block;animation:slideDown 0.3s ease}
     .status.success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981}
     .status.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
     
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .divider{height:1px;background:rgba(255,255,255,0.06);margin:24px 0}
+    
+    .info-box{background:rgba(94,234,212,0.08);border:1px solid rgba(94,234,212,0.2);border-radius:10px;padding:12px 14px;font-size:12px;color:#94a3b8;margin-top:12px}
+    .info-box strong{color:#5eead4}
+    
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
   </style>
 </head>
@@ -59,350 +86,406 @@
 <div class="container">
   <div class="header">
     <h1>📱 流量卡智能顾问 - 管理后台</h1>
-    <p>配置页面样式、文案、功能开关等</p>
+    <p>实时配置对话框样式、颜色、布局等</p>
   </div>
 
-  <div class="status" id="status"></div>
+  <div class="main-grid">
+    <!-- 左侧：配置面板 -->
+    <div class="panel">
+      <div class="status" id="status"></div>
 
-  <div class="tabs">
-    <button class="tab active" data-tab="site">网站信息</button>
-    <button class="tab" data-tab="colors">配色方案</button>
-    <button class="tab" data-tab="layout">布局设置</button>
-    <button class="tab" data-tab="chat">对话框</button>
-    <button class="tab" data-tab="features">功能开关</button>
-    <button class="tab" data-tab="preview">预览</button>
-  </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="bubble">💬 对话框</button>
+        <button class="tab" data-tab="colors">🎨 配色</button>
+        <button class="tab" data-tab="layout">📐 布局</button>
+        <button class="tab" data-tab="advanced">⚙️ 高级</button>
+      </div>
 
-  <!-- 网站信息 -->
-  <div class="section active" id="site">
-    <div class="form-group">
-      <label>网站标题</label>
-      <input type="text" id="siteTitle" placeholder="流量卡智能顾问 AI">
-    </div>
-    <div class="form-group">
-      <label>副标题</label>
-      <input type="text" id="siteSubtitle" placeholder="3秒匹配 · 无合约 · 不虚量 · 官方可查">
-    </div>
-    <div class="form-group">
-      <label>初始欢迎语</label>
-      <textarea id="initMessage"></textarea>
-    </div>
-    <div class="form-group">
-      <label>套餐展示欢迎语</label>
-      <textarea id="initProductsMessage"></textarea>
-    </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
-      <button class="btn btn-secondary" onclick="resetConfig()">🔄 重置</button>
-    </div>
-  </div>
+      <!-- 对话框配置 -->
+      <div class="section active" id="bubble">
+        <div class="form-group">
+          <label class="form-label">AI气泡背景色 <span class="hint">支持rgba或hex</span></label>
+          <div class="color-picker">
+            <input type="color" id="aiBubbleBgColor" class="color-input" value="#1e2232">
+            <input type="text" id="aiBubbleBgValue" class="color-value" placeholder="rgba(30,34,42,0.92)">
+          </div>
+        </div>
 
-  <!-- 配色方案 -->
-  <div class="section" id="colors">
-    <div class="grid-2">
-      <div class="form-group">
-        <label>主色 (Primary)</label>
-        <div class="color-picker">
-          <input type="color" id="colorPrimary" class="color-input">
-          <input type="text" id="colorPrimaryValue" class="color-value" readonly>
+        <div class="form-group">
+          <label class="form-label">用户气泡背景色 <span class="hint">支持渐变</span></label>
+          <input type="text" id="userBubbleBg" placeholder="linear-gradient(135deg,#0891b2,#0e7490)">
+          <div class="info-box">💡 支持纯色 (#0891b2) 或渐变 (linear-gradient(...))</div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">AI气泡圆角 (px)</label>
+            <div class="slider-group">
+              <input type="range" id="aiBubbleRadius" min="0" max="30" value="16">
+              <span class="slider-value" id="aiBubbleRadiusValue">16</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">用户气泡圆角 (px)</label>
+            <div class="slider-group">
+              <input type="range" id="userBubbleRadius" min="0" max="30" value="16">
+              <span class="slider-value" id="userBubbleRadiusValue">16</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">气泡最大宽度 (%)</label>
+            <div class="slider-group">
+              <input type="range" id="bubbleMaxWidth" min="50" max="90" value="78">
+              <span class="slider-value" id="bubbleMaxWidthValue">78</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">气泡内边距 (px)</label>
+            <div class="slider-group">
+              <input type="range" id="bubblePadding" min="10" max="30" value="14">
+              <span class="slider-value" id="bubblePaddingValue">14</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">AI气泡文字颜色</label>
+            <div class="color-picker">
+              <input type="color" id="aiBubbleTextColor" class="color-input" value="#e2e8f0">
+              <input type="text" id="aiBubbleTextColorValue" class="color-value" readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">用户气泡文字颜色</label>
+            <div class="color-picker">
+              <input type="color" id="userBubbleTextColor" class="color-input" value="#ffffff">
+              <input type="text" id="userBubbleTextColorValue" class="color-value" readonly>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">AI头像图标</label>
+            <input type="text" id="aiAvatarIcon" value="✨" maxlength="2">
+            <div class="info-box">单个emoji或字符</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">用户头像图标</label>
+            <input type="text" id="userAvatarIcon" value="👤" maxlength="2">
+            <div class="info-box">单个emoji或字符</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">头像尺寸 (px)</label>
+          <div class="slider-group">
+            <input type="range" id="avatarSize" min="32" max="64" value="42">
+            <span class="slider-value" id="avatarSizeValue">42</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">对话区域最大宽度 (px)</label>
+          <div class="slider-group">
+            <input type="range" id="chatMaxWidth" min="600" max="1200" value="900" step="50">
+            <span class="slider-value" id="chatMaxWidthValue">900</span>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
+          <button class="btn btn-secondary" onclick="resetBubbleConfig()">🔄 重置气泡</button>
+          <button class="btn btn-danger" onclick="resetAllConfig()">⚠️ 重置全部</button>
         </div>
       </div>
-      <div class="form-group">
-        <label>主色深 (Primary Dark)</label>
-        <div class="color-picker">
-          <input type="color" id="colorPrimaryLight" class="color-input">
-          <input type="text" id="colorPrimaryLightValue" class="color-value" readonly>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>强调色 (Accent)</label>
-        <div class="color-picker">
-          <input type="color" id="colorAccent" class="color-input">
-          <input type="text" id="colorAccentValue" class="color-value" readonly>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>背景色</label>
-        <div class="color-picker">
-          <input type="color" id="colorBackground" class="color-input">
-          <input type="text" id="colorBackgroundValue" class="color-value" readonly>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>文字主色</label>
-        <div class="color-picker">
-          <input type="color" id="colorTextPrimary" class="color-input">
-          <input type="text" id="colorTextPrimaryValue" class="color-value" readonly>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>文字辅色</label>
-        <div class="color-picker">
-          <input type="color" id="colorTextSecondary" class="color-input">
-          <input type="text" id="colorTextSecondaryValue" class="color-value" readonly>
-        </div>
-      </div>
-    </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
-      <button class="btn btn-secondary" onclick="resetConfig()">🔄 重置</button>
-    </div>
-  </div>
 
-  <!-- 布局设置 -->
-  <div class="section" id="layout">
-    <div class="grid-2">
-      <div class="form-group">
-        <label>最大宽度 (PC)</label>
-        <input type="number" id="layoutMaxWidth" placeholder="900">
+      <!-- 配色配置 -->
+      <div class="section" id="colors">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">主色 (Primary)</label>
+            <div class="color-picker">
+              <input type="color" id="colorPrimary" class="color-input" value="#0d9488">
+              <input type="text" id="colorPrimaryValue" class="color-value" readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">强调色 (Accent)</label>
+            <div class="color-picker">
+              <input type="color" id="colorAccent" class="color-input" value="#5eead4">
+              <input type="text" id="colorAccentValue" class="color-value" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label>最大宽度 (大屏)</label>
-        <input type="number" id="layoutMaxWidthDesktop" placeholder="1000">
-      </div>
-      <div class="form-group">
-        <label>圆角大小 (px)</label>
-        <input type="number" id="layoutBorderRadius" placeholder="16">
-      </div>
-      <div class="form-group">
-        <label>头像尺寸 (px)</label>
-        <input type="number" id="layoutAvatarSize" placeholder="42">
-      </div>
-      <div class="form-group">
-        <label>气泡间距 (px)</label>
-        <input type="number" id="layoutBubbleSpacing" placeholder="20">
-      </div>
-      <div class="form-group">
-        <label>卡片间距 (px)</label>
-        <input type="number" id="layoutCardSpacing" placeholder="16">
-      </div>
-    </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
-      <button class="btn btn-secondary" onclick="resetConfig()">🔄 重置</button>
-    </div>
-  </div>
 
-  <!-- 对话框设置 -->
-  <div class="section" id="chat">
-    <div class="form-group">
-      <label>AI气泡背景色</label>
-      <input type="text" id="chatAiBubbleBg" placeholder="rgba(30,34,42,0.92)">
-    </div>
-    <div class="form-group">
-      <label>用户气泡背景色</label>
-      <input type="text" id="chatUserBubbleBg" placeholder="linear-gradient(...)">
-    </div>
-    <div class="form-group">
-      <label>AI气泡圆角 (px)</label>
-      <input type="number" id="chatAiBubbleRadius" placeholder="16">
-    </div>
-    <div class="form-group">
-      <label>用户气泡圆角 (px)</label>
-      <input type="number" id="chatUserBubbleRadius" placeholder="16">
-    </div>
-    <div class="form-group">
-      <label>气泡最大宽度 (%)</label>
-      <input type="number" id="chatMaxBubbleWidth" placeholder="78">
-    </div>
-    <div class="form-group">
-      <label>显示阴影</label>
-      <select id="chatShowShadow">
-        <option value="true">是</option>
-        <option value="false">否</option>
-      </select>
-    </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
-      <button class="btn btn-secondary" onclick="resetConfig()">🔄 重置</button>
-    </div>
-  </div>
+      <!-- 布局配置 -->
+      <div class="section" id="layout">
+        <div class="form-group">
+          <label class="form-label">气泡间距 (px)</label>
+          <div class="slider-group">
+            <input type="range" id="bubbleSpacing" min="10" max="30" value="20">
+            <span class="slider-value" id="bubbleSpacingValue">20</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">卡片间距 (px)</label>
+          <div class="slider-group">
+            <input type="range" id="cardSpacing" min="10" max="30" value="16">
+            <span class="slider-value" id="cardSpacingValue">16</span>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
+        </div>
+      </div>
 
-  <!-- 功能开关 -->
-  <div class="section" id="features">
-    <div class="form-group">
-      <label>
-        <input type="checkbox" id="featureShowHighlights"> 显示亮点标签
-      </label>
+      <!-- 高级配置 -->
+      <div class="section" id="advanced">
+        <div class="form-group">
+          <label class="form-label">配置JSON</label>
+          <textarea id="configJson" readonly></textarea>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="copyConfigJson()">📋 复制JSON</button>
+          <button class="btn btn-secondary" onclick="downloadConfig()">⬇️ 下载配置</button>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label>
-        <input type="checkbox" id="featureShowRegionTag"> 显示地区标签
-      </label>
-    </div>
-    <div class="form-group">
-      <label>
-        <input type="checkbox" id="featureShowPriceRow"> 显示价格行
-      </label>
-    </div>
-    <div class="form-group">
-      <label>
-        <input type="checkbox" id="featureAutoScroll"> 自动滚动到底部
-      </label>
-    </div>
-    <div class="form-group">
-      <label>
-        <input type="checkbox" id="featureKeyboardAdapt"> 键盘自适应
-      </label>
-    </div>
-    <div class="form-group">
-      <label>
-        <input type="checkbox" id="featureNationFirst"> 全国套餐优先
-      </label>
-    </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
-      <button class="btn btn-secondary" onclick="resetConfig()">🔄 重置</button>
-    </div>
-  </div>
 
-  <!-- 预览 -->
-  <div class="section" id="preview">
-    <div class="preview">
-      <h3>当前配置预览</h3>
-      <div id="previewContent"></div>
-    </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="downloadConfig()">⬇️ 下载配置</button>
-      <button class="btn btn-secondary" onclick="copyConfigJson()">📋 复制JSON</button>
+    <!-- 右侧：实时预览 -->
+    <div class="panel">
+      <h2 style="color:#5eead4;margin-bottom:20px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px">📺 实时预览</h2>
+      
+      <div class="preview-section">
+        <h3>对话框预览</h3>
+        <div class="preview-chat">
+          <div class="preview-bubble ai" id="previewAI">
+            👋 您好！我是流量卡智能顾问
+          </div>
+          <div class="preview-bubble user" id="previewUser">
+            学生党，预算20以内
+          </div>
+          <div class="preview-bubble ai" id="previewAI2">
+            好的！为您筛选低月租套餐...
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <h3>配置预览</h3>
+        <div id="previewConfig" style="font-size:12px;line-height:1.8;color:#94a3b8">
+          <div>🎨 AI气泡: <span id="previewAiBg" style="color:#5eead4">rgba(30,34,42,0.92)</span></div>
+          <div>🎨 用户气泡: <span id="previewUserBg" style="color:#5eead4">linear-gradient(...)</span></div>
+          <div>📏 头像尺寸: <span id="previewAvatarSize" style="color:#5eead4">42px</span></div>
+          <div>📏 最大宽度: <span id="previewMaxWidth" style="color:#5eead4">900px</span></div>
+          <div>🎯 圆角: <span id="previewRadius" style="color:#5eead4">16px</span></div>
+        </div>
+      </div>
+
+      <div class="info-box" style="margin-top:20px">
+        ℹ️ 修改左侧配置后，预览会<strong>实时更新</strong>。保存后配置会同步到前端页面。
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-let config = {};
+let config = {
+  chat: {
+    aiBubbleBg: 'rgba(30,34,42,0.92)',
+    userBubbleBg: 'linear-gradient(135deg,#0891b2,#0e7490)',
+    aiBubbleRadius: 16,
+    userBubbleRadius: 16,
+    bubbleMaxWidth: 78,
+    bubblePadding: 14,
+    aiBubbleTextColor: '#e2e8f0',
+    userBubbleTextColor: '#ffffff',
+    aiAvatarIcon: '✨',
+    userAvatarIcon: '👤',
+    avatarSize: 42,
+    chatMaxWidth: 900,
+    bubbleSpacing: 20,
+    cardSpacing: 16
+  },
+  colors: {
+    primary: '#0d9488',
+    accent: '#5eead4'
+  }
+};
 
 // 加载配置
 async function loadConfig(){
   try{
-    const res = await fetch('./config.json');
-    config = await res.json();
+    const res = await fetch('./config.json?t=' + Date.now());
+    const data = await res.json();
+    if(data.chat) Object.assign(config.chat, data.chat);
+    if(data.colors) Object.assign(config.colors, data.colors);
     populateForm();
     updatePreview();
   }catch(e){
-    showStatus('加载配置失败: '+e.message, 'error');
+    console.log('使用默认配置');
   }
 }
 
 // 填充表单
 function populateForm(){
-  // 网站信息
-  document.getElementById('siteTitle').value = config.site?.title || '';
-  document.getElementById('siteSubtitle').value = config.site?.subtitle || '';
-  document.getElementById('initMessage').value = config.initMessage || '';
-  document.getElementById('initProductsMessage').value = config.initProductsMessage || '';
+  document.getElementById('aiBubbleBgValue').value = config.chat.aiBubbleBg;
+  document.getElementById('userBubbleBg').value = config.chat.userBubbleBg;
+  document.getElementById('aiBubbleRadius').value = config.chat.aiBubbleRadius;
+  document.getElementById('userBubbleRadius').value = config.chat.userBubbleRadius;
+  document.getElementById('bubbleMaxWidth').value = config.chat.bubbleMaxWidth;
+  document.getElementById('bubblePadding').value = config.chat.bubblePadding;
+  document.getElementById('aiBubbleTextColor').value = config.chat.aiBubbleTextColor;
+  document.getElementById('userBubbleTextColor').value = config.chat.userBubbleTextColor;
+  document.getElementById('aiAvatarIcon').value = config.chat.aiAvatarIcon;
+  document.getElementById('userAvatarIcon').value = config.chat.userAvatarIcon;
+  document.getElementById('avatarSize').value = config.chat.avatarSize;
+  document.getElementById('chatMaxWidth').value = config.chat.chatMaxWidth;
+  document.getElementById('bubbleSpacing').value = config.chat.bubbleSpacing;
+  document.getElementById('cardSpacing').value = config.chat.cardSpacing;
+  document.getElementById('colorPrimary').value = config.colors.primary;
+  document.getElementById('colorAccent').value = config.colors.accent;
   
-  // 配色
-  Object.keys(config.colors || {}).forEach(key => {
-    const el = document.getElementById('color'+key.charAt(0).toUpperCase()+key.slice(1));
-    const valEl = document.getElementById('color'+key.charAt(0).toUpperCase()+key.slice(1)+'Value');
-    if(el && config.colors[key]){
-      el.value = config.colors[key];
-      if(valEl) valEl.value = config.colors[key];
-    }
+  updateSliderValues();
+  updateColorValues();
+}
+
+// 更新滑块显示值
+function updateSliderValues(){
+  document.getElementById('aiBubbleRadiusValue').textContent = document.getElementById('aiBubbleRadius').value;
+  document.getElementById('userBubbleRadiusValue').textContent = document.getElementById('userBubbleRadius').value;
+  document.getElementById('bubbleMaxWidthValue').textContent = document.getElementById('bubbleMaxWidth').value;
+  document.getElementById('bubblePaddingValue').textContent = document.getElementById('bubblePadding').value;
+  document.getElementById('avatarSizeValue').textContent = document.getElementById('avatarSize').value;
+  document.getElementById('chatMaxWidthValue').textContent = document.getElementById('chatMaxWidth').value;
+  document.getElementById('bubbleSpacingValue').textContent = document.getElementById('bubbleSpacing').value;
+  document.getElementById('cardSpacingValue').textContent = document.getElementById('cardSpacing').value;
+}
+
+// 更新颜色显示值
+function updateColorValues(){
+  document.getElementById('colorPrimaryValue').value = document.getElementById('colorPrimary').value;
+  document.getElementById('colorAccentValue').value = document.getElementById('colorAccent').value;
+  document.getElementById('aiBubbleTextColorValue').value = document.getElementById('aiBubbleTextColor').value;
+  document.getElementById('userBubbleTextColorValue').value = document.getElementById('userBubbleTextColor').value;
+}
+
+// 实时预览
+function updatePreview(){
+  const aiBg = document.getElementById('aiBubbleBgValue').value || config.chat.aiBubbleBg;
+  const userBg = document.getElementById('userBubbleBg').value || config.chat.userBubbleBg;
+  const aiRadius = document.getElementById('aiBubbleRadius').value;
+  const userRadius = document.getElementById('userBubbleRadius').value;
+  const aiTextColor = document.getElementById('aiBubbleTextColor').value;
+  const userTextColor = document.getElementById('userBubbleTextColor').value;
+  const avatarSize = document.getElementById('avatarSize').value;
+  
+  document.querySelectorAll('.preview-bubble.ai').forEach(el => {
+    el.style.background = aiBg;
+    el.style.borderRadius = aiRadius + 'px';
+    el.style.color = aiTextColor;
   });
   
-  // 布局
-  document.getElementById('layoutMaxWidth').value = config.layout?.maxWidth || 900;
-  document.getElementById('layoutMaxWidthDesktop').value = config.layout?.maxWidthDesktop || 1000;
-  document.getElementById('layoutBorderRadius').value = config.layout?.borderRadius || 16;
-  document.getElementById('layoutAvatarSize').value = config.layout?.avatarSize || 42;
-  document.getElementById('layoutBubbleSpacing').value = config.layout?.bubbleSpacing || 20;
-  document.getElementById('layoutCardSpacing').value = config.layout?.cardSpacing || 16;
+  document.querySelectorAll('.preview-bubble.user').forEach(el => {
+    el.style.background = userBg;
+    el.style.borderRadius = userRadius + 'px';
+    el.style.color = userTextColor;
+  });
   
-  // 对话框
-  document.getElementById('chatAiBubbleBg').value = config.chat?.aiBubbleBg || '';
-  document.getElementById('chatUserBubbleBg').value = config.chat?.userBubbleBg || '';
-  document.getElementById('chatAiBubbleRadius').value = config.chat?.aiBubbleRadius || 16;
-  document.getElementById('chatUserBubbleRadius').value = config.chat?.userBubbleRadius || 16;
-  document.getElementById('chatMaxBubbleWidth').value = config.chat?.maxBubbleWidth || 78;
-  document.getElementById('chatShowShadow').value = config.chat?.showShadow ? 'true' : 'false';
-  
-  // 功能开关
-  document.getElementById('featureShowHighlights').checked = config.features?.showHighlights !== false;
-  document.getElementById('featureShowRegionTag').checked = config.features?.showRegionTag !== false;
-  document.getElementById('featureShowPriceRow').checked = config.features?.showPriceRow !== false;
-  document.getElementById('featureAutoScroll').checked = config.features?.autoScroll !== false;
-  document.getElementById('featureKeyboardAdapt').checked = config.features?.keyboardAdapt !== false;
-  document.getElementById('featureNationFirst').checked = config.features?.nationFirst !== false;
+  // 更新配置预览
+  document.getElementById('previewAiBg').textContent = aiBg.substring(0, 30) + (aiBg.length > 30 ? '...' : '');
+  document.getElementById('previewUserBg').textContent = userBg.substring(0, 30) + (userBg.length > 30 ? '...' : '');
+  document.getElementById('previewAvatarSize').textContent = avatarSize + 'px';
+  document.getElementById('previewMaxWidth').textContent = document.getElementById('chatMaxWidth').value + 'px';
+  document.getElementById('previewRadius').textContent = aiRadius + 'px / ' + userRadius + 'px';
 }
 
 // 保存配置
 function saveConfig(){
-  config.site = {
-    title: document.getElementById('siteTitle').value,
-    subtitle: document.getElementById('siteSubtitle').value
-  };
+  config.chat.aiBubbleBg = document.getElementById('aiBubbleBgValue').value;
+  config.chat.userBubbleBg = document.getElementById('userBubbleBg').value;
+  config.chat.aiBubbleRadius = parseInt(document.getElementById('aiBubbleRadius').value);
+  config.chat.userBubbleRadius = parseInt(document.getElementById('userBubbleRadius').value);
+  config.chat.bubbleMaxWidth = parseInt(document.getElementById('bubbleMaxWidth').value);
+  config.chat.bubblePadding = parseInt(document.getElementById('bubblePadding').value);
+  config.chat.aiBubbleTextColor = document.getElementById('aiBubbleTextColor').value;
+  config.chat.userBubbleTextColor = document.getElementById('userBubbleTextColor').value;
+  config.chat.aiAvatarIcon = document.getElementById('aiAvatarIcon').value;
+  config.chat.userAvatarIcon = document.getElementById('userAvatarIcon').value;
+  config.chat.avatarSize = parseInt(document.getElementById('avatarSize').value);
+  config.chat.chatMaxWidth = parseInt(document.getElementById('chatMaxWidth').value);
+  config.chat.bubbleSpacing = parseInt(document.getElementById('bubbleSpacing').value);
+  config.chat.cardSpacing = parseInt(document.getElementById('cardSpacing').value);
+  config.colors.primary = document.getElementById('colorPrimary').value;
+  config.colors.accent = document.getElementById('colorAccent').value;
   
-  config.colors = {
-    primary: document.getElementById('colorPrimary').value,
-    primaryLight: document.getElementById('colorPrimaryLight').value,
-    accent: document.getElementById('colorAccent').value,
-    background: document.getElementById('colorBackground').value,
-    textPrimary: document.getElementById('colorTextPrimary').value,
-    textSecondary: document.getElementById('colorTextSecondary').value
-  };
+  // 保存到localStorage
+  localStorage.setItem('flowcard_config', JSON.stringify(config));
   
-  config.layout = {
-    maxWidth: parseInt(document.getElementById('layoutMaxWidth').value),
-    maxWidthDesktop: parseInt(document.getElementById('layoutMaxWidthDesktop').value),
-    borderRadius: parseInt(document.getElementById('layoutBorderRadius').value),
-    avatarSize: parseInt(document.getElementById('layoutAvatarSize').value),
-    bubbleSpacing: parseInt(document.getElementById('layoutBubbleSpacing').value),
-    cardSpacing: parseInt(document.getElementById('layoutCardSpacing').value)
-  };
+  // 显示成功提示
+  showStatus('✅ 配置已保存！请复制JSON并提交到GitHub', 'success');
   
+  // 更新JSON显示
+  document.getElementById('configJson').value = JSON.stringify(config, null, 2);
+}
+
+// 重置气泡配置
+function resetBubbleConfig(){
+  if(!confirm('确定要重置气泡样式吗？')) return;
   config.chat = {
-    aiBubbleBg: document.getElementById('chatAiBubbleBg').value,
-    userBubbleBg: document.getElementById('chatUserBubbleBg').value,
-    aiBubbleRadius: parseInt(document.getElementById('chatAiBubbleRadius').value),
-    userBubbleRadius: parseInt(document.getElementById('chatUserBubbleRadius').value),
-    maxBubbleWidth: parseInt(document.getElementById('chatMaxBubbleWidth').value),
-    showShadow: document.getElementById('chatShowShadow').value === 'true'
+    aiBubbleBg: 'rgba(30,34,42,0.92)',
+    userBubbleBg: 'linear-gradient(135deg,#0891b2,#0e7490)',
+    aiBubbleRadius: 16,
+    userBubbleRadius: 16,
+    bubbleMaxWidth: 78,
+    bubblePadding: 14,
+    aiBubbleTextColor: '#e2e8f0',
+    userBubbleTextColor: '#ffffff',
+    aiAvatarIcon: '✨',
+    userAvatarIcon: '👤',
+    avatarSize: 42,
+    chatMaxWidth: 900,
+    bubbleSpacing: 20,
+    cardSpacing: 16
   };
-  
-  config.features = {
-    showHighlights: document.getElementById('featureShowHighlights').checked,
-    showRegionTag: document.getElementById('featureShowRegionTag').checked,
-    showPriceRow: document.getElementById('featureShowPriceRow').checked,
-    autoScroll: document.getElementById('featureAutoScroll').checked,
-    keyboardAdapt: document.getElementById('featureKeyboardAdapt').checked,
-    nationFirst: document.getElementById('featureNationFirst').checked
-  };
-  
-  config.initMessage = document.getElementById('initMessage').value;
-  config.initProductsMessage = document.getElementById('initProductsMessage').value;
-  
+  populateForm();
   updatePreview();
-  showStatus('✅ 配置已保存到本地，请复制JSON并提交到Git', 'success');
+  saveConfig();
+  showStatus('✅ 气泡样式已重置为默认值', 'success');
 }
 
-// 重置配置
-function resetConfig(){
-  if(confirm('确定要重置所有配置吗？')){
-    loadConfig();
-    showStatus('已重置为默认配置', 'success');
-  }
+// 重置全部配置
+function resetAllConfig(){
+  if(!confirm('确定要重置所有配置吗？此操作不可撤销！')) return;
+  localStorage.removeItem('flowcard_config');
+  location.reload();
 }
 
-// 更新预览
-function updatePreview(){
-  const preview = document.getElementById('previewContent');
-  preview.innerHTML = `
-    <div class="preview-item"><strong>标题:</strong> ${config.site?.title}</div>
-    <div class="preview-item"><strong>副标题:</strong> ${config.site?.subtitle}</div>
-    <div class="preview-item"><strong>主色:</strong> <span style="color:${config.colors?.primary}">${config.colors?.primary}</span></div>
-    <div class="preview-item"><strong>最大宽度:</strong> ${config.layout?.maxWidth}px</div>
-    <div class="preview-item"><strong>头像尺寸:</strong> ${config.layout?.avatarSize}px</div>
-    <div class="preview-item"><strong>气泡间距:</strong> ${config.layout?.bubbleSpacing}px</div>
-    <div class="preview-item"><strong>启用功能:</strong> ${Object.entries(config.features || {}).filter(([k,v])=>v).map(([k])=>k).join(', ')}</div>
-  `;
+// 复制JSON
+function copyConfigJson(){
+  const json = document.getElementById('configJson').value;
+  navigator.clipboard.writeText(json).then(() => {
+    showStatus('✅ 配置JSON已复制到剪贴板', 'success');
+  });
 }
 
 // 下载配置
 function downloadConfig(){
   const json = JSON.stringify(config, null, 2);
-  const blob = new Blob([json], {type:'application/json'});
+  const blob = new Blob([json], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -411,42 +494,36 @@ function downloadConfig(){
   URL.revokeObjectURL(url);
 }
 
-// 复制JSON
-function copyConfigJson(){
-  const json = JSON.stringify(config, null, 2);
-  navigator.clipboard.writeText(json).then(()=>{
-    showStatus('✅ 配置JSON已复制到剪贴板', 'success');
-  });
-}
-
 // 显示状态
 function showStatus(msg, type){
   const el = document.getElementById('status');
   el.textContent = msg;
-  el.className = 'status show '+type;
-  setTimeout(()=>el.classList.remove('show'), 3000);
+  el.className = 'status show ' + type;
+  setTimeout(() => el.classList.remove('show'), 3000);
 }
 
 // 标签切换
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById(tab.dataset.tab).classList.add('active');
   });
 });
 
-// 颜色输入同步
-document.querySelectorAll('.color-input').forEach(input=>{
-  input.addEventListener('change', (e)=>{
-    const valueEl = e.target.nextElementSibling;
-    if(valueEl) valueEl.value = e.target.value;
+// 实时更新预览
+document.querySelectorAll('input[type="range"], input[type="text"], input[type="color"], textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    updateSliderValues();
+    updateColorValues();
+    updatePreview();
   });
 });
 
 // 初始化
 loadConfig();
+document.getElementById('configJson').value = JSON.stringify(config, null, 2);
 </script>
 
 </body>
