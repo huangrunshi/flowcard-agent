@@ -8,75 +8,71 @@
   <script>LA.init({id:"3PTYJy7p2PjoS50k",ck:"3PTYJy7p2PjoS50k"})</script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",Arial,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;flex-direction:column}
+    body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",Arial,sans-serif;background:linear-gradient(135deg,#1a1d29 0%,#2d3748 100%);min-height:100vh;display:flex;flex-direction:column;color:#f7fafc}
     
-    /* 顶部 */
-    .header{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:16px 20px;text-align:center;color:#fff;border-bottom:1px solid rgba(255,255,255,0.1)}
-    .header h1{font-size:18px;font-weight:600;margin-bottom:4px}
-    .header h1 span{color:#ffd700}
-    .header p{font-size:12px;opacity:0.9}
+    .header{background:rgba(45,55,72,0.8);backdrop-filter:blur(10px);padding:16px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .header h1{font-size:18px;font-weight:600;margin-bottom:4px;color:#f7fafc}
+    .header h1 span{color:#48bb78}
+    .header p{font-size:12px;opacity:0.7;color:#a0aec0}
     
-    /* 当前条件标签 */
-    .conditions-bar{background:#fff;padding:10px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+    .conditions-bar{background:rgba(26,29,41,0.6);padding:10px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
     .conditions-bar::-webkit-scrollbar{display:none}
-    .condition-tag{min-width:fit-content;padding:6px 12px;background:#f0f4ff;border:1px solid #667eea;color:#667eea;border-radius:16px;font-size:12px;cursor:pointer;transition:all 0.2s}
-    .condition-tag:hover{background:#667eea;color:#fff}
+    .condition-tag{min-width:fit-content;padding:6px 12px;background:rgba(72,187,120,0.15);border:1px solid #48bb78;color:#48bb78;border-radius:16px;font-size:12px;cursor:pointer;transition:all 0.2s}
+    .condition-tag:hover{background:rgba(72,187,120,0.25)}
     .condition-tag .remove{margin-left:6px;font-size:10px}
     
-    /* 快捷按钮 */
-    .quick-btns{background:#fff;padding:12px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;border-bottom:1px solid #f0f0f0}
+    .quick-btns{background:rgba(26,29,41,0.6);padding:12px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.05)}
     .quick-btns::-webkit-scrollbar{display:none}
-    .quick-btn{min-width:60px;padding:8px 12px;background:#f5f5f5;border-radius:8px;font-size:12px;color:#666;text-align:center;cursor:pointer;transition:all 0.2s;flex-shrink:0}
-    .quick-btn:hover,.quick-btn.active{background:#667eea;color:#fff}
+    .quick-btn{min-width:60px;padding:8px 12px;background:rgba(255,255,255,0.08);border-radius:8px;font-size:12px;color:#a0aec0;text-align:center;cursor:pointer;transition:all 0.2s;flex-shrink:0;border:1px solid rgba(255,255,255,0.1)}
+    .quick-btn:hover,.quick-btn.active{background:rgba(72,187,120,0.2);color:#48bb78;border-color:#48bb78}
     
-    /* 主内容 */
     .main{flex:1;overflow-y:auto;padding:16px;max-width:600px;margin:0 auto;width:100%}
     
-    /* 对话气泡 */
-    .chat-bubble{margin-bottom:12px;animation:fadeIn 0.3s}
+    .chat-bubble{margin-bottom:14px;animation:fadeIn 0.3s}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .chat-bubble.bot{display:flex;gap:10px}
-    .chat-bubble.user{flex-direction:row-reverse}
-    .chat-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:#fff;color:#667eea;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-    .chat-bubble.user .chat-avatar{background:#667eea;color:#fff}
-    .chat-content{max-width:80%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.6}
-    .chat-bubble.bot .chat-content{background:#fff;color:#333;border-bottom-left-radius:4px}
-    .chat-bubble.user .chat-content{background:#667eea;color:#fff;border-bottom-right-radius:4px}
+    .chat-bubble.bot{display:flex;gap:10px;align-items:flex-end}
+    .chat-bubble.user{flex-direction:row-reverse;align-items:flex-end}
+    .chat-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    .chat-bubble.bot .chat-avatar{background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;border:2px solid rgba(72,187,120,0.3)}
+    .chat-bubble.user .chat-avatar{background:linear-gradient(135deg,#ed8936,#dd6b20);color:#fff;border:2px solid rgba(237,137,54,0.3)}
+    .chat-content{max-width:75%;padding:12px 16px;border-radius:18px;font-size:14px;line-height:1.6;word-break:break-word}
+    .chat-bubble.bot .chat-content{background:rgba(45,55,72,0.9);color:#f7fafc;border-bottom-left-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,0.2)}
+    .chat-bubble.user .chat-content{background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;border-bottom-right-radius:4px;box-shadow:0 2px 12px rgba(72,187,120,0.2)}
+    .chat-time{font-size:10px;color:#718096;margin-top:4px;text-align:center}
+    .chat-bubble.user .chat-time{text-align:right}
     
-    /* 卡片结果 */
     .result-cards{display:flex;flex-direction:column;gap:12px;margin-top:8px}
-    .result-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 12px rgba(0,0,0,0.08);transition:all 0.2s}
-    .result-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+    .result-card{background:rgba(45,55,72,0.6);border-radius:12px;padding:14px;box-shadow:0 2px 12px rgba(0,0,0,0.2);transition:all 0.2s;border:1px solid rgba(255,255,255,0.05)}
+    .result-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.3);border-color:rgba(72,187,120,0.3)}
     .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .card-name{font-size:15px;font-weight:700;color:#333}
+    .card-name{font-size:15px;font-weight:700;color:#f7fafc}
     .card-tags{display:flex;gap:6px}
     .tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500}
-    .tag.hot{background:#ff4757;color:#fff}
-    .tag.nation{background:#667eea;color:#fff}
-    .tag.local{background:#ffa502;color:#fff}
+    .tag.hot{background:rgba(237,137,54,0.2);color:#ed8936}
+    .tag.nation{background:rgba(72,187,120,0.2);color:#48bb78}
+    .tag.local{background:rgba(160,174,192,0.2);color:#a0aec0}
     .card-specs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
-    .spec{text-align:center;padding:6px;background:#f8f9fa;border-radius:6px}
-    .spec-val{font-size:14px;font-weight:700;color:#667eea}
-    .spec-label{font-size:10px;color:#999}
-    .card-price{text-align:center;font-size:22px;font-weight:700;color:#ff4757;padding:8px 0;border-top:1px dashed #eee;border-bottom:1px dashed #eee;margin-bottom:10px}
-    .card-price span{font-size:12px;color:#999;font-weight:400}
+    .spec{text-align:center;padding:6px;background:rgba(26,29,41,0.6);border-radius:6px}
+    .spec-val{font-size:14px;font-weight:700;color:#48bb78}
+    .spec-label{font-size:10px;color:#718096}
+    .card-price{text-align:center;font-size:22px;font-weight:700;color:#48bb78;padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:10px}
+    .card-price span{font-size:12px;color:#718096;font-weight:400}
     .card-actions{display:flex;gap:8px}
     .card-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;transition:all 0.2s;border:none}
-    .card-btn.order{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-    .card-btn.order:hover{transform:scale(1.02)}
-    .card-btn.refresh{background:#f5f5f5;color:#666;border:1px solid #e0e0e0}
-    .card-btn.refresh:hover{background:#eee}
+    .card-btn.order{background:linear-gradient(135deg,#48bb78,#38a169);color:#fff}
+    .card-btn.order:hover{transform:scale(1.02);box-shadow:0 4px 12px rgba(72,187,120,0.3)}
+    .card-btn.refresh{background:rgba(255,255,255,0.08);color:#a0aec0;border:1px solid rgba(255,255,255,0.1)}
+    .card-btn.refresh:hover{background:rgba(255,255,255,0.12)}
     
-    /* 输入区 */
-    .input-area{background:#fff;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.1)}
+    .input-area{background:rgba(26,29,41,0.9);padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.2)}
     .input-row{display:flex;gap:10px;align-items:center}
-    .input-row input{flex:1;border:2px solid #e0e0e0;border-radius:24px;padding:12px 16px;font-size:14px;outline:none;transition:border-color 0.2s}
-    .input-row input:focus{border-color:#667eea}
-    .send-btn{width:48px;height:48px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;transition:all 0.2s}
+    .input-row input{flex:1;border:2px solid rgba(72,187,120,0.3);border-radius:24px;padding:12px 16px;font-size:14px;outline:none;transition:border-color 0.2s;background:rgba(45,55,72,0.8);color:#f7fafc}
+    .input-row input:focus{border-color:#48bb78}
+    .input-row input::placeholder{color:#718096}
+    .send-btn{width:48px;height:48px;background:linear-gradient(135deg,#48bb78,#38a169);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 12px rgba(72,187,120,0.3)}
     .send-btn:hover{transform:scale(1.05)}
     
-    /* 加载 */
-    .loading{text-align:center;padding:20px;color:#fff;font-size:14px;display:none}
+    .loading{text-align:center;padding:20px;color:#a0aec0;font-size:14px;display:none}
     .loading.show{display:block}
     .loading::after{content:'...';animation:dots 1.5s infinite}
     @keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
@@ -116,49 +112,183 @@
 
 <script>
 var PRODUCTS=[
-  {id:"dx_xh39",operator:"电信",name:"电信星华卡",price:39,flow:185,talk:0,region:"仅发湖南",nation:false,budget:false,hot:true,desc:"185G流量，性价比之选"},
-  {id:"dx_th39",operator:"电信",name:"电信太华卡",price:39,flow:205,talk:0,region:"仅发山东",nation:false,budget:false,desc:"205G流量"},
-  {id:"dx_bh29",operator:"电信",name:"电信北合卡",price:29,flow:140,talk:0,region:"仅发河北",nation:false,budget:true,student:true,desc:"140G，29元"},
-  {id:"dx_rx19",operator:"电信",name:"电信瑞星卡",price:19,flow:90,talk:400,region:"发全国",nation:true,budget:true,student:true,hot:true,desc:"19元90G+400分钟"},
-  {id:"dx_cy29",operator:"电信",name:"电信畅游卡",price:29,flow:280,talk:300,region:"发全国",nation:true,budget:true,hot:true,desc:"280G+300分钟"},
-  {id:"yd_cy39",operator:"移动",name:"移动畅言卡",price:39,flow:380,talk:2000,region:"发全国",nation:true,budget:false,hot:true,desc:"380G+2000分钟"},
-  {id:"yd_dy29",operator:"移动",name:"移动多言卡",price:29,flow:250,talk:2000,region:"发全国",nation:true,budget:true,hot:true,desc:"250G+2000分钟"},
-  {id:"yd_ty19",operator:"移动",name:"移动天云卡",price:19,flow:240,talk:400,region:"仅发河南",nation:false,budget:true,student:true,desc:"19元240G"},
-  {id:"yd_cl20",operator:"移动",name:"移动川流卡",price:20,flow:350,talk:0,region:"仅发四川",nation:false,budget:true,desc:"20元350G纯流量"},
-  {id:"yd_fh18",operator:"移动",name:"移动绯红卡",price:18,flow:90,talk:300,region:"发全国",nation:true,budget:true,student:true,desc:"18元90G+300分钟"},
-  {id:"lt_ly40",operator:"联通",name:"联通林云卡",price:40,flow:200,talk:100,region:"发全国",nation:true,budget:false,desc:"200G通用流量"},
-  {id:"lt_qy39",operator:"联通",name:"联通千云卡",price:39,flow:280,talk:200,region:"仅发河北",nation:false,budget:false,hot:true,desc:"280G+200分钟"},
-  {id:"lt_jc39",operator:"联通",name:"联通巨川卡",price:39,flow:520,talk:300,region:"仅发四川",nation:false,budget:false,hot:true,desc:"520G超大流量"},
-  {id:"lt_jh29",operator:"联通",name:"联通江会卡",price:29,flow:160,talk:500,region:"仅发浙江",nation:false,budget:true,desc:"29元160G+500分钟"},
-  {id:"lt_hp49",operator:"联通",name:"联通琥珀卡",price:49,flow:215,talk:100,region:"发全国",nation:true,budget:false,desc:"215G通用"}
+  {id:"p2961",operator:"联通",name:"1111联通宽带广深卡",price:59.0,flow:60,talk:100,region:"仅发",nation:false,budget:false,desc:"59元60G通用+1000M宽带+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=2961",tags:[]},
+  {id:"p3238",operator:"移动",name:"1230移动四川卡【预存报单发货】",price:20.0,flow:120,talk:200,region:"仅发",nation:false,budget:true,desc:"20元120G通用+30G定向+200分钟+会员权益",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3238",tags:[]},
+  {id:"p3277",operator:"移动",name:"0106移动四川卡【预存报单发货】",price:20.0,flow:160,talk:200,region:"仅发",nation:false,budget:true,desc:"20元160G通用+30G定向+200分钟+会员权益",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3277",tags:[]},
+  {id:"p3278",operator:"电信",name:"湖南电信500M宽带",price:720.0,flow:0,talk:0,region:"仅发",nation:false,budget:false,desc:"720元包年+100元调试费+500M高速宽带",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3278",tags:[]},
+  {id:"p3279",operator:"电信",name:"湖南电信1000M宽带",price:1200.0,flow:0,talk:0,region:"仅发",nation:false,budget:false,desc:"1200元包年+100元调试费+1000M高速宽带",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3279",tags:[]},
+  {id:"p3307",operator:"联通",name:"0109联通风花卡",price:39.0,flow:20,talk:0,region:"仅发",nation:false,budget:false,desc:"39元20G通用+30G定向+0.1元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3307",tags:[]},
+  {id:"p3309",operator:"联通",name:"0109联通玖玖卡【仅发深圳】",price:38.0,flow:220,talk:0,region:"仅发",nation:false,budget:false,desc:"38元220G通用+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3309",tags:[]},
+  {id:"p3310",operator:"广电",name:"0110广电小百卡【浙江省内】",price:19.0,flow:130,talk:200,region:"仅发",nation:false,budget:true,desc:"19元130G通用+200分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3310",tags:[]},
+  {id:"p3311",operator:"广电",name:"0110广电小百卡【浙江省内】",price:24.0,flow:180,talk:250,region:"仅发",nation:false,budget:true,desc:"24元180G通用+250分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3311",tags:[]},
+  {id:"p3333",operator:"联通",name:"0112联通玖玖卡2.0【仅发深圳】",price:38.0,flow:220,talk:0,region:"仅发",nation:false,budget:false,desc:"38元220G通用+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3333",tags:[]},
+  {id:"p3334",operator:"移动",name:"0112移动华尔卡2.0【深圳市内】",price:39.0,flow:180,talk:100,region:"仅发",nation:false,budget:false,desc:"39元180G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3334",tags:[]},
+  {id:"p3347",operator:"联通",name:"0116联通青龙卡【广东省内】",price:39.0,flow:20,talk:0,region:"仅发",nation:false,budget:false,desc:"39元20G通用+30G定向+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3347",tags:[]},
+  {id:"p3354",operator:"联通",name:"0119联通鸡翅卡【重庆市内】",price:29.0,flow:150,talk:300,region:"仅发",nation:false,budget:true,desc:"29元150G通用+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3354",tags:[]},
+  {id:"p3357",operator:"广电",name:"0119广电天津卡",price:19.0,flow:130,talk:200,region:"仅发",nation:false,budget:true,desc:"19元130G通用+200分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3357",tags:[]},
+  {id:"p3358",operator:"广电",name:"0119广电大津卡",price:29.0,flow:180,talk:250,region:"仅发",nation:false,budget:true,desc:"29元180G通用+250分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3358",tags:[]},
+  {id:"p3393",operator:"移动",name:"0124移动惠州卡【广东惠州市内】",price:39.0,flow:150,talk:100,region:"仅发",nation:false,budget:false,desc:"39元150G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3393",tags:[]},
+  {id:"p3410",operator:"联通",name:"0127联通雾山卡【重庆市内】",price:29.0,flow:150,talk:300,region:"仅发",nation:false,budget:true,desc:"29元150G通用+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3410",tags:[]},
+  {id:"p3414",operator:"移动",name:"0128移动广州卡【广州市内】",price:29.0,flow:120,talk:100,region:"仅发",nation:false,budget:true,desc:"29元120G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3414",tags:[]},
+  {id:"p3415",operator:"移动",name:"0128移动绅士卡【深圳市内】",price:29.0,flow:120,talk:100,region:"仅发",nation:false,budget:true,desc:"29元120G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3415",tags:[]},
+  {id:"p3416",operator:"电信",name:"0128电信江水卡【仅发湛江】",price:29.0,flow:105,talk:100,region:"仅发",nation:false,budget:true,desc:"29元105G通用+100G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3416",tags:[]},
+  {id:"p3437",operator:"广电",name:"0129广电雪地卡【浙江省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3437",tags:[]},
+  {id:"p3444",operator:"移动",name:"陕西移动融合宽带84/月",price:0,flow:0,talk:0,region:"仅发",nation:false,budget:true,desc:"西安移动300M光纤宽带",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3444",tags:[]},
+  {id:"p3446",operator:"联通",name:"陕西联通融合宽带89/月",price:0,flow:0,talk:0,region:"仅发",nation:false,budget:true,desc:"高速稳定  免费副卡",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3446",tags:[]},
+  {id:"p3447",operator:"联通",name:"陕西联通融合宽带109/月",price:0,flow:0,talk:0,region:"仅发",nation:false,budget:true,desc:"高速稳定 资费划算  免费副卡",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3447",tags:[]},
+  {id:"p3448",operator:"电信",name:"陕西西安电信融合宽带99/月",price:0,flow:40,talk:150,region:"仅发",nation:false,budget:true,desc:"150分钟通话时长、40G高速流量",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3448",tags:[]},
+  {id:"p3449",operator:"电信",name:"陕西西安电信融合宽带169/月",price:0,flow:80,talk:300,region:"仅发",nation:false,budget:true,desc:"300分钟通话时长、80G高速流量",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3449",tags:[]},
+  {id:"p3454",operator:"移动",name:"陕西西安移动融合宽带99/月",price:0,flow:0,talk:0,region:"仅发",nation:false,budget:true,desc:"西安移动500M光纤宽带",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3454",tags:[]},
+  {id:"p3455",operator:"移动",name:"陕西西安移动融合宽带99/月",price:0,flow:0,talk:0,region:"仅发",nation:false,budget:true,desc:"西安移动1000M光纤宽带",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3455",tags:[]},
+  {id:"p3456",operator:"电信",name:"山东烟台电信200M单宽",price:300.0,flow:0,talk:0,region:"仅发",nation:false,budget:false,desc:"300元年费",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3456",tags:[]},
+  {id:"p3457",operator:"电信",name:"山东省电信1000M单宽",price:840.0,flow:0,talk:0,region:"仅发",nation:false,budget:false,desc:"840元1年，1560元2年，2160元3年，最低至60元每月",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3457",tags:[]},
+  {id:"p3458",operator:"电信",name:"山东省电信300M单宽",price:480.0,flow:0,talk:0,region:"仅发",nation:false,budget:false,desc:"480元1年，840元2年，1080元3年，最低至1元1天",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3458",tags:[]},
+  {id:"p3459",operator:"联通",name:"济南联通300M单宽-2年",price:840.0,flow:0,talk:0,region:"仅发",nation:false,budget:false,desc:"840元包2年300M宽带",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3459",tags:[]},
+  {id:"p3460",operator:"联通",name:"济南联通300M单宽-1年",price:480.0,flow:0,talk:0,region:"仅发",nation:false,budget:false,desc:"480元包年300M宽带",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3460",tags:[]},
+  {id:"p3468",operator:"广电",name:"0130广电升卿卡【重庆市内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3468",tags:[]},
+  {id:"p3469",operator:"广电",name:"0130广电小百卡【重庆市内】",price:19.0,flow:130,talk:200,region:"仅发",nation:false,budget:true,desc:"19元130G通用+200分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3469",tags:[]},
+  {id:"p3471",operator:"广电",name:"0130广电小重卡【重庆市内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用+30G定向+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3471",tags:[]},
+  {id:"p3472",operator:"广电",name:"0130广电大重卡【重庆市内】",price:38.0,flow:360,talk:300,region:"仅发",nation:false,budget:false,desc:"38元360G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3472",tags:[]},
+  {id:"p3479",operator:"联通",name:"0131联通风云卡【云南省内】",price:49.0,flow:185,talk:100,region:"仅发",nation:false,budget:false,desc:"49元185G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3479",tags:[]},
+  {id:"p3481",operator:"移动",name:"0131移动华尔卡6.0【深圳市内】",price:39.0,flow:180,talk:100,region:"仅发",nation:false,budget:false,desc:"39元180G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3481",tags:[]},
+  {id:"p3482",operator:"联通",name:"0131联通玖玖卡6.0【仅发深圳】",price:38.0,flow:220,talk:0,region:"仅发",nation:false,budget:false,desc:"38元220G通用+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3482",tags:[]},
+  {id:"p3484",operator:"移动",name:"0131移动佛山卡【佛山市内】",price:39.0,flow:170,talk:100,region:"仅发",nation:false,budget:false,desc:"39元170G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3484",tags:[]},
+  {id:"p3487",operator:"移动",name:"0202移动潮州卡【潮州市内】",price:39.0,flow:165,talk:100,region:"仅发",nation:false,budget:false,desc:"39元165G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3487",tags:[]},
+  {id:"p3489",operator:"移动",name:"0202移动揭阳卡【揭阳市内】",price:39.0,flow:115,talk:100,region:"仅发",nation:false,budget:false,desc:"39元115G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3489",tags:[]},
+  {id:"p3494",operator:"广电",name:"0202广电玫瑰卡【山东地区】",price:29.0,flow:150,talk:150,region:"仅发",nation:false,budget:true,desc:"29元150G通用+150分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3494",tags:[]},
+  {id:"p3495",operator:"广电",name:"0202广电茉莉卡【山东地区】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用+30G定向+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3495",tags:[]},
+  {id:"p3501",operator:"联通",name:"0204联通小南卡【云南省内】",price:49.0,flow:185,talk:100,region:"仅发",nation:false,budget:false,desc:"49元185G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3501",tags:[]},
+  {id:"p3507",operator:"广电",name:"0205广电大海卡【上海市内】",price:29.0,flow:150,talk:150,region:"仅发",nation:false,budget:true,desc:"29元150G通用+150分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3507",tags:[]},
+  {id:"p3521",operator:"联通",name:"0207联通花香卡【广东省内】",price:29.0,flow:150,talk:100,region:"仅发",nation:false,budget:true,desc:"29元150G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3521",tags:[]},
+  {id:"p3522",operator:"联通",name:"0207联通稻香卡【广东省内】",price:19.0,flow:150,talk:100,region:"仅发",nation:false,budget:true,desc:"19元150G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3522",tags:[]},
+  {id:"p3523",operator:"电信",name:"0207电信浪浪卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3523",tags:[]},
+  {id:"p3536",operator:"电信",name:"0211电信浪浪卡2.0【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3536",tags:[]},
+  {id:"p3537",operator:"广电",name:"0211广电仙粤卡【广东省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3537",tags:[]},
+  {id:"p3538",operator:"电信",name:"0212电信省内卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3538",tags:[]},
+  {id:"p3548",operator:"电信",name:"0213电信骑士卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3548",tags:[]},
+  {id:"p3561",operator:"电信",name:"0303电信西南卡【广西省内】",price:39.0,flow:175,talk:300,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3561",tags:[]},
+  {id:"p3578",operator:"移动",name:"0226移动雨花卡【四川省内】",price:30.0,flow:150,talk:100,region:"仅发",nation:false,budget:true,desc:"30元150G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3578",tags:[]},
+  {id:"p3579",operator:"广电",name:"0226广电仙桂卡【广西省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3579",tags:[]},
+  {id:"p3582",operator:"广电",name:"0226广电水灵卡【广西省内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用流量+30G定向流量+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3582",tags:[]},
+  {id:"p3586",operator:"移动",name:"0226移动雾都卡【重庆市内】",price:29.0,flow:20,talk:0,region:"仅发",nation:false,budget:true,desc:"29元20G通用+30G定向+170G重庆通用+0.1元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3586",tags:[]},
+  {id:"p3589",operator:"广电",name:"0226广电鲁东卡【山东省内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用流量+30G定向流量+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3589",tags:[]},
+  {id:"p3591",operator:"广电",name:"0226广电鲁西卡【山东省内】",price:29.0,flow:150,talk:150,region:"仅发",nation:false,budget:true,desc:"29元150G通用+150分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3591",tags:[]},
+  {id:"p3596",operator:"移动",name:"新0227移动雾都卡【重庆市内】",price:29.0,flow:20,talk:0,region:"仅发",nation:false,budget:true,desc:"29元20G通用+30G定向+170G重庆通用+0.1元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3596",tags:[]},
+  {id:"p3598",operator:"广电",name:"0227广电双凤卡【浙江省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3598",tags:[]},
+  {id:"p3603",operator:"电信",name:"0227电信橙子卡【广东省内】",price:29.0,flow:175,talk:100,region:"仅发",nation:false,budget:true,desc:"29元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3603",tags:[]},
+  {id:"p3604",operator:"电信",name:"0227电信橘子卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3604",tags:[]},
+  {id:"p3609",operator:"电信",name:"0228电信沃柑卡【广东省内】",price:29.0,flow:175,talk:100,region:"仅发",nation:false,budget:true,desc:"29元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3609",tags:[]},
+  {id:"p3611",operator:"联通",name:"0228联通古丽卡【重庆市内】",price:19.0,flow:150,talk:300,region:"仅发",nation:false,budget:true,desc:"19元150G通用+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3611",tags:[]},
+  {id:"p3613",operator:"广电",name:"0301广电金甲卡【山东省内】",price:29.0,flow:150,talk:150,region:"仅发",nation:false,budget:true,desc:"29元150G通用+150分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3613",tags:[]},
+  {id:"p3614",operator:"广电",name:"0301广电银甲卡【山东省内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用流量+30G定向流量+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3614",tags:[]},
+  {id:"p3617",operator:"移动",name:"0301移动新广卡【广东省内】",price:39.0,flow:170,talk:0,region:"仅发",nation:false,budget:false,desc:"39元170G通用+30G定向+0.19元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3617",tags:[]},
+  {id:"p3618",operator:"移动",name:"0301移动大河卡【河南省内】",price:39.0,flow:40,talk:400,region:"仅发",nation:false,budget:false,desc:"39元40G通用+200G河南省内通用+400分钟+会员权益",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3618",tags:[]},
+  {id:"p3624",operator:"联通",name:"0301联通乐川卡【仅发四川部分地区】",price:39.0,flow:520,talk:300,region:"仅发",nation:false,budget:false,desc:"39元520G通用+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3624",tags:[]},
+  {id:"p3629",operator:"电信",name:"MF0303电信橘子卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3629",tags:[]},
+  {id:"p3634",operator:"电信",name:"0303电信菠萝卡【广东省内】",price:19.0,flow:175,talk:100,region:"仅发",nation:false,budget:true,desc:"19元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3634",tags:[]},
+  {id:"p3635",operator:"电信",name:"0303电信凤梨卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3635",tags:[]},
+  {id:"p3637",operator:"电信",name:"0303电信新西卡【广西省内】",price:39.0,flow:175,talk:300,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3637",tags:[]},
+  {id:"p3638",operator:"广电",name:"0303广电蓝莓卡【广西省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3638",tags:[]},
+  {id:"p3639",operator:"广电",name:"0303广电红花卡【广西省内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用流量+30G定向流量+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3639",tags:[]},
+  {id:"p3640",operator:"广电",name:"0303广电青花卡【广东省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3640",tags:[]},
+  {id:"p3642",operator:"广电",name:"0303广电小雾卡【重庆市内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用+30G定向+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3642",tags:[]},
+  {id:"p3643",operator:"广电",name:"0303广电大雾卡【重庆市内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3643",tags:[]},
+  {id:"p3644",operator:"联通",name:"0303联通京爷卡【南京市内】",price:39.0,flow:90,talk:50,region:"仅发",nation:false,budget:false,desc:"39元90G通用+50分钟+黄金速率",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3644",tags:[]},
+  {id:"p3645",operator:"联通",name:"0303联通沪少卡【上海市内】",price:39.0,flow:20,talk:100,region:"仅发",nation:false,budget:false,desc:"39元20G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3645",tags:[]},
+  {id:"p3651",operator:"移动",name:"0304移动天晴卡【河北省内】",price:30.0,flow:120,talk:100,region:"仅发",nation:false,budget:true,desc:"30元120G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3651",tags:[]},
+  {id:"p3654",operator:"电信",name:"0304电信安徽卡【安徽省内】",price:39.0,flow:80,talk:200,region:"仅发",nation:false,budget:false,desc:"39元80G通用+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3654",tags:[]},
+  {id:"p3665",operator:"联通",name:"0308联通山药卡【广东省内】",price:38.0,flow:220,talk:0,region:"仅发",nation:false,budget:false,desc:"38元220G通用+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3665",tags:[]},
+  {id:"p3669",operator:"电信",name:"0308电信龙岩卡【广西省内】",price:39.0,flow:175,talk:300,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3669",tags:[]},
+  {id:"p3684",operator:"联通",name:"0310联通奇兵卡【广东省内】",price:28.0,flow:260,talk:0,region:"仅发",nation:false,budget:true,desc:"28元260G通用+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3684",tags:[]},
+  {id:"p3690",operator:"电信",name:"0311电信海豹卡【合肥市内】",price:39.0,flow:160,talk:100,region:"仅发",nation:false,budget:false,desc:"39元160G通用+100分钟+100条短信",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3690",tags:[]},
+  {id:"p3698",operator:"电信",name:"0312电信海豹卡2.0【合肥市内】",price:39.0,flow:160,talk:100,region:"仅发",nation:false,budget:false,desc:"39元160G通用+100分钟+100条短信",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3698",tags:[]},
+  {id:"p3699",operator:"移动",name:"0312移动晚宴卡【安徽省内】",price:39.0,flow:120,talk:100,region:"仅发",nation:false,budget:false,desc:"39元120G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3699",tags:[]},
+  {id:"p3701",operator:"电信",name:"0313电信蛋糕卡【安徽省内】",price:29.0,flow:80,talk:200,region:"仅发",nation:false,budget:true,desc:"29元80G通用+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3701",tags:[]},
+  {id:"p3705",operator:"电信",name:"0313电信点心卡【安徽省内】",price:39.0,flow:80,talk:200,region:"仅发",nation:false,budget:false,desc:"39元80G通用+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3705",tags:[]},
+  {id:"p3710",operator:"电信",name:"0313电信西西卡【广西省内】",price:39.0,flow:175,talk:300,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3710",tags:[]},
+  {id:"p3711",operator:"广电",name:"0314广电瑞幸卡【山东省内】",price:29.0,flow:180,talk:250,region:"仅发",nation:false,budget:true,desc:"29元180G通用+250分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3711",tags:[]},
+  {id:"p3712",operator:"移动",name:"0314移动蜜雪卡【四川省内】",price:33.0,flow:190,talk:100,region:"仅发",nation:false,budget:false,desc:"33元190G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3712",tags:[]},
+  {id:"p3713",operator:"电信",name:"0314电信恶龙卡【合肥市内】",price:29.0,flow:160,talk:100,region:"仅发",nation:false,budget:true,desc:"29元160G通用+100分钟+100条短信",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3713",tags:[]},
+  {id:"p3715",operator:"联通",name:"0315联通林海卡【广东省内】",price:18.0,flow:220,talk:0,region:"仅发",nation:false,budget:true,desc:"18元220G通用+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3715",tags:[]},
+  {id:"p3721",operator:"联通",name:"0316联通陕西卡【陕西省内】",price:39.0,flow:80,talk:100,region:"仅发",nation:false,budget:false,desc:"39元80G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3721",tags:[]},
+  {id:"p3722",operator:"联通",name:"0316联通中兴卡【陕西省内】",price:29.0,flow:80,talk:100,region:"仅发",nation:false,budget:true,desc:"29元80G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3722",tags:[]},
+  {id:"p3724",operator:"联通",name:"0316联通年少卡【四川省内】",price:39.0,flow:230,talk:200,region:"仅发",nation:false,budget:false,desc:"39元230G通用+200分钟+会员权益N选1",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3724",tags:[]},
+  {id:"p3725",operator:"移动",name:"0316移动上海卡【上海市内】",price:39.0,flow:50,talk:300,region:"仅发",nation:false,budget:false,desc:"39元50G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3725",tags:[]},
+  {id:"p3726",operator:"移动",name:"0316移动上海卡【上海市内】",price:39.0,flow:50,talk:300,region:"仅发",nation:false,budget:false,desc:"39元50G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3726",tags:[]},
+  {id:"p3731",operator:"电信",name:"0318电信周岁卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3731",tags:[]},
+  {id:"p3732",operator:"联通",name:"0318联通光辉卡【安徽省内】",price:39.0,flow:155,talk:100,region:"仅发",nation:false,budget:false,desc:"39元155G通用+100分钟通话",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3732",tags:[]},
+  {id:"p3738",operator:"移动",name:"0318移动宝瓶卡【河南省内】",price:19.4,flow:40,talk:400,region:"仅发",nation:false,budget:true,desc:"19.4元40G通用+200G省内+400分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3738",tags:[]},
+  {id:"p3739",operator:"联通",name:"0318联通左右卡【上海市内】",price:29.0,flow:20,talk:100,region:"仅发",nation:false,budget:true,desc:"29元20G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3739",tags:[]},
+  {id:"p3742",operator:"移动",name:"0319移动肉丸卡【河北省内】",price:40.0,flow:140,talk:300,region:"仅发",nation:false,budget:false,desc:"40元140G通用+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3742",tags:[]},
+  {id:"p3743",operator:"联通",name:"0319联通椰子卡【海南省内】",price:39.0,flow:115,talk:100,region:"仅发",nation:false,budget:false,desc:"39元115G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3743",tags:[]},
+  {id:"p3745",operator:"联通",name:"0319联通大南卡【湖南省内】",price:49.0,flow:155,talk:0,region:"仅发",nation:false,budget:false,desc:"49元155G通用+30G定向",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3745",tags:[]},
+  {id:"p3746",operator:"联通",name:"0319联通小南卡【湖南省内】",price:39.0,flow:125,talk:0,region:"仅发",nation:false,budget:false,desc:"39元125G通用+30G定向",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3746",tags:[]},
+  {id:"p3748",operator:"电信",name:"0319电信鲁王卡【山东省内】",price:39.0,flow:125,talk:0,region:"仅发",nation:false,budget:false,desc:"39元125G通用+30G定向+50G省内",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3748",tags:[]},
+  {id:"p3749",operator:"联通",name:"0320联通盛花卡【湖南省内】",price:39.0,flow:125,talk:0,region:"仅发",nation:false,budget:false,desc:"39元125G通用+30G定向",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3749",tags:[]},
+  {id:"p3750",operator:"电信",name:"0320电信神话卡【广东省内】",price:29.0,flow:175,talk:100,region:"仅发",nation:false,budget:true,desc:"29元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3750",tags:[]},
+  {id:"p3752",operator:"联通",name:"0320联通大龙卡【浙江省内】",price:29.0,flow:150,talk:100,region:"仅发",nation:false,budget:true,desc:"29元150G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3752",tags:[]},
+  {id:"p3753",operator:"联通",name:"0320联通小龙卡【浙江省内】",price:19.0,flow:150,talk:100,region:"仅发",nation:false,budget:true,desc:"19元150G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3753",tags:[]},
+  {id:"p3754",operator:"电信",name:"0320电信鲁圣卡【山东省内】",price:39.0,flow:125,talk:0,region:"仅发",nation:false,budget:false,desc:"39元125G通用+30G定向+50G省内",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3754",tags:[]},
+  {id:"p3755",operator:"联通",name:"0320联通南王卡【湖南省内】",price:39.0,flow:125,talk:0,region:"仅发",nation:false,budget:false,desc:"39元125G通用+30G定向",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3755",tags:[]},
+  {id:"p3763",operator:"电信",name:"0321电信狼烟卡【广西省内】",price:39.0,flow:175,talk:300,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3763",tags:[]},
+  {id:"p3764",operator:"联通",name:"0321联通烽火卡【广西省内】",price:39.0,flow:219,talk:100,region:"仅发",nation:false,budget:false,desc:"39元219G通用+100分钟通话",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3764",tags:[]},
+  {id:"p3765",operator:"广电",name:"0321广电杏花卡【广西省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3765",tags:[]},
+  {id:"p3766",operator:"广电",name:"0321广电桂花卡【广西省内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用流量+30G定向流量+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3766",tags:[]},
+  {id:"p3767",operator:"广电",name:"0321广电花开卡【重庆市内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3767",tags:[]},
+  {id:"p3768",operator:"广电",name:"0321广电花落卡【重庆市内】",price:28.0,flow:320,talk:200,region:"仅发",nation:false,budget:true,desc:"28元320G通用+30G定向+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3768",tags:[]},
+  {id:"p3769",operator:"联通",name:"0321联通信仰卡【重庆市内】",price:39.0,flow:190,talk:200,region:"仅发",nation:false,budget:false,desc:"39元190G通用+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3769",tags:[]},
+  {id:"p3770",operator:"联通",name:"0321新联通南王卡2.0【湖南省内】",price:39.0,flow:125,talk:0,region:"仅发",nation:false,budget:false,desc:"39元125G通用+30G定向",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3770",tags:[]},
+  {id:"p3771",operator:"广电",name:"0321广电湘江卡【湖南省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3771",tags:[]},
+  {id:"p3774",operator:"广电",name:"0321广电江湖卡【江西省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3774",tags:[]},
+  {id:"p3776",operator:"广电",name:"0321新广电双凤卡2.0【浙江省内】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3776",tags:[]},
+  {id:"p3777",operator:"广电",name:"0321新广电天津卡【天津市内】",price:19.0,flow:130,talk:200,region:"仅发",nation:false,budget:true,desc:"19元130G通用+200分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3777",tags:[]},
+  {id:"p3778",operator:"广电",name:"0321新广电大津卡2.0【天津市内】",price:29.0,flow:180,talk:250,region:"仅发",nation:false,budget:true,desc:"29元180G通用+250分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3778",tags:[]},
+  {id:"p3779",operator:"联通",name:"0321新联通椰子卡2.0【海南省内】",price:39.0,flow:115,talk:100,region:"仅发",nation:false,budget:false,desc:"39元115G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3779",tags:[]},
+  {id:"p3783",operator:"电信",name:"0321电信白将卡【山东省内】",price:39.0,flow:175,talk:0,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+0.1元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3783",tags:[]},
+  {id:"p3792",operator:"电信",name:"0323电信吉姆卡【广西省内】",price:39.0,flow:175,talk:300,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3792",tags:[]},
+  {id:"p3795",operator:"电信",name:"0324电信梅香卡【湖南省内】",price:39.0,flow:155,talk:0,region:"仅发",nation:false,budget:false,desc:"39元155G通用+30G定向+0.1元/分钟通话",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3795",tags:[]},
+  {id:"p3801",operator:"联通",name:"0325联通海凯卡【湖南省内】",price:39.0,flow:180,talk:100,region:"仅发",nation:false,budget:false,desc:"39元180G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3801",tags:[]},
+  {id:"p3804",operator:"广电",name:"0325广电宁川卡【宁夏省内】",price:29.0,flow:180,talk:150,region:"仅发",nation:false,budget:true,desc:"29元180G通用+150分钟（需参加多用多少活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3804",tags:[]},
+  {id:"p3807",operator:"电信",name:"0325电信梅香卡2.0【湖南省内】",price:39.0,flow:155,talk:0,region:"仅发",nation:false,budget:false,desc:"39元155G通用+30G定向+0.1元/分钟通话",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3807",tags:[]},
+  {id:"p3816",operator:"联通",name:"0326联通手表卡【广东省内】",price:10.0,flow:2,talk:100,region:"仅发",nation:false,budget:true,desc:"10元2G通用+10G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3816",tags:[]},
+  {id:"p3818",operator:"电信",name:"0326电信腊肉【湖南省内】",price:39.0,flow:155,talk:0,region:"仅发",nation:false,budget:false,desc:"39元155G通用+30G定向+0.1元/分钟通话",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3818",tags:[]},
+  {id:"p3821",operator:"联通",name:"0327联通火锅卡【四川省内】",price:30.1,flow:240,talk:200,region:"仅发",nation:false,budget:false,desc:"30.1元240G通用+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3821",tags:[]},
+  {id:"p3823",operator:"广电",name:"0328广电青花卡2.0【广东省内选号】",price:29.0,flow:192,talk:15,region:"仅发",nation:false,budget:true,desc:"29元192G通用+0.15分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3823",tags:[]},
+  {id:"p3824",operator:"电信",name:"0328电信枫枫卡【广东省内】",price:39.0,flow:175,talk:100,region:"仅发",nation:false,budget:false,desc:"39元175G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3824",tags:[]},
+  {id:"p3829",operator:"电信",name:"0329电信青瓜卡【浙江省内】",price:29.0,flow:175,talk:300,region:"仅发",nation:false,budget:true,desc:"29元175G通用+30G定向+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3829",tags:[]},
+  {id:"p3831",operator:"广电",name:"0330广电包年卡【上海市内】",price:240.0,flow:320,talk:200,region:"仅发",nation:false,budget:false,desc:"240元/年320G通用+30G定向+200分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3831",tags:[]},
+  {id:"p3832",operator:"广电",name:"0330广电洛溪卡【上海市内】",price:19.0,flow:100,talk:100,region:"仅发",nation:false,budget:true,desc:"19元100G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3832",tags:[]},
+  {id:"p3833",operator:"联通",name:"0331联通溪流卡【四川省内】",price:29.0,flow:140,talk:0,region:"仅发",nation:false,budget:true,desc:"29元140G通用+0.15元/分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3833",tags:[]},
+  {id:"p3322",operator:"广电",name:"0111广电奔马卡【全国发货】",price:39.0,flow:90,talk:0,region:"发全国",nation:true,budget:false,desc:"39元90G通用+0.15元/分钟（需参加多用多送活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3322",tags:[]},
+  {id:"p3718",operator:"联通",name:"0315联通饺子卡【报单发货】",price:29.0,flow:150,talk:200,region:"发全国",nation:true,budget:true,desc:"29元150G通用+200分钟+会员权益",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3718",tags:[]},
+  {id:"p3730",operator:"联通",name:"0317联通东山卡【三照下单】",price:40.0,flow:155,talk:100,region:"发全国",nation:true,budget:false,desc:"40元155G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3730",tags:[]},
+  {id:"p3793",operator:"联通",name:"0323联通惊喜卡【激活后发货】",price:39.0,flow:25,talk:100,region:"发全国",nation:true,budget:false,desc:"39元25G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3793",tags:[]},
+  {id:"p3806",operator:"联通",name:"0325联通飞驰卡【报单发货】",price:19.0,flow:210,talk:100,region:"发全国",nation:true,budget:true,desc:"19元210G通用+100分钟+会员权益（需取消会员才可形成19元）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3806",tags:[]},
+  {id:"p3814",operator:"联通",name:"0326联通惊喜卡2.0【认证后发货】",price:39.0,flow:25,talk:100,region:"发全国",nation:true,budget:false,desc:"39元25G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3814",tags:[]},
+  {id:"p3815",operator:"联通",name:"0326联通醉酒卡【激活后发货】",price:40.0,flow:200,talk:100,region:"发全国",nation:true,budget:false,desc:"40元200G通用+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3815",tags:[]},
+  {id:"p3819",operator:"移动",name:"0327移动泡泡卡【河北省内】",price:40.0,flow:160,talk:300,region:"发全国",nation:true,budget:false,desc:"40元160G通用+300分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3819",tags:[]},
+  {id:"p3822",operator:"联通",name:"0327联通绘梦卡【本地归属】",price:39.0,flow:20,talk:100,region:"发全国",nation:true,budget:false,desc:"39元20G通用+30G定向+100分钟",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3822",tags:[]},
+  {id:"p3827",operator:"广电",name:"0329广电花菜卡【本地归属】",price:39.0,flow:222,talk:15,region:"发全国",nation:true,budget:false,desc:"39元222G通用+0.15分钟（需参加多用多送活动）",url:"https://vip.777haoka.cn/order/index?uid=V1pnM1FJS3VZZ3c9&pid=3827",tags:[]}
 ];
 
-// 用户条件状态
-var userConditions={
-  budget:null,
-  operator:null,
-  needTalk:null,
-  region:null,
-  device:null
-};
+var userConditions={budget:null,operator:null,needTalk:null,region:null,device:null};
 var currentResults=[];
 var resultIndex=0;
 
-// 初始化
 function init(){
   showBotMessage('👋 您好！我是流量卡智能顾问\n\n请告诉我您的需求，比如：\n• "学生党，预算20以内"\n• "通话多，流量也要大"\n• "只要移动卡"');
 }
 
-// 显示加载
 function showLoading(){document.getElementById('loading').classList.add('show');}
 function hideLoading(){document.getElementById('loading').classList.remove('show');}
 
-// 添加消息
 function addChatBubble(content,type){
+  var now=new Date();
+  var time=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
   var div=document.createElement('div');
   div.className='chat-bubble '+type;
   var avatar=type==='bot'?'🤖':'🙋';
-  div.innerHTML='<div class="chat-avatar">'+avatar+'</div><div class="chat-content">'+content.replace(/\n/g,'<br>')+'</div>';
+  div.innerHTML='<div class="chat-avatar">'+avatar+'</div><div class="chat-content">'+content.replace(/\n/g,'<br>')+'</div><div class="chat-time">'+time+'</div>';
   document.getElementById('chatArea').appendChild(div);
   scrollToBottom();
 }
@@ -171,7 +301,6 @@ function scrollToBottom(){
   setTimeout(function(){main.scrollTop=main.scrollHeight;},50);
 }
 
-// 更新条件标签
 function updateConditions(){
   var bar=document.getElementById('conditionsBar');
   var tags=[];
@@ -200,42 +329,29 @@ function clearCondition(key){
   searchProducts();
 }
 
-// 搜索产品
 function searchProducts(){
   var results=PRODUCTS.slice();
-  
-  // 按运营商筛选
   if(userConditions.operator){
     results=results.filter(function(p){return p.operator===userConditions.operator;});
   }
-  
-  // 按预算筛选
   if(userConditions.budget&&userConditions.budget.max){
     results=results.filter(function(p){return p.price<=userConditions.budget.max;});
   }
-  
-  // 按通话筛选
   if(userConditions.needTalk===true){
     results=results.filter(function(p){return p.talk>0;});
   }else if(userConditions.needTalk===false){
     results=results.filter(function(p){return p.talk===0;});
   }
-  
-  // 按地区筛选
   if(userConditions.region==='nation'){
     results=results.filter(function(p){return p.nation;});
   }
-  
-  // 排序：热门优先，然后按流量
   results.sort(function(a,b){
     if(a.hot&&!b.hot)return-1;
     if(!a.hot&&b.hot)return 1;
     return b.flow-a.flow;
   });
-  
   currentResults=results;
   resultIndex=0;
-  
   if(results.length===0){
     showBotMessage('😢 没有找到符合条件的套餐\n\n试试放宽条件？');
   }else{
@@ -244,18 +360,15 @@ function searchProducts(){
   }
 }
 
-// 显示下一批结果
 function showNextResults(){
   hideLoading();
   var cards=document.createElement('div');
   cards.className='result-cards';
-  
   var batch=currentResults.slice(resultIndex,resultIndex+3);
   batch.forEach(function(p){
     var hotTag=p.hot?'<span class="tag hot">🔥</span>':'';
     var regionTag=p.nation?'<span class="tag nation">🌐全国</span>':'<span class="tag local">📍省内</span>';
     var talkText=p.talk>0?p.talk+'分钟':'纯流量';
-    
     cards.innerHTML+='<div class="result-card">'+
       '<div class="card-top">'+
         '<div class="card-name">'+p.name+'</div>'+
@@ -265,20 +378,15 @@ function showNextResults(){
         '<div class="spec"><div class="spec-val">'+p.operator+'</div><div class="spec-label">运营商</div></div>'+
         '<div class="spec"><div class="spec-val">'+p.flow+'G</div><div class="spec-label">流量</div></div>'+
         '<div class="spec"><div class="spec-val">'+talkText+'</div><div class="spec-label">通话</div></div>'+
-        '<div class="spec"><div class="spec-val">'+p.region.split("发")[1]||p.region+'</div><div class="spec-label">地区</div></div>'+
+        '<div class="spec"><div class="spec-val">'+(p.region.split("发")[1]||'省内')+'</div><div class="spec-label">地区</div></div>'+
       '</div>'+
       '<div class="card-price">'+p.price+'<span>元/月</span></div>'+
-      '<div class="card-desc" style="text-align:center;font-size:12px;color:#666;margin-bottom:10px">'+p.desc+'</div>'+
-      '<div class="card-actions">'+
-        '<button class="card-btn order" onclick="showQR()">📞 办理</button>'+
-      '</div>'+
+      '<div class="card-desc" style="text-align:center;font-size:12px;color:#a0aec0;margin-bottom:10px">'+p.desc+'</div>'+
+      '<div class="card-actions"><button class="card-btn order" onclick="window.open(\''+p.url+'\',\'_blank\')">📞 立即办理</button></div>'+
     '</div>';
   });
-  
   document.getElementById('chatArea').appendChild(cards);
   resultIndex+=3;
-  
-  // 如果还有更多，显示换一批按钮
   if(resultIndex<currentResults.length){
     var moreBtn=document.createElement('button');
     moreBtn.className='card-btn refresh';
@@ -288,21 +396,16 @@ function showNextResults(){
     moreBtn.onclick=showNextResults;
     document.getElementById('chatArea').appendChild(moreBtn);
   }
-  
   scrollToBottom();
 }
 
-// 显示二维码
 function showQR(){
   window.open('https://huangrunshi.github.io/flowcard-agent/qrcode.png','_blank');
 }
 
-// 处理用户输入
 function processInput(text){
   var t=text.toLowerCase();
-  
-  // 检查修改条件
-  if(t.includes('改成')||t.includes('改')||t.includes('改成')){
+  if(t.includes('改成')||t.includes('改')){
     if(t.includes('预算')||t.includes('20')||t.includes('30')||t.includes('40')||t.includes('便宜')){
       var match=t.match(/(\d+)/);
       if(match){
@@ -316,7 +419,7 @@ function processInput(text){
     }
     if(t.includes('不要')&&(t.includes('电信')||t.includes('移动')||t.includes('联通'))){
       var notOp=t.includes('电信')?'电信':t.includes('移动')?'移动':'联通';
-      userConditions.operator=notOp==='电信'?'移动':'电信';
+      userConditions.operator=notOp==='电信'?'移动':'notOp==='移动'?'联通':'电信';
       updateConditions();
       showUserMessage('好的，不要'+notOp+'，给你推荐其他运营商');
       showLoading();
@@ -324,9 +427,7 @@ function processInput(text){
       return;
     }
   }
-  
-  // 运营商选择
-  if(t.includes('电信')||t.includes('dx')||t.includes('电信卡')){
+  if(t.includes('电信')||t.includes('dx')){
     userConditions.operator='电信';
     updateConditions();
     showUserMessage('好的，要电信卡');
@@ -359,8 +460,6 @@ function processInput(text){
     setTimeout(function(){searchProducts();},800);
     return;
   }
-  
-  // 通话需求
   if(t.includes('通话')||t.includes('打电话')||t.includes('分钟')||t.includes('电话多')){
     userConditions.needTalk=true;
     updateConditions();
@@ -377,8 +476,6 @@ function processInput(text){
     setTimeout(function(){searchProducts();},800);
     return;
   }
-  
-  // 预算
   var budgetMatch=t.match(/(\d{1,2})\s*元/);
   if(budgetMatch){
     userConditions.budget={max:parseInt(budgetMatch[1])};
@@ -396,8 +493,6 @@ function processInput(text){
     setTimeout(function(){searchProducts();},800);
     return;
   }
-  
-  // 地区
   if(t.includes('全国')||t.includes('通用')){
     userConditions.region='nation';
     updateConditions();
@@ -406,8 +501,6 @@ function processInput(text){
     setTimeout(function(){searchProducts();},800);
     return;
   }
-  
-  // 学生党
   if(t.includes('学生')||t.includes('上学')){
     userConditions.budget={max:30};
     userConditions.needTalk=null;
@@ -417,16 +510,12 @@ function processInput(text){
     setTimeout(function(){searchProducts();},800);
     return;
   }
-  
-  // 热门推荐
   if(t.includes('推荐')||t.includes('热门')||t.includes('最好')){
     showUserMessage('好的，为你推荐热门套餐');
     showLoading();
     setTimeout(function(){searchProducts();},800);
     return;
   }
-  
-  // 大流量
   if(t.includes('大流量')||t.includes('流量多')){
     showUserMessage('好的，找大流量套餐');
     showLoading();
@@ -438,14 +527,11 @@ function processInput(text){
     },800);
     return;
   }
-  
-  // 默认：模糊搜索，反问确认
   showBotMessage('收到！我来帮你找...\n\n您还有什么要求吗？\n• 预算多少？（比如30元以内）\n• 需要通话吗？\n• 要哪个运营商？');
   showLoading();
   setTimeout(function(){searchProducts();},800);
 }
 
-// 事件绑定
 document.getElementById('sendBtn').onclick=function(){
   var input=document.getElementById('userInput');
   var text=input.value.trim();
@@ -459,12 +545,10 @@ document.getElementById('userInput').onkeydown=function(e){
   if(e.key==='Enter')document.getElementById('sendBtn').click();
 };
 
-// 快捷按钮
 document.querySelectorAll('.quick-btn').forEach(function(btn){
   btn.onclick=function(){
     var action=this.dataset.action;
     var filter=this.dataset.filter;
-    
     if(action==='refresh'){
       showUserMessage('换一批');
       showLoading();
@@ -476,7 +560,6 @@ document.querySelectorAll('.quick-btn').forEach(function(btn){
       },500);
       return;
     }
-    
     if(filter==='dx'){processInput('电信');return;}
     if(filter==='yd'){processInput('移动');return;}
     if(filter==='lt'){processInput('联通');return;}
