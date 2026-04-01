@@ -277,6 +277,13 @@ var resultIndex=0;
 
 function init(){
   showBotMessage('👋 您好！我是流量卡智能顾问\n\n请告诉我您的需求，比如：\n• "学生党，预算20以内"\n• "通话多，流量也要大"\n• "只要移动卡"');
+  // 自动展示热门套餐
+  setTimeout(function(){
+    showBotMessage('🔥 以下是当前热门套餐，点击「立即办理」直接下单：');
+    currentResults = PRODUCTS.filter(function(p){return p.price>0 && p.flow>0;}).sort(function(a,b){return b.flow-a.flow;});
+    resultIndex = 0;
+    setTimeout(function(){showNextResults();}, 300);
+  }, 600);
 }
 
 function showLoading(){document.getElementById('loading').classList.add('show');}
