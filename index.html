@@ -667,7 +667,7 @@ function setQuickBtnsDisabled(disabled){
 }
 
 /* ===== 处理用户输入 ===== */
-function processInput(text){
+function processInputLocal(text){
   if(isSearching) return;
   isSearching=true;
   setQuickBtnsDisabled(true);
@@ -711,6 +711,77 @@ function processInput(text){
 }
 
 /* ===== 初始化 ===== */
+
+// ===== AI大模型对接 =====
+var AI_API_URL = ''; // 部署后填入云函数URL
+var chatHistory = []; // 对话历史
+
+async function callAI(message){
+  if(!AI_API_URL){
+    // 未配置AI，使用本地逻辑
+    return null;
+  }
+  
+  try{
+    showLoadingHint('AI正在思考...');
+    
+    var res = await fetch(AI_API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        message: message,
+        history: chatHistory.slice(-6) // 保留最近3轮对话
+      })
+    });
+    
+    var data = await res.json();
+    hideLoadingHint();
+    
+    if(data.code === 0 && data.data && data.data.reply){
+      // 保存到历史
+      chatHistory.push({isUser: true, content: message});
+      chatHistory.push({isUser: false, content: data.data.reply});
+      return data.data.reply;
+    }else{
+      return '抱歉，AI服务暂时不可用，我用本地知识为您推荐。';
+    }
+  }catch(e){
+    console.log('AI调用失败:', e);
+    hideLoadingHint();
+    return null; // 返回null表示使用本地逻辑
+  }
+}
+
+// 增强的processInput，优先调用AI
+async function processInputWithAI(text){
+  if(isSearching) return;
+  isSearching = true;
+  setQuickBtnsDisabled(true);
+  showUserMessage(text);
+  
+  // 先尝试调用AI
+  var aiReply = await callAI(text);
+  
+  if(aiReply && aiReply.indexOf('本地知识') === -1){
+    // AI成功返回
+    showBotMessage(aiReply);
+    isSearching = false;
+    setQuickBtnsDisabled(false);
+    return;
+  }
+  
+  // AI失败或未配置，使用本地逻辑
+  if(aiReply){
+    showBotMessage(aiReply); // 显示AI的降级提示
+  }
+  
+  // 继续本地处理...
+  processInputLocal(text);
+}
+
+// 本地处理逻辑（原有逻辑）
+function processInputLocal(text){
+
 function init(){
   showBotMessage('👋 您好！我是流量卡智能顾问\n\n请告诉我您的需求，比如：\n• "学生党，预算20以内"\n• "通话多，流量也要大"\n• "只要移动卡"');
   setTimeout(function(){
@@ -726,12 +797,12 @@ function init(){
 /* ===== 事件绑定 ===== */
 document.getElementById('sendBtn').onclick=function(){
   var v=document.getElementById('userInput').value.trim();
-  if(v){processInput(v);document.getElementById('userInput').value='';}
+  if(v){processInputWithAI(v);document.getElementById('userInput').value='';}
 };
 document.getElementById('userInput').addEventListener('keydown',function(e){
   if(e.key==='Enter'){
     var v=this.value.trim();
-    if(v){processInput(v);this.value='';}
+    if(v){processInputWithAI(v);this.value='';}
   }
 });
 
@@ -763,7 +834,7 @@ document.getElementById('quickBtns').addEventListener('click',function(e){
 document.getElementById('suggestBtns').addEventListener('click',function(e){
   var btn=e.target.closest('.suggest-btn');
   if(!btn) return;
-  processInput(btn.dataset.q);
+  processInputWithAI(btn.dataset.q);
 });
 
 // 手机键盘适配
