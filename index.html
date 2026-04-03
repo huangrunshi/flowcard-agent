@@ -663,52 +663,6 @@ function setQuickBtnsDisabled(disabled){
   document.querySelectorAll('.quick-btn').forEach(function(b){b.disabled=disabled;});
 }
 
-/* ===== 处理用户输入 ===== */
-function processInputLocal(text){
-  if(isSearching) return;
-  isSearching=true;
-  setQuickBtnsDisabled(true);
-  showUserMessage(text);
-  showLoadingHint('正在为您匹配套餐');
-
-  var t=text.toLowerCase();
-  var matched=false;
-
-  if(/电信/.test(t)){userConditions.operator='电信';matched=true;}
-  else if(/移动/.test(t)){userConditions.operator='移动';matched=true;}
-  else if(/联通/.test(t)){userConditions.operator='联通';matched=true;}
-  else if(/广电/.test(t)){userConditions.operator='广电';matched=true;}
-
-  if(/大流量|流量多|流量大|流量高/.test(t)){userConditions.flowHigh=true;matched=true;}
-  if(/便宜|低月租|省钱|学生|预算|20以内|30以内/.test(t)){userConditions.budget=true;matched=true;}
-  if(/通话|打电话|分钟/.test(t)){userConditions.needTalk=true;matched=true;}
-  if(/纯流量|不要通话|不需要通话/.test(t)){userConditions.needTalk=false;matched=true;}
-  if(/全国|不限地区|全国通用/.test(t)){userConditions.region='nation';matched=true;}
-
-  if(!matched){
-    hideLoadingHint();
-    showBotMessage('我理解您的需求，为您推荐以下套餐：');
-    isSearching=false;
-    setQuickBtnsDisabled(false);
-    doSearch();
-    return;
-  }
-
-  updateConditionsBar();
-  var reply='好的！';
-  if(userConditions.operator) reply+='为您筛选'+userConditions.operator+'套餐';
-  if(userConditions.flowHigh) reply+='，大流量优先';
-  if(userConditions.budget) reply+='，低月租优先';
-  if(userConditions.needTalk===true) reply+='，含通话分钟';
-  if(userConditions.region==='nation') reply+='，全国通用';
-  reply+='，正在匹配...';
-  setTimeout(function(){
-    hideLoadingHint();
-    showBotMessage(reply);
-    doSearch();
-  },400);
-}
-
 /* ===== 初始化 ===== */
 
 // ===== AI大模型对接 =====
