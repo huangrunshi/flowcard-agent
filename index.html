@@ -752,6 +752,11 @@ async function callAI(message){
   }
 }
 
+// 入口函数 - 统一处理
+function processInput(text){
+  processInputWithAI(text);
+}
+
 // 增强的processInput，优先调用AI
 async function processInputWithAI(text){
   if(isSearching) return;
