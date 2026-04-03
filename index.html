@@ -733,6 +733,8 @@ async function processInputWithAI(text){
     showBotMessage(aiReply); // 显示AI的降级提示
   }
   
+  // 重置isSearching，让processInputLocal可以执行
+  isSearching = false;
   // 继续本地处理...
   processInputLocal(text);
 }
