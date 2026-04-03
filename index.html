@@ -835,7 +835,7 @@ document.getElementById('quickBtns').addEventListener('click',function(e){
 document.getElementById('suggestBtns').addEventListener('click',function(e){
   var btn=e.target.closest('.suggest-btn');
   if(!btn) return;
-  processInputWithAI(btn.dataset.q);
+  processInput(btn.dataset.q);
 });
 
 // 手机键盘适配
