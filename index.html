@@ -744,7 +744,7 @@ function processInputLocal(text){
   if(isSearching) return;
   isSearching=true;
   setQuickBtnsDisabled(true);
-  showUserMessage(text);
+  // showUserMessage已在上层调用，这里不再重复
   showLoadingHint('正在为您匹配套餐');
 
   var t=text.toLowerCase();
