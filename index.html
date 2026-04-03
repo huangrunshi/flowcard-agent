@@ -50,14 +50,12 @@
     /* ===== 对话气泡 ===== */
     .chat-bubble{margin-bottom:20px;animation:fadeUp 0.3s ease}
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .chat-bubble.bot{display:flex;gap:10px;align-items:flex-start;width:100%}
+    .chat-bubble.bot{display:flex;gap:10px;align-items:flex-start;width:100%;flex-shrink:0}
     .chat-bubble.user{display:flex;flex-direction:row-reverse;align-items:flex-start;gap:10px;width:100%}
-    .chat-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;position:relative}
-    .chat-bubble.bot .chat-avatar{background:linear-gradient(135deg,#1e293b,#334155);border:2px solid #5eead4;box-shadow:0 3px 12px rgba(0,0,0,0.4);}
-    .chat-bubble.user .chat-avatar{background:linear-gradient(135deg,#0891b2,#0e7490);border:2px solid #22d3ee;box-shadow:0 3px 12px rgba(8,145,178,0.4);}
-    .chat-content{max-width:90%;border-radius:16px;font-size:14px;line-height:1.7;white-space:normal;word-wrap:break-word;word-break:break-all;color:#e2e8f0}
-    .chat-bubble.bot .chat-content{flex:1;background:rgba(30,34,42,0.92);border-radius:16px;border-bottom-left-radius:6px;border:1px solid rgba(94,234,212,0.08);box-shadow:0 4px 16px rgba(0,0,0,0.35);padding:14px 18px;}
-    .chat-bubble.user .chat-content{flex:1;background:linear-gradient(135deg,#0891b2,#0e7490);border-radius:16px;border-bottom-right-radius:6px;box-shadow:0 4px 16px rgba(8,145,178,0.35);padding:14px 18px;}
+    .chat-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .chat-content{flex:1;max-width:none;border-radius:16px;font-size:14px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;padding:12px 16px;color:#e2e8f0}
+    .chat-bubble.bot .chat-content{background:rgba(30,34,42,0.92);border-radius:16px;border-bottom-left-radius:4px;border:1px solid rgba(94,234,212,0.08);box-shadow:0 2px 8px rgba(0,0,0,0.25)}
+    .chat-bubble.user .chat-content{background:linear-gradient(135deg,#0891b2,#0e7490);border-radius:16px;border-bottom-right-radius:4px;box-shadow:0 2px 8px rgba(8,145,178,0.25)}
     .chat-time{font-size:11px;color:#64748b;margin-top:6px;padding:0 6px;font-weight:400;letter-spacing:0.3px}
 
     /* ===== 套餐卡片 ===== */
@@ -499,8 +497,7 @@ function showBotMessage(text){
   var div=document.createElement('div');
   div.className='chat-bubble bot';
   div.innerHTML='<div class="chat-avatar">✨</div>'+
-    '<div><div class="chat-content">'+text.replace(/\n/g,'<br>')+'</div>'+
-    '<div class="chat-time">'+now()+'</div></div>';
+    '<div class="chat-content">'+text.replace(/\n/g,'<br>')+'</div>';
   chatArea.appendChild(div);
   scrollToBottom();
 }
@@ -510,8 +507,7 @@ function showUserMessage(text){
   var div=document.createElement('div');
   div.className='chat-bubble user';
   div.innerHTML='<div class="chat-avatar">👤</div>'+
-    '<div><div class="chat-content">'+text+'</div>'+
-    '<div class="chat-time">'+now()+'</div></div>';
+    '<div class="chat-content">'+text+'</div>';
   chatArea.appendChild(div);
   scrollToBottom();
 }
@@ -642,6 +638,7 @@ function doSearch(){
   var results=PRODUCTS.filter(function(p){return p.price>0&&p.flow>0;});
   if(userConditions.operator) results=results.filter(function(p){return p.operator===userConditions.operator;});
   if(userConditions.budget) results=results.filter(function(p){return p.budget;});
+  if(userConditions.flowHigh) results=results.filter(function(p){return p.flow>=100;});
   if(userConditions.needTalk===true) results=results.filter(function(p){return p.talk>0;});
   if(userConditions.needTalk===false) results=results.filter(function(p){return p.talk===0;});
   if(userConditions.region==='nation') results=results.filter(function(p){return p.nation;});
@@ -682,7 +679,9 @@ function processInputLocal(text){
   else if(/联通/.test(t)){userConditions.operator='联通';matched=true;}
   else if(/广电/.test(t)){userConditions.operator='广电';matched=true;}
 
-  if(/便宜|低月租|省钱|学生|预算|20以内|30以内|便宜/.test(t)){userConditions.budget=true;matched=true;}
+  if(/大流量|流量多|流量大|流量高/.test(t)){userConditions.flowHigh=true;matched=true;}
+
+  if(/便宜|低月租|省钱|学生|预算|20以内|30以内/.test(t)){userConditions.budget=true;matched=true;}
   if(/通话|打电话|分钟/.test(t)){userConditions.needTalk=true;matched=true;}
   if(/纯流量|不要通话|不需要通话/.test(t)){userConditions.needTalk=false;matched=true;}
   if(/全国|不限地区|全国通用/.test(t)){userConditions.region='nation';matched=true;}
