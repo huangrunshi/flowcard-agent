@@ -824,7 +824,7 @@ function processInputLocal(text){
 }
 
 function init(){
-  showBotMessage('👋 您好！我是流量卡智能顾问\n\n请告诉我您的需求，比如："学生党，预算20以内"或"通话多，流量大"');
+  showBotMessage('您好！我是流量卡智能顾问，请告诉我您的需求！👋');
   setTimeout(function(){
     showBotMessage('🌐 以下是当前热门套餐，全国套餐优先展示，点击「立即办理」直接下单：');
     var nation=PRODUCTS.filter(function(p){return p.nation&&p.price>0&&p.flow>0;}).sort(function(a,b){return b.flow-a.flow;});
